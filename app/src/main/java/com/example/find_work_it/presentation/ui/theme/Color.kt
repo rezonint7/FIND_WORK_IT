@@ -8,3 +8,8 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 val AppNameTextColor = Color(0xFF757575)
+
+val textFieldColor = Color(0xFF757575)
+val textFieldHintColor = Color(0xFF8B8B8B)
+
+val customLightGray = Color(0xFFB4B4B4)

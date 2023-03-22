@@ -35,11 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.find_work_it.R
-import com.example.find_work_it.presentation.ui.theme.BasicTextFieldStyle
-import com.example.find_work_it.presentation.ui.theme.FIND_WORK_ITTheme
-import com.example.find_work_it.ui.theme.customLightGray
-import com.example.find_work_it.ui.theme.textFieldColor
-import com.example.find_work_it.ui.theme.textFieldHintColor
+import com.example.find_work_it.presentation.ui.theme.*
 
 //@Composable
 //fun SearchElement(){

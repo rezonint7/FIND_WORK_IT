@@ -6,7 +6,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.find_work_it.ui.theme.textFieldColor
 
 val BasicTextFieldStyle = TextStyle(
     fontFamily = FontFamily.Default,
