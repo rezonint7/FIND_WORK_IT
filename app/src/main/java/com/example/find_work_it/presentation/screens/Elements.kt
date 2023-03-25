@@ -86,33 +86,31 @@ fun AddBasicTextField(
 @Composable
 fun FilterButton(
     size: Int,
-    borderColor: Color = MainTheme.colors.strokeColor
+    borderColor: Color = MainTheme.colors.strokeColor,
+    onClick: () -> Unit
 ){
     val shape = RoundedCornerShape(size = 10.dp)
-    val surfaceModifier = Modifier
-        .size(size.dp)
-        .background(color = MainTheme.colors.secondaryBackground, shape = shape)
-        .clip(shape)
     val boxModifier = Modifier
         .size(size.dp)
+        .background(MainTheme.colors.secondaryBackground)
         .border(
             width = (0.5).dp,
             color = borderColor,
             shape = shape
         ).clickable {
-
+            onClick()
         }
-
-    Surface(modifier = surfaceModifier) {
-        Box(modifier = boxModifier, contentAlignment = Alignment.Center) {
-            Icon(
-                painter = painterResource(id = R.drawable.filter_icon),
-                contentDescription = "filter",
-                modifier = Modifier.size(32.dp),
-                tint = MainTheme.colors.hintTextFieldColor
-            )
-        }
+    Box(modifier = boxModifier, contentAlignment = Alignment.Center) {
+        Icon(
+            painter = painterResource(id = R.drawable.filter_icon),
+            contentDescription = "filter",
+            modifier = Modifier.size(32.dp),
+            tint = MainTheme.colors.hintTextFieldColor
+        )
     }
+
+
+
 }
 
 

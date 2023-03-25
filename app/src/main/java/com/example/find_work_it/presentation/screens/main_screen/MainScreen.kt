@@ -13,11 +13,12 @@ import com.example.find_work_it.Greeting
 import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.BasicTextFieldStyle
+import com.example.find_work_it.ui.theme.MainTheme
 
 
 @Composable
 fun MainScreen(){
-    Column(Modifier.fillMaxSize()) {
+    Column(Modifier.fillMaxSize().background(MainTheme.colors.primaryBackground)) {
         TopBar()
         //Greeting(name = "${BuildConfig.}")
     }
@@ -30,13 +31,15 @@ fun TopBar(){
         AddBasicTextField(
             sizeWidth = 254,
             sizeHeight = 48,
-            textStyle = BasicTextFieldStyle,
+            textStyle = MainTheme.typography.inputTextField,
             placeholder = "Поиск",
             icon = Icons.Default.Search,
             iconContentDescription = "iconSearch"
         )
         Spacer(modifier = Modifier.width(width = 8.dp))
-        FilterButton(size = 48)
+        FilterButton(size = 48, onClick = {
+
+        })
 
     }
 }

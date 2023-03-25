@@ -16,9 +16,9 @@ fun FINDWORKIT_Theme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
         headerText = HeaderText,
         bodyText = BodyStyle1,
         bodyText2 = BodyStyle2,
-        smallText = SmallStyle
+        smallText = SmallStyle,
+        inputTextField = BasicTextFieldStyle
     )
-
 
     CompositionLocalProvider(
         LocalColors provides colors,

@@ -22,7 +22,8 @@ data class FINDWORKIT_Typography(
     val headerText: TextStyle,
     val bodyText: TextStyle,
     val bodyText2: TextStyle,
-    val smallText: TextStyle
+    val smallText: TextStyle,
+    val inputTextField:TextStyle,
 )
 
 object MainTheme{

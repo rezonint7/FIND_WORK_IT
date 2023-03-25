@@ -4,7 +4,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.example.find_work_it.R
 
-
 internal val darkColorPalette = FINDWORKIT_Colors(
     primaryBackground = Color(0xFF121212),
     primaryText = Color(0xFFFFFFFF),

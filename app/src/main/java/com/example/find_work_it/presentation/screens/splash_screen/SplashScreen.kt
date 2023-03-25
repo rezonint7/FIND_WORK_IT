@@ -85,7 +85,7 @@ fun SplashScreen(controller: NavController){
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun DefaultPreview() {
     FINDWORKIT_Theme(darkTheme = true) {

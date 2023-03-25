@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -20,6 +21,7 @@ import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.BasicTextFieldStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
+import com.example.find_work_it.ui.theme.MainTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = MainTheme.colors.primaryBackground
                 ) {
                     SetUpNavController(controller = rememberNavController())
                 }
@@ -51,7 +53,7 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     FINDWORKIT_Theme(darkTheme = true) {
-        Surface() {
+        Surface(modifier = Modifier.background(MainTheme.colors.primaryBackground)) {
             Spacer(modifier = Modifier.width(width = 8.dp))
             AddBasicTextField(
                 sizeWidth = 254,

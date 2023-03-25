@@ -1,6 +1,7 @@
 package com.example.find_work_it.ui.theme
 
 import androidx.compose.material.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +28,7 @@ val BasicTextFieldStyle = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
     fontSize = 20.sp,
+    color = Color(0xFF8B8B8B)
 )
 
 val AppNameStyle = TextStyle(
