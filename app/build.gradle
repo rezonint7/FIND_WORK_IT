@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -42,6 +43,13 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+
+    secrets {
+        propertiesFileName 'findworkit.properties'
+        defaultPropertiesFileName = 'secrets.defaults.properties'
+        ignoreList.add("APP_ACCESS_TOKEN") // Ignore the key "keyToIgnore"
+        ignoreList.add("sdk.*")
     }
 }
 

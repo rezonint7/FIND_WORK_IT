@@ -1,30 +1,46 @@
-package com.example.find_work_it.presentation.ui.theme
+package com.example.find_work_it.ui.theme
 
 import androidx.compose.material.Typography
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+
+val BodyStyle1 = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp,
+)
+val BodyStyle2 = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+)
+val HeaderText = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Bold,
+    fontSize = 16.sp,
+)
+
 val BasicTextFieldStyle = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
     fontSize = 20.sp,
-    color = textFieldColor
 )
 
 val AppNameStyle = TextStyle(
-    color = AppNameTextColor,
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.SemiBold,
     fontSize = 20.sp,
 )
-val HHStyle = TextStyle(
+
+val SmallStyle = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.SemiBold,
     fontSize = 12.sp,
 )
+
 
 // Set of Material typography styles to start with
 val Typography = Typography(

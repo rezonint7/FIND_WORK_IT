@@ -21,10 +21,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.presentation.navigation.NavScreens
-import com.example.find_work_it.presentation.ui.theme.AppNameStyle
-import com.example.find_work_it.presentation.ui.theme.HHStyle
 import com.example.find_work_it.R
-import com.example.find_work_it.presentation.ui.theme.FIND_WORK_ITTheme
+import com.example.find_work_it.ui.theme.AppNameStyle
+import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
+import com.example.find_work_it.ui.theme.MainTheme
+import com.example.find_work_it.ui.theme.SmallStyle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 
@@ -48,23 +49,26 @@ fun SplashScreen(controller: NavController){
         }
     }
 
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(Color.Black)
+//    val systemUiController = rememberSystemUiController()
+//    systemUiController.setSystemBarsColor(Color.Black)
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
         controller.navigate(NavScreens.MainScreen.route)
     }
 
-    ConstraintLayout(constraints, modifier = Modifier.fillMaxSize()){
+    ConstraintLayout(constraints, modifier = Modifier.fillMaxSize().background(MainTheme.colors.primaryBackground)){
         val logo = painterResource(id = R.drawable.logo2)
         val logoHH = painterResource(id = R.drawable.min_hh_red)
+
+        val textColor = MainTheme.colors.primaryText
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.layoutId("blockLogo")) {
             Image(painter = logo,
                 contentDescription = "AppLogo",
                 Modifier.size(128.dp, 128.dp))
             Text(text = stringResource(R.string.app_name),
-                style = AppNameStyle
+                style = AppNameStyle,
+                color = MainTheme.colors.secondaryText
             )
         }
 
@@ -74,7 +78,8 @@ fun SplashScreen(controller: NavController){
             Image(painter = logoHH, contentDescription = "LogoHH",
                 modifier = Modifier.size(32.dp))
             Text(text = stringResource(R.string.hh_info_load),
-                style = HHStyle,
+                style = SmallStyle,
+                color = textColor,
                 modifier = Modifier.padding(start = 8.dp))
         }
     }
@@ -83,7 +88,14 @@ fun SplashScreen(controller: NavController){
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    FIND_WORK_ITTheme {
+    FINDWORKIT_Theme(darkTheme = true) {
+        SplashScreen(controller = rememberNavController())
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview2() {
+    FINDWORKIT_Theme(darkTheme = false) {
         SplashScreen(controller = rememberNavController())
     }
 }

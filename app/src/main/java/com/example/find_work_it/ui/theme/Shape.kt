@@ -1,4 +1,4 @@
-package com.example.find_work_it.presentation.ui.theme
+package com.example.find_work_it.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

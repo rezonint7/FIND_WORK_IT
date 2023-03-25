@@ -12,7 +12,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun SetUpNavController(controller: NavHostController){
-    val systemUiController = rememberSystemUiController()
     NavHost(navController = controller, startDestination = NavScreens.SplashScreen.route){
         composable(NavScreens.MainScreen.route){
             MainScreen()

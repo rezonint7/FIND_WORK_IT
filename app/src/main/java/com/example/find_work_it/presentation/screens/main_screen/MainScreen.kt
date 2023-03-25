@@ -8,14 +8,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.find_work_it.presentation.ui.theme.BasicTextFieldStyle
-import com.example.find_work_it.presentation.ui.theme.elements.AddBasicTextField
-import com.example.find_work_it.presentation.ui.theme.elements.FilterButton
+import com.example.find_work_it.BuildConfig
+import com.example.find_work_it.Greeting
+import com.example.find_work_it.presentation.screens.AddBasicTextField
+import com.example.find_work_it.presentation.screens.FilterButton
+import com.example.find_work_it.ui.theme.BasicTextFieldStyle
+
 
 @Composable
 fun MainScreen(){
     Column(Modifier.fillMaxSize()) {
         TopBar()
+        //Greeting(name = "${BuildConfig.}")
     }
 }
 
