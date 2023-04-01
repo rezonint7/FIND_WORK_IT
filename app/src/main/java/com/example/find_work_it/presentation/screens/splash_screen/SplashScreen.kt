@@ -1,5 +1,7 @@
 package com.example.find_work_it.presentation.screens.splash_screen
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,7 +32,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(controller: NavController){
+fun SplashScreen(controller: NavController, context:Context){
     val constraints = ConstraintSet{
         val blockLogo = createRefFor("blockLogo")
         val blockHH = createRefFor("blockHH")
@@ -51,10 +53,20 @@ fun SplashScreen(controller: NavController){
 
 //    val systemUiController = rememberSystemUiController()
 //    systemUiController.setSystemBarsColor(Color.Black)
+    val sharedPreferences = context.getSharedPreferences("FIND_WORK_IT", Context.MODE_PRIVATE)
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
-        controller.navigate(NavScreens.MainScreen.route)
+        if(!sharedPreferences.contains("jsonTokens")){
+            val tokens = sharedPreferences.getString("jsonTokens", "")
+            Log.d("APP123-not", tokens!!)
+            controller.navigate(NavScreens.AuthorizationScreen.route)
+        }
+        else{
+            val tokens = sharedPreferences.getString("jsonTokens", "")
+            Log.d("APP123-yes", tokens!!)
+            controller.navigate(NavScreens.MainScreen.route)
+        }
     }
 
     ConstraintLayout(constraints, modifier = Modifier.fillMaxSize().background(MainTheme.colors.primaryBackground)){
@@ -85,18 +97,18 @@ fun SplashScreen(controller: NavController){
     }
 }
 
-@Preview(showBackground = false)
-@Composable
-fun DefaultPreview() {
-    FINDWORKIT_Theme(darkTheme = true) {
-        SplashScreen(controller = rememberNavController())
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview2() {
-    FINDWORKIT_Theme(darkTheme = false) {
-        SplashScreen(controller = rememberNavController())
-    }
-}
+//@Preview(showBackground = false)
+//@Composable
+//fun DefaultPreview() {
+//    FINDWORKIT_Theme(darkTheme = true) {
+//        SplashScreen(controller = rememberNavController())
+//    }
+//}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview2() {
+//    FINDWORKIT_Theme(darkTheme = false) {
+//        SplashScreen(controller = rememberNavController())
+//    }
+//}
 

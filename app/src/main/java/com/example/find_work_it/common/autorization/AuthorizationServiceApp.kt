@@ -1,53 +1,87 @@
 package com.example.find_work_it.common.autorization
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.webkit.WebView
 import androidx.core.content.ContextCompat
-import com.example.find_work_it.BuildConfig
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.common.autorization.model.Tokens
 import net.openid.appauth.*
 import okhttp3.*
 import java.io.IOException
 
 class AuthorizationServiceApp {
-    fun startAuthorization(context: Context){
-        val redirectUri = Uri.parse(Constants.REDIRECT_URI)
-        val authorizationRequest = AuthorizationRequest.Builder(
+    private val redirectUri = Uri.parse(Constants.REDIRECT_URI)
+    private var authorizationRequestCode : AuthorizationRequest? = null
+    fun startAuthorization(webView: WebView){
+        authorizationRequestCode = AuthorizationRequest.Builder(
             AuthorizationConfig.authorizationServiceConfiguration,
-            BuildConfig.CLIENT_ID,
+            Constants.CLIENT_ID,
             ResponseTypeValues.CODE,
             redirectUri
         ).build()
-
-        val authorizationService = AuthorizationService(context)
-        val authorizationIntent = authorizationService.getAuthorizationRequestIntent(authorizationRequest)
-
-        ContextCompat.startActivity(context, authorizationIntent, null)
+        webView.loadUrl(authorizationRequestCode!!.toUri().toString())
     }
 
-    fun performTokenExchangeRequest(
+    fun getAccessUserToken(
+        url: String,
         authorizationService: AuthorizationService,
-        tokenRequest: TokenRequest,
-        onTokenExchangeComplete: (TokenResponse?, AuthorizationException?) -> Unit
+        onTokenExchangeComplete: (Tokens?, AuthorizationException?) -> Unit
     ){
-        val request = Request.Builder()
-            .url(tokenRequest.configuration.tokenEndpoint.toString())
-            .post() // add body
-            .addHeader("Content-Type", "application/x-www-form-urlencoded")
-            .build()
-        val client = OkHttpClient().newCall(request)
-        client.enqueue(object : Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                onTokenExchangeComplete(null, AuthorizationException.fromTemplate(
-                    AuthorizationException.GeneralErrors.NETWORK_ERROR, e
-                ))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val tokenResponse = TokenResponse.fromJson(response.body()?.string())
-                onTokenExchangeComplete(tokenResponse, null)
-            }
-
-        })
+        val responseCode = AuthorizationResponse.Builder(authorizationRequestCode!!).fromUri(Uri.parse(url)).build()
+        val tokenRequest = TokenRequest.Builder(
+            AuthorizationConfig.authorizationServiceConfiguration,
+            Constants.CLIENT_ID
+        )
+            .setAuthorizationCode(responseCode.authorizationCode!!)
+            .setGrantType(GrantTypeValues.AUTHORIZATION_CODE)
+            .setRedirectUri(redirectUri)
+            .setAdditionalParameters(
+                mapOf(
+                    "client_secret" to Constants.CLIENT_SECRET,
+                    "Content-Type" to "application/x-www-form-urlencoded"
+                )
+            ).build()
+        authorizationService.performTokenRequest(tokenRequest){ response, error ->
+            onTokenExchangeComplete(
+                Tokens(
+                    response?.accessToken.toString(),
+                    response?.accessTokenExpirationTime!!.toInt(),
+                    response.refreshToken.toString(),
+                    response.tokenType.toString()
+                ), error
+            )
+        }
     }
+
+//    fun performTokenExchangeRequest(
+//        authorizationService: AuthorizationService,
+//        authorizationResponse: AuthorizationResponse,
+//        tokenRequest: TokenRequest,
+//        onTokenExchangeComplete: (TokenResponse?, AuthorizationException?) -> Unit
+//    ){
+//        val requestBody = tokenRequest.configuration.toJsonString()
+//        val body = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), requestBody)
+//        val request = Request.Builder()
+//            .url(tokenRequest.configuration.tokenEndpoint.toString())
+//            .post(body) // add body
+//            .addHeader("Content-Type", "application/x-www-form-urlencoded")
+//            .addHeader()
+//            .build()
+//        val client = OkHttpClient().newCall(request)
+//        client.enqueue(object : Callback{
+//            override fun onFailure(call: Call, e: IOException) {
+//                onTokenExchangeComplete(null, AuthorizationException.fromTemplate(
+//                    AuthorizationException.GeneralErrors.NETWORK_ERROR, e
+//                ))
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                val tokenResponse = response.body()?.string()?.let { TokenResponse.jsonDeserialize(it) }
+//                onTokenExchangeComplete(tokenResponse, null)
+//            }
+//        })
+//    }
 }
