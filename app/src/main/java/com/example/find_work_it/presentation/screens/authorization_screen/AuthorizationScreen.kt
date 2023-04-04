@@ -50,7 +50,7 @@ fun AuthorizationScreen(
                         if (request != null && url.startsWith(Constants.REDIRECT_URI)) {
                             authorizationServiceApp.getAccessUserToken(url, authorizationService){ tokens, authorizationException ->
                                 val json = Gson().toJson(tokens)
-                                sharedPreferencesEdit.putString("jsonTokens", json)
+                                sharedPreferencesEdit.putString("jsonTokens", json).apply()
                                 Log.d("APP123", json)
                                 controller.navigate(NavScreens.MainScreen.route)
                             }

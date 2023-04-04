@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.find_work_it.R
 import com.example.find_work_it.ui.theme.MainTheme
@@ -108,8 +109,10 @@ fun FilterButton(
             tint = MainTheme.colors.hintTextFieldColor
         )
     }
+}
 
-
+@Composable
+fun VacancyItem(listVacancies: ){
 
 }
 

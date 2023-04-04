@@ -52,24 +52,11 @@ class MainActivity : ComponentActivity() {
                     val authorizationServiceApp = AuthorizationServiceApp()
                     val tokens = sharedPreferences.getString("jsonTokens", "")
                     Log.d("APP123-main", tokens!!)
-                    SetUpNavController(controller = rememberNavController(), this, authorizationService, authorizationServiceApp)
+                    SetUpNavController(controller = rememberNavController(), LocalContext.current, authorizationService, authorizationServiceApp)
                 }
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-}
-
-
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello!")
-
 }
 
 @Preview(showBackground = true)
