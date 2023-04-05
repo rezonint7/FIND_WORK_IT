@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.find_work_it.Greeting
 import com.example.find_work_it.common.autorization.AuthorizationServiceApp
 import com.example.find_work_it.presentation.screens.authorization_screen.AuthorizationScreen
 import com.example.find_work_it.presentation.screens.main_screen.MainScreen

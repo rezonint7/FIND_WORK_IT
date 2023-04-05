@@ -111,10 +111,10 @@ fun FilterButton(
     }
 }
 
-@Composable
-fun VacancyItem(listVacancies: ){
-
-}
+//@Composable
+//fun VacancyItem(listVacancies: ){
+//
+//}
 
 
 

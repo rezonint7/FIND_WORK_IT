@@ -8,5 +8,5 @@ interface ApiService {
     @GET("/vacancies")
     suspend fun getVacancies() : VacancyDTO
     @GET("/vacancies/{vacancyId}/similar_vacancies")
-    suspend fun getSimilarVacancies(@Path("vacancyId") vacancyId : String)
+    suspend fun getSimilarVacancies(@Path("vacancyId") vacancyId : String) : VacancyDTO
 }
