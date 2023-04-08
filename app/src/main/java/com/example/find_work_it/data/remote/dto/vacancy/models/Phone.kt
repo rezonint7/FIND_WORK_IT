@@ -1,15 +1,15 @@
-package com.example.find_work_it.data.remote.dto.vacancy
+package com.example.find_work_it.data.remote.dto.vacancy.models
 
 
 import com.google.gson.annotations.SerializedName
 
 data class Phone(
     @SerializedName("city")
-    val city: String,
+    val city: String?,
     @SerializedName("comment")
     val comment: Any?,
     @SerializedName("country")
-    val country: String,
+    val country: String?,
     @SerializedName("number")
-    val number: String
+    val number: String?
 )

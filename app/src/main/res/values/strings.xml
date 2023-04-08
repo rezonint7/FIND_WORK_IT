@@ -1,8 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Поиск работы в IT</string>
 
     <string name="hh_info_load">Подборка вакансий осуществляется на основе сайта hh.ru</string>
     <string name="title_activity_loading">LoadingActivity</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="error_occurred">Произошла ошибка</string>
+    <string name="network_error" tools:ignore="TypographyEllipsis">Что-то пошло не так... Проверьте подключение к интернету</string>
 </resources>

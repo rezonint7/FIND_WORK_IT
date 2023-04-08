@@ -1,11 +1,11 @@
-package com.example.find_work_it.data.remote.dto.vacancy
+package com.example.find_work_it.data.remote.dto.vacancy.models
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Department(
+data class WorkingTimeInterval(
     @SerializedName("id")
     val id: String,
     @SerializedName("name")
-    val name: String
+    val name: String?
 )

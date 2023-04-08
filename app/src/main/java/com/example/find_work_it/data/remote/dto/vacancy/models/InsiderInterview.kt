@@ -1,11 +1,11 @@
-package com.example.find_work_it.data.remote.dto.vacancy
+package com.example.find_work_it.data.remote.dto.vacancy.models
 
 
 import com.google.gson.annotations.SerializedName
 
 data class InsiderInterview(
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("url")
-    val url: String
+    val url: String?
 )
