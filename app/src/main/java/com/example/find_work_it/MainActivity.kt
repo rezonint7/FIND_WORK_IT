@@ -30,17 +30,12 @@ import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.BasicTextFieldStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
-import com.google.gson.Gson
-import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationResponse
-import net.openid.appauth.AuthorizationService
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var sharedPreferences: SharedPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences =  getSharedPreferences("FIND_WORK_IT", Context.MODE_PRIVATE)
         setContent {
             FINDWORKIT_Theme {
                 // A surface container using the 'background' color from the theme
@@ -48,11 +43,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MainTheme.colors.primaryBackground
                 ) {
-                    val authorizationService = AuthorizationService(this)
-                    val authorizationServiceApp = AuthorizationServiceApp()
-                    val tokens = sharedPreferences.getString("jsonTokens", "")
-                    Log.d("APP123-main", tokens!!)
-                    SetUpNavController(controller = rememberNavController(), LocalContext.current, authorizationService, authorizationServiceApp)
+                    SetUpNavController(controller = rememberNavController())
                 }
             }
         }

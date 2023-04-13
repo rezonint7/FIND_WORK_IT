@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.presentation.navigation.NavScreens
@@ -32,7 +33,10 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(controller: NavController, context:Context){
+fun SplashScreen(
+    controller: NavController,
+    splashViewModel: SplashScreenViewModel = hiltViewModel()
+){
     val constraints = ConstraintSet{
         val blockLogo = createRefFor("blockLogo")
         val blockHH = createRefFor("blockHH")
@@ -53,23 +57,22 @@ fun SplashScreen(controller: NavController, context:Context){
 
 //    val systemUiController = rememberSystemUiController()
 //    systemUiController.setSystemBarsColor(Color.Black)
-    val sharedPreferences = context.getSharedPreferences("FIND_WORK_IT", Context.MODE_PRIVATE)
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
-        if(!sharedPreferences.contains("jsonTokens")){
-            val tokens = sharedPreferences.getString("jsonTokens", "")
-            Log.d("APP123-not", tokens!!)
+        if(!splashViewModel.tokens.value){
             controller.navigate(NavScreens.AuthorizationScreen.route)
+            Log.d("APP123", "toAuth")
         }
         else{
-            val tokens = sharedPreferences.getString("jsonTokens", "")
-            Log.d("APP123-yes", tokens!!)
             controller.navigate(NavScreens.MainScreen.route)
+            Log.d("APP123", "toMain")
         }
     }
 
-    ConstraintLayout(constraints, modifier = Modifier.fillMaxSize().background(MainTheme.colors.primaryBackground)){
+    ConstraintLayout(constraints, modifier = Modifier
+        .fillMaxSize()
+        .background(MainTheme.colors.primaryBackground)){
         val logo = painterResource(id = R.drawable.logo2)
         val logoHH = painterResource(id = R.drawable.min_hh_red)
 

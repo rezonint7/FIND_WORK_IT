@@ -28,7 +28,7 @@ class AuthorizationServiceApp {
     fun getAccessUserToken(
         url: String,
         authorizationService: AuthorizationService,
-        onTokenExchangeComplete: (Tokens?, AuthorizationException?) -> Unit
+        onTokenExchangeComplete: (Tokens?) -> Unit
     ){
         val responseCode = AuthorizationResponse.Builder(authorizationRequestCode!!).fromUri(Uri.parse(url)).build()
         val tokenRequest = TokenRequest.Builder(
@@ -44,14 +44,14 @@ class AuthorizationServiceApp {
                     "Content-Type" to "application/x-www-form-urlencoded"
                 )
             ).build()
-        authorizationService.performTokenRequest(tokenRequest){ response, error ->
+        authorizationService.performTokenRequest(tokenRequest){ response, _ ->
             onTokenExchangeComplete(
-                Tokens(
-                    response?.accessToken.toString(),
-                    response?.accessTokenExpirationTime!!.toInt(),
-                    response.refreshToken.toString(),
-                    response.tokenType.toString()
-                ), error
+                 Tokens(
+                    response?.accessToken,
+                    response?.accessTokenExpirationTime,
+                    response?.refreshToken,
+                    response?.tokenType
+                )
             )
         }
     }

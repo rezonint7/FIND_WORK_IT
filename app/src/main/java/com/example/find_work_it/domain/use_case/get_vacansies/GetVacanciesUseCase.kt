@@ -13,7 +13,6 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetVacanciesUseCase @Inject constructor(private val repository: ApiRepository){
-    @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke() : Flow<Resource<List<Vacancy>>> = flow{
         try{
             emit(Resource.Loading())

@@ -1,7 +1,6 @@
 package com.example.find_work_it.common
 
 import com.example.find_work_it.BuildConfig
-import net.openid.appauth.BuildConfig
 
 
 object Constants {
@@ -13,4 +12,6 @@ object Constants {
     const val REDIRECT_URI = "https://redirect.findworkit.com/oauth"
     const val AUTHORIZATION_ENDPOINT = "https://hh.ru/oauth/authorize"
     const val TOKEN_ENDPOINT = "https://hh.ru/oauth/token"
+
+    const val PARAM_VACANCY_ID = "vacancyId"
 }

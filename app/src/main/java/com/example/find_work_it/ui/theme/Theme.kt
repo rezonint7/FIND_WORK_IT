@@ -14,10 +14,11 @@ fun FINDWORKIT_Theme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
 
     val typography = FINDWORKIT_Typography(
         headerText = HeaderText,
-        bodyText = BodyStyle1,
+        bodyText1 = BodyStyle1,
         bodyText2 = BodyStyle2,
         smallText = SmallStyle,
-        inputTextField = BasicTextFieldStyle
+        inputTextField = BasicTextFieldStyle,
+        buttonText = ButtonStyle
     )
 
     CompositionLocalProvider(

@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.find_work_it.R
 import com.example.find_work_it.ui.theme.MainTheme
+import com.example.find_work_it.ui.theme.Shapes
 
 @Composable
 fun AddBasicTextField(
@@ -44,7 +46,9 @@ fun AddBasicTextField(
             shape = shape
         )
         .padding(start = 64.dp)
-    val rowModifier = Modifier.size(sizeWidth.dp, sizeHeight.dp).background(MainTheme.colors.secondaryBackground)
+    val rowModifier = Modifier
+        .size(sizeWidth.dp, sizeHeight.dp)
+        .background(MainTheme.colors.secondaryBackground)
     val surfaceModifier = Modifier.background(Color.Transparent, shape = shape)
 
     Surface(shape = shape, modifier = surfaceModifier) {
@@ -90,15 +94,15 @@ fun FilterButton(
     borderColor: Color = MainTheme.colors.strokeColor,
     onClick: () -> Unit
 ){
-    val shape = RoundedCornerShape(size = 10.dp)
     val boxModifier = Modifier
         .size(size.dp)
         .background(MainTheme.colors.secondaryBackground)
         .border(
             width = (0.5).dp,
             color = borderColor,
-            shape = shape
-        ).clickable {
+            shape = Shapes.small
+        )
+        .clickable {
             onClick()
         }
     Box(modifier = boxModifier, contentAlignment = Alignment.Center) {
@@ -111,10 +115,28 @@ fun FilterButton(
     }
 }
 
-//@Composable
-//fun VacancyItem(listVacancies: ){
-//
-//}
+@Composable
+fun ButtonElement(
+    text: String,
+    modifier: Modifier,
+    backgroundColor: Color,
+    strokeColor: Color = backgroundColor,
+    onClick: () -> Unit
+){
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = backgroundColor,
+            contentColor = MainTheme.colors.buttonText,
+            disabledBackgroundColor = MainTheme.colors.secondaryBackground
+        ),
+        border = BorderStroke(1.dp, strokeColor),
+        shape = Shapes.medium,
+        modifier = modifier,
+        onClick = {onClick()}
+    ) {
+        Text(text, style = MainTheme.typography.buttonText)
+    }
+}
 
 
 
