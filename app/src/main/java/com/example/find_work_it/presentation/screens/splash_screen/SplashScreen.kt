@@ -60,6 +60,7 @@ fun SplashScreen(
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
+
         if(!splashViewModel.tokens.value){
             controller.navigate(NavScreens.AuthorizationScreen.route)
             Log.d("APP123", "toAuth")

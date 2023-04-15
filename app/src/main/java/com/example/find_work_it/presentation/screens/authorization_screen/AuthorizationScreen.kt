@@ -2,6 +2,7 @@ package com.example.find_work_it.presentation.screens.authorization_screen
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -43,23 +44,24 @@ fun AuthorizationScreen(
                     webViewClient = object : WebViewClient(){
                         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                             super.onPageStarted(view, url, favicon)
-
                         }
 
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
-                            webViewRef.value?.let { authViewModel.onAuthorizationStart(it) }
                         }
 
                         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                             authViewModel.onTokens(request)
+                            Log.d("URL2", request!!.url.toString())
                             return authViewModel.state.value.tokens?.access_token != null
                         }
                     }
+                    loadUrl(authViewModel.authorizationRequest.value!!.toUri().toString())
                 }
             },
-            update = {webView -> webViewRef.value = webView}
+            update = {authViewModel.authorizationRequest.value!!.toUri().toString()}
         )
+        if(authViewModel.state.value.tokens != null) controller.navigate(NavScreens.MainScreen.route)
         if (authViewModel.state.value.error != null) {
             val buttonModifier = Modifier.padding(all = 4.dp)
             Text(text = authViewModel.state.value.error!!, style = MainTheme.typography.headerText, color = MainTheme.colors.refusedColor)
@@ -68,7 +70,6 @@ fun AuthorizationScreen(
                 authViewModel.retryAuthorization()
             }
         }
-        if(authViewModel.state.value.tokens != null) controller.navigate(NavScreens.MainScreen.route)
     }
 
 }

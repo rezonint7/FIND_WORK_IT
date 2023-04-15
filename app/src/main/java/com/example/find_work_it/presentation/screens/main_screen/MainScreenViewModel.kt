@@ -16,9 +16,9 @@ import com.example.find_work_it.domain.use_case.get_vacansies.GetVacanciesUseCas
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,10 +26,10 @@ class MainScreenViewModel @Inject constructor(
     private val getVacanciesUseCase: GetVacanciesUseCase,
     private val sharedPreferencesRepository: SharedPrefsRepository) : ViewModel(){
     private val _state = mutableStateOf<MainScreenState>(MainScreenState())
-    private val _tokens = mutableStateOf<Tokens?>(null)
+    private val _tokens = MutableStateFlow<Tokens?>(null)
 
     val state: State<MainScreenState> = _state
-    val tokens: State<Tokens?> = _tokens
+    val tokens: StateFlow<Tokens?> = _tokens.asStateFlow()
 
     init{
         getSharedPrefsTokens()
@@ -53,8 +53,10 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun getSharedPrefsTokens(){
-        viewModelScope.launch(Dispatchers.IO){
-            _tokens.value = sharedPreferencesRepository.getTokens()
+        viewModelScope.launch {
+            _tokens.value = withContext(Dispatchers.IO) {
+                sharedPreferencesRepository.getTokens()
+            }
         }
     }
 }

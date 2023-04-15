@@ -1,6 +1,7 @@
 package com.example.find_work_it.presentation.screens.authorization_screen
 
 import android.content.SharedPreferences
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.runtime.State
@@ -17,6 +18,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import javax.inject.Inject
 
@@ -26,10 +28,16 @@ class AuthorizationScreenViewModel @Inject constructor(
     private val authorizationServiceApp: AuthorizationServiceApp,
 ): ViewModel() {
     private val _state = mutableStateOf<AuthorizationScreenState>(AuthorizationScreenState())
+    private val _authorizationRequest = mutableStateOf<AuthorizationRequest?>(null)
     val state: State<AuthorizationScreenState> = _state
+    val authorizationRequest: State<AuthorizationRequest?> = _authorizationRequest
 
-    fun onAuthorizationStart(webView: WebView) {
-        authorizationServiceApp.startAuthorization(webView)
+    init {
+        onAuthorizationStart()
+    }
+
+    private fun onAuthorizationStart() {
+        _authorizationRequest.value = authorizationServiceApp.startAuthorization()
     }
 
     fun onTokens(request: WebResourceRequest?){

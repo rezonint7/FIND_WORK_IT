@@ -12,20 +12,27 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.common.autorization.AuthorizationServiceApp
 import com.example.find_work_it.common.autorization.model.Tokens
+import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.navigation.SetUpNavController
 import com.example.find_work_it.presentation.screens.AddBasicTextField
+import com.example.find_work_it.presentation.screens.BottomNavigationMenu
 import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.BasicTextFieldStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
@@ -43,10 +50,37 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MainTheme.colors.primaryBackground
                 ) {
-                    SetUpNavController(controller = rememberNavController())
+                    RootScreen()
                 }
             }
         }
+    }
+}
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun RootScreen(){
+    val navController = rememberNavController()
+    var showBottomBar by remember { mutableStateOf(true) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    showBottomBar = when (navBackStackEntry?.destination?.route) {
+            NavScreens.MainScreen.route,
+            NavScreens.FavoritesScreen.route,
+            NavScreens.ResponsesVacancyScreen.route,
+            NavScreens.ProfileScreen.route -> true
+        else -> false
+    }
+    val listNavigationBottomMenu = listOf(
+        NavScreens.MainScreen,
+        NavScreens.FavoritesScreen,
+        NavScreens.ResponsesVacancyScreen,
+        NavScreens.ProfileScreen
+    )
+    Scaffold(
+        bottomBar = { if (showBottomBar) BottomNavigationMenu(navController, listNavigationBottomMenu) },
+        backgroundColor = MainTheme.colors.primaryBackground
+    ){
+        SetUpNavController(controller = navController)
     }
 }
 
@@ -55,15 +89,7 @@ class MainActivity : ComponentActivity() {
 fun DefaultPreview() {
     FINDWORKIT_Theme(darkTheme = true) {
         Surface(modifier = Modifier.background(MainTheme.colors.primaryBackground)) {
-            Spacer(modifier = Modifier.width(width = 8.dp))
-            AddBasicTextField(
-                sizeWidth = 254,
-                sizeHeight = 48,
-                textStyle = BasicTextFieldStyle,
-                placeholder = "Поиск",
-                icon = Icons.Default.Search,
-                iconContentDescription = "iconSearch"
-            )
+            RootScreen()
         }
     }
 }

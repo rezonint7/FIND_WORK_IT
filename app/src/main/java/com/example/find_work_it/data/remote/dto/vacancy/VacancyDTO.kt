@@ -9,7 +9,9 @@ import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.domain.model.VacancyDetail
 import com.google.gson.annotations.SerializedName
 import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 data class VacancyDTO(
     @SerializedName("alternate_url")
@@ -30,22 +32,24 @@ data class VacancyDTO(
     val perPage: Int
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun Item.toVacancy() : Vacancy {
     return Vacancy(
         idVacancy = id,
         nameVacancy = name,
         employer = employer,
         salary =  salary,
-        areaName = area?.name,
+        areaName = address?.city,
         publishDate = dateToStringFormat(publishedAt),
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SimpleDateFormat")
 fun dateToStringFormat(date : String?) : String?{
     if(date.isNullOrBlank()) return null
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-    return OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME).format(formatter)
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+    val dateTime = ZonedDateTime.parse(date, inputFormatter)
+
+    val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy в HH:mm", Locale("ru", "RU"))
+
+    return outputFormatter.format(dateTime)
 }

@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import com.example.find_work_it.common.Constants
@@ -15,14 +16,14 @@ import java.io.IOException
 class AuthorizationServiceApp {
     private val redirectUri = Uri.parse(Constants.REDIRECT_URI)
     private var authorizationRequestCode : AuthorizationRequest? = null
-    fun startAuthorization(webView: WebView){
+    fun startAuthorization() : AuthorizationRequest?{
         authorizationRequestCode = AuthorizationRequest.Builder(
             AuthorizationConfig.authorizationServiceConfiguration,
             Constants.CLIENT_ID,
             ResponseTypeValues.CODE,
             redirectUri
         ).build()
-        webView.loadUrl(authorizationRequestCode!!.toUri().toString())
+        return authorizationRequestCode
     }
 
     fun getAccessUserToken(
@@ -47,10 +48,10 @@ class AuthorizationServiceApp {
         authorizationService.performTokenRequest(tokenRequest){ response, _ ->
             onTokenExchangeComplete(
                  Tokens(
-                    response?.accessToken,
-                    response?.accessTokenExpirationTime,
-                    response?.refreshToken,
-                    response?.tokenType
+                     response?.accessToken,
+                     response?.accessTokenExpirationTime?.toInt(),
+                     response?.refreshToken,
+                     response?.tokenType
                 )
             )
         }

@@ -12,14 +12,14 @@ import javax.inject.Inject
 class SharedPrefsRepositoryImpl @Inject constructor(private val sharedPrefs: SharedPreferences) : SharedPrefsRepository {
     @SuppressLint("CommitPrefEdits")
     override suspend fun setTokens(tokens: Tokens) {
-        sharedPrefs.edit().apply{
-            putString(SharedPrefsConstants.JSON_TOKENS, Gson().toJson(tokens))
-        }
+        Log.d("SET", tokens.access_token.toString())
+        Log.d("SET", tokens.expires_in.toString())
+
+        sharedPrefs.edit().putString(SharedPrefsConstants.JSON_TOKENS, Gson().toJson(tokens)).apply()
     }
 
-    override suspend fun getTokens(): Tokens {
-        val json = sharedPrefs.getString(SharedPrefsConstants.JSON_TOKENS, null)
-        Log.d("APP123", json!!)
-        return Gson().fromJson(json, Tokens::class.java)
+    override suspend fun getTokens(): Tokens? {
+        val json = sharedPrefs.getString(SharedPrefsConstants.JSON_TOKENS, "")
+        return Gson().fromJson(json, Tokens::class.java) ?: null
     }
 }

@@ -17,11 +17,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.R
+import com.example.find_work_it.presentation.navigation.NavScreens
+import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
 
@@ -135,6 +142,59 @@ fun ButtonElement(
         onClick = {onClick()}
     ) {
         Text(text, style = MainTheme.typography.buttonText)
+    }
+}
+
+@Composable
+fun BottomNavigationMenu(
+    controller: NavController,
+    items: List<NavScreens>
+){
+    BottomNavigation {
+        val navBackStackEntry by controller.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = {
+                    Icon(
+                        painter =  painterResource(id = screen.icon),
+                        contentDescription = stringResource(id = screen.title),
+                        modifier = Modifier.size(28.dp)
+                    )
+                },
+                modifier = Modifier.background(MainTheme.colors.primaryBackground),
+                label = { Text(stringResource(id = screen.title)) },
+                selected = currentRoute == screen.route,
+                selectedContentColor = MainTheme.colors.auxiliaryColor,
+                unselectedContentColor = MainTheme.colors.secondaryText.copy(0.4f),
+                alwaysShowLabel = true,
+                onClick = {
+                    controller.navigate(screen.route) {
+                        controller.graph.startDestinationRoute?.let { screen_route ->
+                            popUpTo(screen_route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    val list = listOf(
+        NavScreens.MainScreen,
+        NavScreens.FavoritesScreen,
+        NavScreens.ResponsesVacancyScreen,
+        NavScreens.ProfileScreen
+    )
+    FINDWORKIT_Theme(darkTheme = true) {
+        BottomNavigationMenu(controller = rememberNavController(), items = list )
     }
 }
 

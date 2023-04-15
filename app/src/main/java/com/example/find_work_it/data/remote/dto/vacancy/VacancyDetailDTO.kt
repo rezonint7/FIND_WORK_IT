@@ -98,7 +98,6 @@ data class VacancyDetailDTO(
     val workingTimeModes: List<WorkingTimeMode?>?
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun VacancyDetailDTO.toVacancyDetail() : VacancyDetail {
     return VacancyDetail(
         idVacancy = id,

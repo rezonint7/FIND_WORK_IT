@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +29,7 @@ import com.example.find_work_it.R
 import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.AddBasicTextField
+import com.example.find_work_it.presentation.screens.BottomNavigationMenu
 import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -36,13 +38,14 @@ import com.example.find_work_it.ui.theme.Shapes
 
 @Composable
 fun MainScreen(
-    navController: NavController,
+    controller: NavController,
     mainScreenViewModel: MainScreenViewModel = hiltViewModel()
 ){
     val constraints = ConstraintSet{
         val topBar = createRefFor("topBar")
         val loadingBar = createRefFor("loadingBar")
         val errorBlock = createRefFor("errorBlock")
+        val lazyColumn = createRefFor("lazyColumn")
 
         constrain(topBar){
             top.linkTo(parent.top)
@@ -61,19 +64,27 @@ fun MainScreen(
             end.linkTo(parent.end)
             bottom.linkTo(parent.bottom)
         }
+        constrain(lazyColumn){
+            top.linkTo(topBar.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
     }
     val constraintLayoutModifier = Modifier
         .fillMaxSize()
         .background(MainTheme.colors.primaryBackground)
 
     val state = mainScreenViewModel.state.value
+
     ConstraintLayout(constraints, modifier = constraintLayoutModifier) {
         if(state.error.isBlank()){
             TopBar()
-            LazyColumn(modifier = Modifier.fillMaxSize()){
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .layoutId("lazyColumn")){
                 items(state.vacancies){vacancy ->
                     VacancyItem(vacancy = vacancy, onItemClick = {
-                        navController.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
+                        controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
                     })
                 }
             }
@@ -82,7 +93,9 @@ fun MainScreen(
             }
         }
         else if (state.error.isNotBlank()){
-            Column(modifier = Modifier.fillMaxWidth().layoutId("errorBlock")) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .layoutId("errorBlock")) {
                 Text(
                     text = state.error,
                     color = MainTheme.colors.refusedColor,
@@ -99,14 +112,14 @@ fun TopBar(){
         modifier = Modifier
             .fillMaxWidth()
             .background(MainTheme.colors.primaryBackground)
+            .padding(8.dp)
             .layoutId("topBar"),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
 
     ) {
-        Spacer(modifier = Modifier.width(width = 8.dp))
         AddBasicTextField(
-            sizeWidth = 254,
+            sizeWidth = 274,
             sizeHeight = 48,
             textStyle = MainTheme.typography.inputTextField,
             placeholder = "Поиск",
@@ -116,7 +129,6 @@ fun TopBar(){
         FilterButton(size = 48, onClick = {
 
         })
-        Spacer(modifier = Modifier.width(width = 8.dp))
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.find_work_it.presentation.screens.splash_screen
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -15,5 +16,6 @@ class SplashScreenViewModel @Inject constructor(sharedPreferences: SharedPrefere
 
     init {
         _tokens.value = sharedPreferences.contains(SharedPrefsConstants.JSON_TOKENS)
+        Log.d("contains", _tokens.value.toString())
     }
 }

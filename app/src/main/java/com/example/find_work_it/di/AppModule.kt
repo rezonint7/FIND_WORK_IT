@@ -2,6 +2,8 @@ package com.example.find_work_it.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.Preference
+import android.preference.PreferenceManager
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.SharedPrefsConstants
 import com.example.find_work_it.common.autorization.AuthorizationServiceApp
