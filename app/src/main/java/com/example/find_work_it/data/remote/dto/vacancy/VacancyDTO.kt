@@ -32,7 +32,14 @@ data class VacancyDTO(
     val perPage: Int
 )
 
-fun Item.toVacancy() : Vacancy {
+fun VacancyDTO.pagesVacancy() : Map<String, Int>{
+    return mapOf(
+        "page" to page,
+        "pages" to pages
+    )
+}
+
+fun Item.toVacancy(pages: Int = 0, page: Int = 0) : Vacancy {
     return Vacancy(
         idVacancy = id,
         nameVacancy = name,
@@ -40,6 +47,8 @@ fun Item.toVacancy() : Vacancy {
         salary =  salary,
         areaName = address?.city,
         publishDate = dateToStringFormat(publishedAt),
+        pages = pages,
+        page = page
     )
 }
 

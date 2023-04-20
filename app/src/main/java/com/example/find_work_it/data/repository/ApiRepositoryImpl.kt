@@ -8,8 +8,22 @@ import com.example.find_work_it.domain.repository.ApiRepository
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiRepository{
-    override suspend fun getVacancies(): VacancyDTO {
-        return api.getVacancies()
+    override suspend fun getVacancies(
+        industryId: String,
+        searchField: String,
+        itemsCount : String,
+        page: String,
+        professionalRoleId: String,
+        text : String
+    ): VacancyDTO {
+        return api.getVacancies(
+            industryId,
+            searchField,
+            itemsCount,
+            page,
+            professionalRoleId,
+            text
+        )
     }
 
     override suspend fun getSimilarVacancies(vacancyId: String): VacancyDTO {

@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.BottomNavigationMenu
+import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.FilterButton
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -75,27 +77,57 @@ fun MainScreen(
         .background(MainTheme.colors.primaryBackground)
 
     val state = mainScreenViewModel.state.value
+    val stateExtra = mainScreenViewModel.extra.value
 
     ConstraintLayout(constraints, modifier = constraintLayoutModifier) {
-        if(state.error.isBlank()){
-            TopBar()
+        if(state.error.isBlank() && stateExtra.error.isBlank()){
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 56.dp)
                 .layoutId("lazyColumn")){
                 items(state.vacancies){vacancy ->
                     VacancyItem(vacancy = vacancy, onItemClick = {
                         controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
                     })
                 }
+                item {
+                    if(stateExtra.isLoading){
+                        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator(color = MainTheme.colors.auxiliaryColor)
+                        }
+                    }else{
+                        if(state.vacancies.isNotEmpty()){
+                            ButtonElement(text = "Показать еще", modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp), backgroundColor = MainTheme.colors.auxiliaryColor) {
+                                mainScreenViewModel.getExtraVacancies()
+                            }
+                        }
+                    }
+                }
             }
             if(state.isLoading){
-                CircularProgressIndicator(modifier = Modifier.layoutId("loadingBar"))
+                CircularProgressIndicator(
+                    modifier = Modifier.layoutId("loadingBar"),
+                    color = MainTheme.colors.auxiliaryColor
+                )
             }
+
         }
-        else if (state.error.isNotBlank()){
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .layoutId("errorBlock")) {
+        else if (state.error.isNotBlank() || stateExtra.error.isNotBlank()){
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .layoutId("errorBlock"),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(64.dp),
+                    painter = painterResource(id = R.drawable.round_connection_failed),
+                    contentDescription = "connectionFailedIcon",
+                    colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = state.error,
                     color = MainTheme.colors.refusedColor,
@@ -116,7 +148,6 @@ fun TopBar(){
             .layoutId("topBar"),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-
     ) {
         AddBasicTextField(
             sizeWidth = 274,
@@ -163,16 +194,21 @@ fun VacancyItem(
         if(vacancy.salary != null){
             Row(modifier = rowModifier){
                 val salary = when{
-                    (vacancy.salary.from != null && vacancy.salary.to != null) ->
-                        "от ${vacancy.salary.from} до ${vacancy.salary.to} ${vacancy.salary.currency}"
-                    (vacancy.salary.from != null) ->
-                        "от ${vacancy.salary.from} ${vacancy.salary.currency}"
-                    (vacancy.salary.to != null) ->
-                        "до ${vacancy.salary.to} ${vacancy.salary.currency}"
+                    (vacancy.salary.from != null && vacancy.salary.to != null) -> "от ${vacancy.salary.from} до ${vacancy.salary.to}"
+                    (vacancy.salary.to == vacancy.salary.from) -> vacancy.salary.to.toString()
+                    (vacancy.salary.from != null) -> "от ${vacancy.salary.from}"
+                    (vacancy.salary.to != null) -> "до ${vacancy.salary.to}"
                     else -> {""}
                 }
+                val currency = when(vacancy.salary.currency){
+                    "RUR" -> "₽"
+                    "USD" -> "$"
+                    "EUR" -> "€"
+
+                    else -> vacancy.salary.currency
+                }
                 Text(
-                    text = salary,
+                    text = "$salary $currency",
                     style = MainTheme.typography.bodyText2,
                     color = MainTheme.colors.primaryText
                 )

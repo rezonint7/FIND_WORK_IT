@@ -102,11 +102,14 @@ fun VacancyDetailDTO.toVacancyDetail() : VacancyDetail {
     return VacancyDetail(
         idVacancy = id,
         nameVacancy = name,
+        description = description,
         employer = employer,
         salary =  salary,
         address = address,
         publishDate = dateToStringFormat(publishedAt),
         schedule = schedule?.name,
+        experience = experience,
+        employment = employment,
         contacts = contacts
     )
 }

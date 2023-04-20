@@ -10,4 +10,6 @@ data class Vacancy (
     val salary : Salary?,
     val areaName : String?,
     val publishDate : String?,
+    val pages: Int,
+    val page: Int
 )

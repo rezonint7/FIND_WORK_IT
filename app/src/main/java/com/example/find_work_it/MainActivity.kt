@@ -34,6 +34,7 @@ import com.example.find_work_it.presentation.navigation.SetUpNavController
 import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.BottomNavigationMenu
 import com.example.find_work_it.presentation.screens.FilterButton
+import com.example.find_work_it.presentation.screens.main_screen.TopBar
 import com.example.find_work_it.ui.theme.BasicTextFieldStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -62,12 +63,18 @@ class MainActivity : ComponentActivity() {
 fun RootScreen(){
     val navController = rememberNavController()
     var showBottomBar by remember { mutableStateOf(true) }
+    var showTopBar by remember { mutableStateOf(true) }
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     showBottomBar = when (navBackStackEntry?.destination?.route) {
-            NavScreens.MainScreen.route,
-            NavScreens.FavoritesScreen.route,
-            NavScreens.ResponsesVacancyScreen.route,
-            NavScreens.ProfileScreen.route -> true
+        NavScreens.MainScreen.route,
+        NavScreens.FavoritesScreen.route,
+        NavScreens.ResponsesVacancyScreen.route,
+        NavScreens.ProfileScreen.route -> true
+        else -> false
+    }
+    showTopBar = when(navBackStackEntry?.destination?.route){
+        NavScreens.MainScreen.route -> true
         else -> false
     }
     val listNavigationBottomMenu = listOf(
@@ -78,6 +85,7 @@ fun RootScreen(){
     )
     Scaffold(
         bottomBar = { if (showBottomBar) BottomNavigationMenu(navController, listNavigationBottomMenu) },
+        topBar = {if(showTopBar) TopBar()},
         backgroundColor = MainTheme.colors.primaryBackground
     ){
         SetUpNavController(controller = navController)

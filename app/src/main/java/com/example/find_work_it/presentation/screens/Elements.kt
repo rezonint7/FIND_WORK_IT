@@ -1,9 +1,8 @@
 package com.example.find_work_it.presentation.screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -13,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -23,14 +22,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.example.find_work_it.R
+import com.example.find_work_it.data.remote.dto.vacancy.models.Employer
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
+import java.util.concurrent.Executors
 
 @Composable
 fun AddBasicTextField(
@@ -182,6 +183,61 @@ fun BottomNavigationMenu(
             )
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun EmployerInfoItem(
+    vacancyDetailEmployer: Employer,
+    onItemClick: () -> Unit
+){
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+            .background(MainTheme.colors.secondaryBackground, shape = Shapes.medium)
+            .clickable { onItemClick() }
+    ) {
+        if(!vacancyDetailEmployer.logoUrls?.x90.isNullOrEmpty()){
+            Row(Modifier.padding(4.dp)){
+                val image = rememberImagePainter(data = vacancyDetailEmployer.logoUrls?.x90)
+                Image(painter = image, contentDescription = "logoEmployer")
+            }
+        }
+        Row(Modifier.padding(4.dp)){
+            Text(
+                text = vacancyDetailEmployer.name.toString(),
+                style = MainTheme.typography.headerText,
+                color = MainTheme.colors.primaryText
+            )
+            if(vacancyDetailEmployer.trusted!!){
+                Image(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(top = 4.dp, bottom = 2.dp),
+                    painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
+                    contentDescription = "checkEmployer",
+                    colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AddToFavoriteButton(onItemClick: () -> Unit){
+    var isClicked by remember { mutableStateOf(false) }
+    Image(
+        painter = painterResource(id = R.drawable.round_favorite_screen_icon),
+        contentDescription = "addFavorite",
+        modifier = Modifier
+            .size(28.dp)
+            .clickable {
+                isClicked = !isClicked
+                onItemClick()
+            },
+        colorFilter = if (isClicked) ColorFilter.tint(MainTheme.colors.refusedColor) else ColorFilter.tint(MainTheme.colors.secondaryText)
+    )
 }
 
 @Preview(showBackground = true)

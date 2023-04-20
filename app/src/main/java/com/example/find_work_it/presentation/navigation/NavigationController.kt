@@ -28,7 +28,7 @@ fun SetUpNavController(
         composable(NavScreens.AuthorizationScreen.route){
             AuthorizationScreen(controller)
         }
-        composable(NavScreens.VacancyDetailScreen.route){
+        composable(NavScreens.VacancyDetailScreen.route + "/{vacancyId}"){
             VacancyDetailScreen(controller)
         }
     }
