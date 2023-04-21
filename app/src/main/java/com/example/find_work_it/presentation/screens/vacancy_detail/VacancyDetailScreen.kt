@@ -5,6 +5,7 @@ import android.text.Html
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
@@ -12,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,17 +38,17 @@ fun VacancyDetailScreen(
     val state = detailVacancyViewModel.state.value
     Column(modifier = modifier) {
         state.vacancy?.let { vacancy ->
+            TopBarDetailVacancy(detailViewModel = detailVacancyViewModel)
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp)){
                 item{
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                    Row(
+                        modifier = Modifier.padding(4.dp)
+                    ){
                         Text(
                             text = vacancy.nameVacancy,
                             style = MainTheme.typography.headerText,
                             color = MainTheme.colors.primaryText
                         )
-                        AddToFavoriteButton {
-
-                        }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -57,17 +59,21 @@ fun VacancyDetailScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    EmployerInfoItem(vacancyDetailEmployer = vacancy.employer!!) {
+                    EmployerInfoItem(vacancy = vacancy) {
 
                     }
                 }
                 item {
                     val annotatedString = AnnotatedString.Builder().append(Html.fromHtml(vacancy.description)).toAnnotatedString()
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = annotatedString,
                         style = MainTheme.typography.bodyText1,
                         color = MainTheme.colors.primaryText
                     )
+                }
+                item {
+
                 }
             }
         }
@@ -93,6 +99,47 @@ fun VacancyDetailScreen(
                 CircularProgressIndicator(
                     modifier = Modifier,
                     color = MainTheme.colors.auxiliaryColor
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MainTheme.colors.primaryBackground)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        val imageModifier = Modifier.size(34.dp)
+        Row(modifier = Modifier
+            .size(34.dp)
+            .clickable { }) {
+            Image(
+                painter = painterResource(id = R.drawable.round_arrow_back_24),
+                contentDescription = "arrowBack",
+                colorFilter = ColorFilter.tint(MainTheme.colors.secondaryText),
+                modifier = imageModifier
+            )
+        }
+        Row(modifier = Modifier.padding(horizontal = 8.dp)) {
+            AddToFavoriteButton {
+
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Row(modifier = Modifier
+                .size(34.dp)
+                .clickable { }
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.round_share_24),
+                    contentDescription = "share",
+                    colorFilter = ColorFilter.tint(MainTheme.colors.secondaryText),
+                    modifier = imageModifier
                 )
             }
         }

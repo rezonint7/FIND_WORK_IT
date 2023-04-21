@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
@@ -26,7 +28,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.find_work_it.R
+import com.example.find_work_it.data.remote.dto.vacancy.models.Contacts
 import com.example.find_work_it.data.remote.dto.vacancy.models.Employer
+import com.example.find_work_it.data.remote.dto.vacancy.models.Phone
+import com.example.find_work_it.domain.model.Vacancy
+import com.example.find_work_it.domain.model.VacancyDetail
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -188,56 +194,101 @@ fun BottomNavigationMenu(
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun EmployerInfoItem(
-    vacancyDetailEmployer: Employer,
+    vacancy: VacancyDetail,
     onItemClick: () -> Unit
 ){
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(4.dp)
+            .padding(2.dp)
             .background(MainTheme.colors.secondaryBackground, shape = Shapes.medium)
             .clickable { onItemClick() }
     ) {
-        if(!vacancyDetailEmployer.logoUrls?.x90.isNullOrEmpty()){
-            Row(Modifier.padding(4.dp)){
-                val image = rememberImagePainter(data = vacancyDetailEmployer.logoUrls?.x90)
-                Image(painter = image, contentDescription = "logoEmployer")
-            }
+        if(!vacancy.employer?.logoUrls?.x90.isNullOrEmpty()){
+
         }
         Row(Modifier.padding(4.dp)){
+            val image = rememberImagePainter(data = vacancy.employer?.logoUrls?.x90)
+            Image(painter = image, contentDescription = "logoEmployer")
+        }
+        Row(
+            Modifier
+                .padding(4.dp)
+                .padding(horizontal = 20.dp)){
             Text(
-                text = vacancyDetailEmployer.name.toString(),
+                text = vacancy.employer?.name.toString(),
                 style = MainTheme.typography.headerText,
                 color = MainTheme.colors.primaryText
             )
-            if(vacancyDetailEmployer.trusted!!){
+            if(vacancy.employer?.trusted!!){
                 Image(
                     modifier = Modifier
-                        .size(24.dp)
-                        .padding(top = 4.dp, bottom = 2.dp),
+                        .size(18.dp)
+                        .padding(top = 2.dp),
                     painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
                     contentDescription = "checkEmployer",
                     colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
                 )
             }
         }
+        if(vacancy.contacts != null){
+            Row(modifier = Modifier.fillMaxWidth()) {
+                AddContacts(employerContacts = vacancy.contacts)
+            }
+        }
+    }
+}
+
+@Composable
+fun AddContacts(employerContacts: Contacts){
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(8.dp)){
+            Text(
+                text = employerContacts.name.toString(),
+                style = MainTheme.typography.headerText,
+                color = MainTheme.colors.primaryText
+            )
+        }
+        LazyColumn(modifier = Modifier.fillMaxWidth()){
+            employerContacts.phones?.let {
+                items(it.toMutableList()){phone ->
+                    ItemContacts(phone = phone)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemContacts(phone: Phone?){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+    ) {
+        Text(
+            text = phone?.number.toString(),
+            style = MainTheme.typography.bodyText1,
+            color = MainTheme.colors.approvedColor
+        )
     }
 }
 
 @Composable
 fun AddToFavoriteButton(onItemClick: () -> Unit){
     var isClicked by remember { mutableStateOf(false) }
-    Image(
-        painter = painterResource(id = R.drawable.round_favorite_screen_icon),
-        contentDescription = "addFavorite",
-        modifier = Modifier
-            .size(28.dp)
-            .clickable {
-                isClicked = !isClicked
-                onItemClick()
-            },
-        colorFilter = if (isClicked) ColorFilter.tint(MainTheme.colors.refusedColor) else ColorFilter.tint(MainTheme.colors.secondaryText)
-    )
+    Column(modifier = Modifier.size(34.dp)) {
+        Image(
+            painter = painterResource(id = R.drawable.round_favorite_screen_icon),
+            contentDescription = "addFavorite",
+            modifier = Modifier
+                .size(34.dp)
+                .clickable {
+                    isClicked = !isClicked
+                    onItemClick()
+                },
+            colorFilter = if (isClicked) ColorFilter.tint(MainTheme.colors.refusedColor) else ColorFilter.tint(MainTheme.colors.secondaryText)
+        )
+    }
 }
 
 @Preview(showBackground = true)

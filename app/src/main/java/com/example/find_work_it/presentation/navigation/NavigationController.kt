@@ -1,6 +1,8 @@
 package com.example.find_work_it.presentation.navigation
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,6 +16,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import net.openid.appauth.AuthorizationService
 
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun SetUpNavController(
     controller: NavHostController
