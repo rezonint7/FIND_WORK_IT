@@ -9,16 +9,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
+import com.example.find_work_it.domain.repository.ApiRepository
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacanciesUseCase
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacancyDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VacancyDetailViewModel @Inject constructor(
     private val getVacancyDetailUseCase: GetVacancyDetailUseCase,
+    private val apiRepository: ApiRepository,
     savedStateHandle: SavedStateHandle
     ) : ViewModel(){
     private val _state = mutableStateOf<VacancyDetailState>(VacancyDetailState())
@@ -44,5 +47,17 @@ class VacancyDetailViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+
+    fun putFavoriteVacancy(vacancyId : String) : Boolean{
+        return try {
+            viewModelScope.launch {
+                apiRepository.putFavoriteVacancy(vacancyId)
+            }
+            true
+        }catch (ex: Exception){
+            false
+        }
     }
 }

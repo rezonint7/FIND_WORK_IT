@@ -14,4 +14,11 @@ interface ApiRepository {
     ) : VacancyDTO
     suspend fun  getVacancyDetail(vacancyId : String) : VacancyDetailDTO
     suspend fun getSimilarVacancies(vacancyId : String) : VacancyDTO
+
+    suspend fun getFavoriteVacancies(
+        itemsCount : String = "100",
+        page: String = "0"
+    ) : VacancyDTO
+    suspend fun putFavoriteVacancy(vacancyId : String)
+    suspend fun deleteFavoriteVacancy(vacancyId : String)
 }

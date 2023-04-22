@@ -30,6 +30,18 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
         return api.getSimilarVacancies(vacancyId)
     }
 
+    override suspend fun getFavoriteVacancies(itemsCount: String, page: String): VacancyDTO {
+        return api.getFavoriteVacancies(itemsCount, page)
+    }
+
+    override suspend fun putFavoriteVacancy(vacancyId: String) {
+        api.putFavoriteVacancy(vacancyId)
+    }
+
+    override suspend fun deleteFavoriteVacancy(vacancyId: String) {
+        api.deleteFavoriteVacancy(vacancyId)
+    }
+
     override suspend fun getVacancyDetail(vacancyId: String): VacancyDetailDTO{
         return api.getVacancyDetail(vacancyId)
     }

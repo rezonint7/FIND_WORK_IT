@@ -49,11 +49,6 @@ fun MainScreen(
         val errorBlock = createRefFor("errorBlock")
         val lazyColumn = createRefFor("lazyColumn")
 
-        constrain(topBar){
-            top.linkTo(parent.top)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }
         constrain(loadingBar){
             top.linkTo(parent.top)
             start.linkTo(parent.start)
@@ -144,8 +139,7 @@ fun TopBar(){
         modifier = Modifier
             .fillMaxWidth()
             .background(MainTheme.colors.primaryBackground)
-            .padding(8.dp)
-            .layoutId("topBar"),
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

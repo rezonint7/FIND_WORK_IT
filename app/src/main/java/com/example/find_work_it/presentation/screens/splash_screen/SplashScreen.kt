@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.R
+import com.example.find_work_it.data.shared_prefs.SharedPrefsHelper
 import com.example.find_work_it.ui.theme.AppNameStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -34,8 +35,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    controller: NavController,
-    splashViewModel: SplashScreenViewModel = hiltViewModel()
+    controller: NavController
 ){
     val constraints = ConstraintSet{
         val blockLogo = createRefFor("blockLogo")
@@ -61,7 +61,7 @@ fun SplashScreen(
         delay(3000)
         controller.popBackStack()
 
-        if(!splashViewModel.tokens.value){
+        if(!SharedPrefsHelper.containsTokens()){
             controller.navigate(NavScreens.AuthorizationScreen.route)
             Log.d("APP123", "toAuth")
         }

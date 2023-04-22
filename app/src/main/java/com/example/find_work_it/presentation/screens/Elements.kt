@@ -208,7 +208,9 @@ fun EmployerInfoItem(
 
         }
         Row(Modifier.padding(4.dp)){
-            val image = rememberImagePainter(data = vacancy.employer?.logoUrls?.x90)
+            val image = rememberImagePainter("https://hhcdn.ru/employer-logo/3790847.png"){
+                this.build()
+            }
             Image(painter = image, contentDescription = "logoEmployer")
         }
         Row(
@@ -231,6 +233,15 @@ fun EmployerInfoItem(
                 )
             }
         }
+        if(vacancy.address?.raw != null){
+            Row(modifier = Modifier.padding(8.dp)){
+                Text(
+                    text = vacancy.address.raw.toString(),
+                    style = MainTheme.typography.headerText,
+                    color = MainTheme.colors.primaryText
+                )
+            }
+        }
         if(vacancy.contacts != null){
             Row(modifier = Modifier.fillMaxWidth()) {
                 AddContacts(employerContacts = vacancy.contacts)
@@ -249,7 +260,8 @@ fun AddContacts(employerContacts: Contacts){
                 color = MainTheme.colors.primaryText
             )
         }
-        LazyColumn(modifier = Modifier.fillMaxWidth()){
+
+        LazyColumn(modifier = Modifier.fillMaxWidth(), userScrollEnabled = false){
             employerContacts.phones?.let {
                 items(it.toMutableList()){phone ->
                     ItemContacts(phone = phone)

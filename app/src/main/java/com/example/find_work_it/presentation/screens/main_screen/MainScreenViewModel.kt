@@ -1,35 +1,22 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
-import com.example.find_work_it.common.SharedPrefsConstants
 import com.example.find_work_it.common.autorization.model.Tokens
-import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
-import com.example.find_work_it.domain.repository.SharedPrefsRepository
 import com.example.find_work_it.domain.use_case.get_vacansies.GetExtraVacanciesUseCase
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacanciesUseCase
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val getVacanciesUseCase: GetVacanciesUseCase,
-    private val getExtraVacanciesUseCase: GetExtraVacanciesUseCase,
-    private val sharedPreferencesRepository: SharedPrefsRepository) : ViewModel(){
+    private val getExtraVacanciesUseCase: GetExtraVacanciesUseCase) : ViewModel(){
     private val _state = mutableStateOf<MainScreenState>(MainScreenState())
     private val _tokens = MutableStateFlow<Tokens?>(null)
     private val _extraState = mutableStateOf(MainExtraScreenState())
@@ -92,10 +79,6 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun getSharedPrefsTokens(){
-        viewModelScope.launch {
-            _tokens.value = withContext(Dispatchers.IO) {
-                sharedPreferencesRepository.getTokens()
-            }
-        }
+
     }
 }
