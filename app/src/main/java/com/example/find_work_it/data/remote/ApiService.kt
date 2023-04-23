@@ -17,7 +17,7 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @GET("/vacancies")
     suspend fun getVacancies(
-        @Header("Authorization") authHeader: String,
+        //@Header("Authorization") authHeader: String,
         @Query("industry") industryId : String,
         @Query("search_field") searchField : String,
         @Query("per_page") itemsCount : String,
@@ -28,13 +28,11 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @GET("/vacancies/{vacancyId}")
     suspend fun getVacancyDetail(
-        @Header("Authorization") authHeader: String,
         @Path("vacancyId") vacancyId : String
     ) : VacancyDetailDTO
     @Headers(Constants.USER_AGENT_APP)
     @GET("/vacancies/{vacancyId}/similar_vacancies")
     suspend fun getSimilarVacancies(
-        @Header("Authorization") authHeader: String,
         @Path("vacancyId") vacancyId : String
     ) : VacancyDTO
 
@@ -42,7 +40,6 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @GET("/vacancies/favorited")
     suspend fun getFavoriteVacancies(
-        @Header("Authorization") authHeader: String,
         @Query("per_page") itemsCount : String,
         @Query("page") page: String,
     ) : VacancyDTO
@@ -50,14 +47,12 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @PUT("/vacancies/favorited/{vacancyId}")
     suspend fun putFavoriteVacancy(
-        @Header("Authorization") authHeader: String,
         @Path("vacancyId") vacancyId : String
     )
 
     @Headers(Constants.USER_AGENT_APP)
     @DELETE("/vacancies/favorited/{vacancyId}")
     suspend fun deleteFavoriteVacancy(
-        @Header("Authorization") authHeader: String,
         @Path("vacancyId") vacancyId : String
     )
 

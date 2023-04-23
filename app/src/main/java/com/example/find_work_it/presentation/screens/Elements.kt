@@ -286,7 +286,7 @@ fun ItemContacts(phone: Phone?){
 }
 
 @Composable
-fun AddToFavoriteButton(onItemClick: () -> Unit){
+fun AddToFavoriteButton(onItemClick: (isClicked: Boolean) -> Unit){
     var isClicked by remember { mutableStateOf(false) }
     Column(modifier = Modifier.size(34.dp)) {
         Image(
@@ -296,7 +296,7 @@ fun AddToFavoriteButton(onItemClick: () -> Unit){
                 .size(34.dp)
                 .clickable {
                     isClicked = !isClicked
-                    onItemClick()
+                    onItemClick(isClicked)
                 },
             colorFilter = if (isClicked) ColorFilter.tint(MainTheme.colors.refusedColor) else ColorFilter.tint(MainTheme.colors.secondaryText)
         )

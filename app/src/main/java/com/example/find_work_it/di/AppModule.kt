@@ -1,6 +1,7 @@
 package com.example.find_work_it.di
 
 import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.autorization.AuthorizationServiceApp
 import com.example.find_work_it.data.remote.ApiService
@@ -21,13 +22,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
-    fun provideApi(): ApiService{
+    fun provideSharedPrefsHelper(@ApplicationContext context: Context): SharedPrefsHelper {
+        return SharedPrefsHelper.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApi(sharedPrefsHelper: SharedPrefsHelper): ApiService{
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer ${SharedPrefsHelper.getTokens()?.access_token}")
+                    .addHeader("Authorization", "Bearer ${sharedPrefsHelper.getTokens()?.access_token}")
                     .build()
                 chain.proceed(request)
             }

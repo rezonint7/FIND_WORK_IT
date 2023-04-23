@@ -2,6 +2,7 @@ package com.example.find_work_it.domain.use_case.authorization
 
 import android.util.Log
 import android.webkit.WebResourceRequest
+import androidx.compose.ui.platform.LocalContext
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.common.autorization.AuthorizationServiceApp
@@ -18,6 +19,7 @@ import kotlin.coroutines.suspendCoroutine
 class AuthorizationUseCase @Inject constructor(
     private val authorizationService: AuthorizationService,
     private val authorizationServiceApp: AuthorizationServiceApp,
+    private val sharedPrefsHelper: SharedPrefsHelper
 ) {
     private suspend fun getTokensOrException(request: WebResourceRequest?): Tokens? {
         val url = request?.url.toString()
@@ -30,7 +32,7 @@ class AuthorizationUseCase @Inject constructor(
                 }
             }.let { tokens ->
                 result = tokens
-                SharedPrefsHelper.setTokens(result!!)
+                sharedPrefsHelper.setTokens(tokens)
             }
         }
         return result

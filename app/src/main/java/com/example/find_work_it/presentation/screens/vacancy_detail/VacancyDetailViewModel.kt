@@ -10,8 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.repository.ApiRepository
+import com.example.find_work_it.domain.use_case.favorites_vacancies.DeleteFavoritesVacanciesUseCase
+import com.example.find_work_it.domain.use_case.favorites_vacancies.PutFavoritesVacanciesUseCase
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacanciesUseCase
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacancyDetailUseCase
+import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesAddScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,11 +24,16 @@ import javax.inject.Inject
 @HiltViewModel
 class VacancyDetailViewModel @Inject constructor(
     private val getVacancyDetailUseCase: GetVacancyDetailUseCase,
-    private val apiRepository: ApiRepository,
+    private val deleteFavoritesVacanciesUseCase: DeleteFavoritesVacanciesUseCase,
+    private val putFavoritesVacanciesUseCase: PutFavoritesVacanciesUseCase,
     savedStateHandle: SavedStateHandle
     ) : ViewModel(){
     private val _state = mutableStateOf<VacancyDetailState>(VacancyDetailState())
+    private val _statePut = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
+    private val _stateDelete = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
     val state: State<VacancyDetailState> = _state
+    val statePut: State<FavoritesAddScreenState> = _statePut
+    val stateDelete: State<FavoritesAddScreenState> = _stateDelete
 
     init{
         savedStateHandle.get<String>(Constants.PARAM_VACANCY_ID)?.let { vacancyId ->
@@ -49,15 +57,26 @@ class VacancyDetailViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-
-    fun putFavoriteVacancy(vacancyId : String) : Boolean{
-        return try {
-            viewModelScope.launch {
-                apiRepository.putFavoriteVacancy(vacancyId)
+    fun putFavoriteVacancy(vacancyId : String){
+        putFavoritesVacanciesUseCase(vacancyId).onEach { result ->
+            when(result){
+                is Resource.Success -> {
+                    _statePut.value = FavoritesAddScreenState(success = result.data ?: false)
+                }
+                is Resource.Error -> _statePut.value = FavoritesAddScreenState(error = result.message ?: "Произошла ошибка")
+                else -> {}
             }
-            true
-        }catch (ex: Exception){
-            false
+        }
+    }
+    fun deleteFavoriteVacancy(vacancyId : String){
+        deleteFavoritesVacanciesUseCase(vacancyId).onEach { result ->
+            when(result){
+                is Resource.Success -> {
+                    _stateDelete.value = FavoritesAddScreenState(success = result.data ?: false)
+                }
+                is Resource.Error -> _stateDelete.value = FavoritesAddScreenState(error = result.message ?: "Произошла ошибка")
+                else -> {}
+            }
         }
     }
 }

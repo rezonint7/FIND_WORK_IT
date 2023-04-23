@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,20 +55,21 @@ fun SplashScreen(
             end.linkTo(parent.end)
         }
     }
-
+    val context = LocalContext.current
 //    val systemUiController = rememberSystemUiController()
 //    systemUiController.setSystemBarsColor(Color.Black)
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
 
-        if(!SharedPrefsHelper.containsTokens()){
+        if(!SharedPrefsHelper.getInstance(context).containsTokens()){
             controller.navigate(NavScreens.AuthorizationScreen.route)
             Log.d("APP123", "toAuth")
         }
         else{
             controller.navigate(NavScreens.MainScreen.route)
-            Log.d("APP123", "toMain")
+            val tokens = SharedPrefsHelper.getInstance(context).getTokens()
+            Log.d("APP123", tokens?.access_token.toString())
         }
     }
 

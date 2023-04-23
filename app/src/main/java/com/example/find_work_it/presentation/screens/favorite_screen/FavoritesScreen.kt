@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,6 +40,24 @@ fun FavoritesScreen(
                     })
                 }
             }
+        }
+        if(state.vacancies.isEmpty()){
+            Text(
+                text = "Туть пусто...",
+                style = MainTheme.typography.headerText,
+                color = MainTheme.colors.secondaryText,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        if (state.error.isNotBlank()){
+            Text(
+                text = state.error,
+                style = MainTheme.typography.headerText,
+                color = MainTheme.colors.secondaryText,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 

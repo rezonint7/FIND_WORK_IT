@@ -30,6 +30,7 @@ class FavoritesScreenViewModel @Inject constructor(
     ))
 
     val state: State<FavoritesScreenState> = _state
+    val stateDelete: State<FavoritesAddScreenState> = _stateDelete
 
     init {
         getFavoritesVacancies()

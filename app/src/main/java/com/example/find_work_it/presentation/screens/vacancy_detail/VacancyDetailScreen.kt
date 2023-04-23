@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.R
+import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.screens.AddToFavoriteButton
 import com.example.find_work_it.presentation.screens.EmployerInfoItem
 import com.example.find_work_it.ui.theme.MainTheme
@@ -36,10 +38,21 @@ fun VacancyDetailScreen(
         .fillMaxSize()
         .background(MainTheme.colors.primaryBackground)
     val state = detailVacancyViewModel.state.value
+    val statePutFavorite = detailVacancyViewModel.statePut.value
+    val stateDeleteFavorite = detailVacancyViewModel.stateDelete.value
     Column(modifier = modifier) {
         state.vacancy?.let { vacancy ->
-            TopBarDetailVacancy(detailViewModel = detailVacancyViewModel)
+            TopBarDetailVacancy(detailViewModel = detailVacancyViewModel, vacancy.idVacancy)
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp)){
+                item {
+                    // Add a header as a separate item before the main items
+                    Text(
+                        text = "Vacancy Details",
+                        style = MainTheme.typography.headerText,
+                        color = MainTheme.colors.primaryText,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+                }
                 item{
                     Row(
                         modifier = Modifier.padding(4.dp)
@@ -76,37 +89,37 @@ fun VacancyDetailScreen(
 
                 }
             }
-        }
-        if(state.error.isNotBlank()){
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = state.error,
-                    color = MainTheme.colors.refusedColor,
-                    textAlign = TextAlign.Center,
-                )
+            if(state.error.isNotBlank()){
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = state.error,
+                        color = MainTheme.colors.refusedColor,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
-        }
-        if(state.isLoading){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ){
-                CircularProgressIndicator(
-                    modifier = Modifier,
-                    color = MainTheme.colors.auxiliaryColor
-                )
+            if(state.isLoading){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    CircularProgressIndicator(
+                        modifier = Modifier,
+                        color = MainTheme.colors.auxiliaryColor
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel){
+fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel, vacancyId: String){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,8 +140,11 @@ fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel){
             )
         }
         Row(modifier = Modifier.padding(horizontal = 8.dp)) {
-            AddToFavoriteButton {
-
+            AddToFavoriteButton { clicked ->
+                if(clicked)
+                    detailViewModel.putFavoriteVacancy(vacancyId)
+                else
+                    detailViewModel.deleteFavoriteVacancy(vacancyId)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Row(modifier = Modifier
