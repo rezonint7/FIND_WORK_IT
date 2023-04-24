@@ -41,10 +41,12 @@ class FavoritesScreenViewModel @Inject constructor(
             when(result){
                 is Resource.Success -> {
                     _state.value = FavoritesScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
-                    _pages.value.putAll(mutableMapOf(
-                        "pages" to _state.value.vacancies.last().pages,
-                        "page" to _state.value.vacancies.last().page
-                    ))
+                    if(!result.data.isNullOrEmpty()){
+                        _pages.value.putAll(mutableMapOf(
+                            "pages" to _state.value.vacancies.last().pages,
+                            "page" to _state.value.vacancies.last().page
+                        ))
+                    }
                 }
                 is Resource.Error -> {
                     _state.value = FavoritesScreenState(error = result.message ?: "Произошла ошибка")

@@ -215,8 +215,8 @@ fun EmployerInfoItem(
         }
         Row(
             Modifier
-                .padding(4.dp)
-                .padding(horizontal = 20.dp)){
+                .padding(8.dp)
+                .padding(vertical = 20.dp)){
             Text(
                 text = vacancy.employer?.name.toString(),
                 style = MainTheme.typography.headerText,
@@ -237,39 +237,14 @@ fun EmployerInfoItem(
             Row(modifier = Modifier.padding(8.dp)){
                 Text(
                     text = vacancy.address.raw.toString(),
-                    style = MainTheme.typography.headerText,
+                    style = MainTheme.typography.smallText,
                     color = MainTheme.colors.primaryText
                 )
             }
         }
-        if(vacancy.contacts != null){
-            Row(modifier = Modifier.fillMaxWidth()) {
-                AddContacts(employerContacts = vacancy.contacts)
-            }
-        }
     }
 }
 
-@Composable
-fun AddContacts(employerContacts: Contacts){
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.padding(8.dp)){
-            Text(
-                text = employerContacts.name.toString(),
-                style = MainTheme.typography.headerText,
-                color = MainTheme.colors.primaryText
-            )
-        }
-
-        LazyColumn(modifier = Modifier.fillMaxWidth(), userScrollEnabled = false){
-            employerContacts.phones?.let {
-                items(it.toMutableList()){phone ->
-                    ItemContacts(phone = phone)
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun ItemContacts(phone: Phone?){
@@ -281,24 +256,6 @@ fun ItemContacts(phone: Phone?){
             text = phone?.number.toString(),
             style = MainTheme.typography.bodyText1,
             color = MainTheme.colors.approvedColor
-        )
-    }
-}
-
-@Composable
-fun AddToFavoriteButton(onItemClick: (isClicked: Boolean) -> Unit){
-    var isClicked by remember { mutableStateOf(false) }
-    Column(modifier = Modifier.size(34.dp)) {
-        Image(
-            painter = painterResource(id = R.drawable.round_favorite_screen_icon),
-            contentDescription = "addFavorite",
-            modifier = Modifier
-                .size(34.dp)
-                .clickable {
-                    isClicked = !isClicked
-                    onItemClick(isClicked)
-                },
-            colorFilter = if (isClicked) ColorFilter.tint(MainTheme.colors.refusedColor) else ColorFilter.tint(MainTheme.colors.secondaryText)
         )
     }
 }

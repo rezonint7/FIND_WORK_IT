@@ -4,6 +4,7 @@ import com.example.find_work_it.common.Constants
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
 import com.example.find_work_it.data.remote.dto.vacancy.models.ProfessionalRole
+import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -48,12 +49,12 @@ interface ApiService {
     @PUT("/vacancies/favorited/{vacancyId}")
     suspend fun putFavoriteVacancy(
         @Path("vacancyId") vacancyId : String
-    )
+    ): Response<Unit>
 
     @Headers(Constants.USER_AGENT_APP)
     @DELETE("/vacancies/favorited/{vacancyId}")
     suspend fun deleteFavoriteVacancy(
         @Path("vacancyId") vacancyId : String
-    )
+    ): Response<Unit>
 
 }

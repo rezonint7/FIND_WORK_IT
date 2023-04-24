@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,48 +40,24 @@ import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     controller: NavController,
     mainScreenViewModel: MainScreenViewModel = hiltViewModel()
 ){
-    val constraints = ConstraintSet{
-        val topBar = createRefFor("topBar")
-        val loadingBar = createRefFor("loadingBar")
-        val errorBlock = createRefFor("errorBlock")
-        val lazyColumn = createRefFor("lazyColumn")
-
-        constrain(loadingBar){
-            top.linkTo(parent.top)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        }
-        constrain(errorBlock){
-            top.linkTo(parent.top)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        }
-        constrain(lazyColumn){
-            top.linkTo(topBar.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }
-    }
-    val constraintLayoutModifier = Modifier
-        .fillMaxSize()
-        .background(MainTheme.colors.primaryBackground)
-
     val state = mainScreenViewModel.state.value
     val stateExtra = mainScreenViewModel.extra.value
 
-    ConstraintLayout(constraints, modifier = constraintLayoutModifier) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = { TopBarMainScreen()},
+        backgroundColor = MainTheme.colors.primaryBackground
+    ) {
         if(state.error.isBlank() && stateExtra.error.isBlank()){
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 56.dp)
-                .layoutId("lazyColumn")){
+                .padding(bottom = 56.dp)){
                 items(state.vacancies){vacancy ->
                     VacancyItem(vacancy = vacancy, onItemClick = {
                         controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
@@ -87,34 +65,51 @@ fun MainScreen(
                 }
                 item {
                     if(stateExtra.isLoading){
-                        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             CircularProgressIndicator(color = MainTheme.colors.auxiliaryColor)
                         }
                     }else{
                         if(state.vacancies.isNotEmpty()){
-                            ButtonElement(text = "Показать еще", modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp), backgroundColor = MainTheme.colors.auxiliaryColor) {
-                                mainScreenViewModel.getExtraVacancies()
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .size(48.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                ButtonElement(text = "Показать еще", modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp)
+                                    .padding(horizontal = 8.dp),
+                                    backgroundColor = MainTheme.colors.auxiliaryColor
+                                ) {
+                                    mainScreenViewModel.getExtraVacancies()
+                                }
                             }
                         }
                     }
                 }
             }
             if(state.isLoading){
-                CircularProgressIndicator(
-                    modifier = Modifier.layoutId("loadingBar"),
-                    color = MainTheme.colors.auxiliaryColor
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    CircularProgressIndicator(
+                        color = MainTheme.colors.auxiliaryColor
+                    )
+                }
             }
 
         }
         else if (state.error.isNotBlank() || stateExtra.error.isNotBlank()){
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .layoutId("errorBlock"),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Image(
                     modifier = Modifier.size(64.dp),
@@ -134,7 +129,7 @@ fun MainScreen(
 }
 
 @Composable
-fun TopBar(){
+fun TopBarMainScreen(){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,6 +138,7 @@ fun TopBar(){
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+
         AddBasicTextField(
             sizeWidth = 274,
             sizeHeight = 48,
@@ -154,6 +150,25 @@ fun TopBar(){
         FilterButton(size = 48, onClick = {
 
         })
+
+    }
+}
+
+@Composable
+fun TopBar(screenName: String){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MainTheme.colors.primaryBackground)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = screenName,
+            style = MainTheme.typography.headerText,
+            color = MainTheme.colors.primaryText
+        )
     }
 }
 

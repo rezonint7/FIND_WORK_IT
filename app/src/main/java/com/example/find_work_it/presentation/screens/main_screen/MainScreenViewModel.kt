@@ -41,10 +41,12 @@ class MainScreenViewModel @Inject constructor(
             when(result){
                 is Resource.Success -> {
                     _state.value = MainScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
-                    _pages.value.putAll(mutableMapOf(
-                        "pages" to _state.value.vacancies.last().pages,
-                        "page" to _state.value.vacancies.last().page
-                    ))
+                    if(!result.data.isNullOrEmpty()){
+                        _pages.value.putAll(mutableMapOf(
+                            "pages" to _state.value.vacancies.last().pages,
+                            "page" to _state.value.vacancies.last().page
+                        ))
+                    }
                 }
                 is Resource.Error -> {
                     _state.value = MainScreenState(error = result.message ?: "Произошла ошибка")
@@ -63,10 +65,12 @@ class MainScreenViewModel @Inject constructor(
                 is Resource.Success -> {
                     _extraState.value = MainExtraScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
                     _state.value.vacancies.addAll(_extraState.value.vacancies)
-                    _pages.value.putAll(mutableMapOf(
-                        "pages" to _state.value.vacancies.last().pages,
-                        "page" to _state.value.vacancies.last().page
-                    ))
+                    if(!result.data.isNullOrEmpty()){
+                        _pages.value.putAll(mutableMapOf(
+                            "pages" to _state.value.vacancies.last().pages,
+                            "page" to _state.value.vacancies.last().page
+                        ))
+                    }
                 }
                 is Resource.Error -> {
                     _extraState.value = MainExtraScreenState(error = result.message ?: "Произошла ошибка")

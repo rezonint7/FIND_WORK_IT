@@ -1,5 +1,6 @@
 package com.example.find_work_it.domain.use_case.favorites_vacancies
 
+import android.util.Log
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.data.remote.dto.vacancy.pagesVacancy
 import com.example.find_work_it.data.remote.dto.vacancy.toVacancy
@@ -15,10 +16,13 @@ class DeleteFavoritesVacanciesUseCase @Inject constructor(private val repository
     operator fun invoke(vacancyId : String) : Flow<Resource<Boolean>> = flow{
         try{
             repository.deleteFavoriteVacancy(vacancyId)
+            Log.d("delFav1", "YES")
             emit(Resource.Success(true))
         }catch (e: HttpException){
+            Log.d("delFav1", "NO")
             emit(Resource.Error(message = e.localizedMessage ?: "Произошла ошибка"))
         }catch (e: IOException){
+            Log.d("delFav1", "NO")
             emit(Resource.Error(message = "Произошла ошибка. Проверьте подключение к интернету"))
         }
     }

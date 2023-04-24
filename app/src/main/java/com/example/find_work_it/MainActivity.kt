@@ -45,67 +45,48 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FINDWORKIT_Theme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MainTheme.colors.primaryBackground
-                ) {
-                    RootScreen()
+                val navController = rememberNavController()
+                var showBottomBar by remember { mutableStateOf(true) }
+                var showTopBar by remember { mutableStateOf(true) }
+
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                showBottomBar = when (navBackStackEntry?.destination?.route) {
+                    NavScreens.MainScreen.route,
+                    NavScreens.FavoritesScreen.route,
+                    NavScreens.ResponsesVacancyScreen.route,
+                    NavScreens.ProfileScreen.route -> true
+                    else -> false
+                }
+                showTopBar = when(navBackStackEntry?.destination?.route){
+                    NavScreens.MainScreen.route,
+                    NavScreens.FavoritesScreen.route,
+                    NavScreens.ResponsesVacancyScreen.route -> true
+                    else -> false
+                }
+                val listNavigationBottomMenu = listOf(
+                    NavScreens.MainScreen,
+                    NavScreens.FavoritesScreen,
+                    NavScreens.ResponsesVacancyScreen,
+                    NavScreens.ProfileScreen
+                )
+                Scaffold(
+                    bottomBar = { if (showBottomBar) BottomNavigationMenu(navController, listNavigationBottomMenu) },
+                    backgroundColor = MainTheme.colors.primaryBackground
+                ){
+                    SetUpNavController(controller = navController)
                 }
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.P)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun RootScreen(){
-    val navController = rememberNavController()
-    var showBottomBar by remember { mutableStateOf(true) }
-    var showTopBar by remember { mutableStateOf(true) }
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    showBottomBar = when (navBackStackEntry?.destination?.route) {
-        NavScreens.MainScreen.route,
-        NavScreens.FavoritesScreen.route,
-        NavScreens.ResponsesVacancyScreen.route,
-        NavScreens.ProfileScreen.route -> true
-        else -> false
-    }
-    showTopBar = when(navBackStackEntry?.destination?.route){
-        NavScreens.MainScreen.route -> true
-        else -> false
-    }
-    val listNavigationBottomMenu = listOf(
-        NavScreens.MainScreen,
-        NavScreens.FavoritesScreen,
-        NavScreens.ResponsesVacancyScreen,
-        NavScreens.ProfileScreen
-    )
-    Scaffold(
-        bottomBar = { if (showBottomBar) BottomNavigationMenu(navController, listNavigationBottomMenu) },
-        topBar = {if(showTopBar) TopBar()},
-        backgroundColor = MainTheme.colors.primaryBackground
-    ){
-        SetUpNavController(controller = navController)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.P)
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    FINDWORKIT_Theme(darkTheme = true) {
-        Surface(modifier = Modifier.background(MainTheme.colors.primaryBackground)) {
-            RootScreen()
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
