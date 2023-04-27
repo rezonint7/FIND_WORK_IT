@@ -32,7 +32,6 @@ class MainScreenViewModel @Inject constructor(
     val extra: State<MainExtraScreenState> = _extraState
 
     init{
-        getSharedPrefsTokens()
         getVacancies()
     }
 
@@ -80,9 +79,5 @@ class MainScreenViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun getSharedPrefsTokens(){
-
     }
 }

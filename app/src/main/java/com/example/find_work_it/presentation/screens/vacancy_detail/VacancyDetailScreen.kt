@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.text.Html
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,33 +20,47 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.R
+import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.EmployerInfoItem
+import com.example.find_work_it.presentation.screens.favorite_screen.BackPressHandler
+import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesScreenViewModel
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun VacancyDetailScreen(
-    navController: NavController,
-    detailVacancyViewModel: VacancyDetailViewModel = hiltViewModel()
+    controller: NavController,
+    detailVacancyViewModel: VacancyDetailViewModel = hiltViewModel(),
+    favoritesScreenViewModel: FavoritesScreenViewModel = hiltViewModel()
 ){
     val state = detailVacancyViewModel.state.value
-    val statePutFavorite = detailVacancyViewModel.statePutFavorite.value
-    val stateDeleteFavorite = detailVacancyViewModel.stateDeleteFavorite.value
+    val statePutFavorite = favoritesScreenViewModel.statePutFavorite.value
+    val stateDeleteFavorite = favoritesScreenViewModel.stateDeleteFavorite.value
+
+    val context = LocalContext.current
+    val onBack = {
+        controller.popBackStack()
+        favoritesScreenViewModel.updateFavoritesVacancies()
+        Toast.makeText(context, "Дерьмо", Toast.LENGTH_SHORT).show()
+    }
+    BackPressHandler(onBackPressed = onBack)
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MainTheme.colors.primaryBackground,
-        topBar = {state.vacancy?.let { TopBarDetailVacancy(detailViewModel = detailVacancyViewModel, it.idVacancy) }},
+        topBar = {state.vacancy?.let { TopBarDetailVacancy(favoritesScreenViewModel, detailVacancyViewModel, it.idVacancy) }},
         bottomBar = {state.vacancy?.let { AddResponseButton(detailVacancyViewModel, it.idVacancy) }}
     ) {
         state.vacancy?.let { vacancy ->
@@ -112,7 +129,13 @@ fun VacancyDetailScreen(
 }
 
 @Composable
-fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel, vacancyId: String){
+fun TopBarDetailVacancy(
+    favoritesScreenViewModel: FavoritesScreenViewModel,
+    vacancyDetailViewModel: VacancyDetailViewModel,
+    vacancyId: String
+){
+    val favoritesList = favoritesScreenViewModel.state.value.vacancies
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -133,11 +156,11 @@ fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel, vacancyId: Stri
             )
         }
         Row(modifier = Modifier.padding(horizontal = 8.dp)) {
-            AddToFavoriteButton(detailViewModel) { clicked ->
-                if(clicked) detailViewModel.putFavoriteVacancy(vacancyId)
-                else detailViewModel.deleteFavoriteVacancy(vacancyId)
-                Log.d("delFav1", detailViewModel.stateDeleteFavorite.value.success.toString())
-                Log.d("delFav1", detailViewModel.stateDeleteFavorite.value.error)
+            AddToFavoriteButton(vacancyDetailViewModel, favoritesList) { clicked ->
+                if(clicked) {
+                    favoritesScreenViewModel.putFavoriteVacancy(vacancyId)
+                }
+                else favoritesScreenViewModel.deleteFavoriteVacancy(vacancyId)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Row(modifier = Modifier
@@ -156,8 +179,16 @@ fun TopBarDetailVacancy(detailViewModel: VacancyDetailViewModel, vacancyId: Stri
 }
 
 @Composable
-fun AddToFavoriteButton(vacancyDetailViewModel: VacancyDetailViewModel, onItemClick: (isClicked: Boolean) -> Unit){
-    var isClicked by remember { mutableStateOf(vacancyDetailViewModel.isFavorited.value) }
+fun AddToFavoriteButton(
+    vacancyDetailViewModel: VacancyDetailViewModel,
+    favoritesList: MutableList<Vacancy>,
+    onItemClick: (isClicked: Boolean) -> Unit
+){
+    var isClicked by remember { mutableStateOf(favoritesList.any { it.idVacancy == vacancyDetailViewModel.state.value.vacancy?.idVacancy }) }
+    Log.d("FAVBUTTON", isClicked.toString())
+    LaunchedEffect(favoritesList) {
+        isClicked = favoritesList.any { it.idVacancy == vacancyDetailViewModel.state.value.vacancy?.idVacancy }
+    }
     Column(modifier = Modifier.size(34.dp)) {
         Image(
             painter = painterResource(id = R.drawable.round_favorite_screen_icon),

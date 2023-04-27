@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.vacancy_detail
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -21,21 +22,12 @@ import javax.inject.Inject
 class VacancyDetailViewModel @Inject constructor(
     private val getVacancyDetailUseCase: GetVacancyDetailUseCase,
     private val getFavoritesVacanciesUseCase: GetFavoritesVacanciesUseCase,
-    private val deleteFavoritesVacanciesUseCase: DeleteFavoritesVacanciesUseCase,
-    private val putFavoritesVacanciesUseCase: PutFavoritesVacanciesUseCase,
-    savedStateHandle: SavedStateHandle
-    ) : ViewModel(){
+    savedStateHandle: SavedStateHandle) : ViewModel(){
     private val _state = mutableStateOf<VacancyDetailState>(VacancyDetailState())
-    private val _statePut = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
     private val _stateGet = mutableStateOf<FavoritesScreenState>(FavoritesScreenState())
-    private val _stateDelete = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
 
     val state: State<VacancyDetailState> = _state
-    val statePutFavorite: State<FavoritesAddScreenState> = _statePut
     val stateGetFavorite: State<FavoritesScreenState> = _stateGet
-    val stateDeleteFavorite: State<FavoritesAddScreenState> = _stateDelete
-
-    val isFavorited = mutableStateOf(false)
     init{
         savedStateHandle.get<String>(Constants.PARAM_VACANCY_ID)?.let { vacancyId ->
             getVacancy(vacancyId)
@@ -77,35 +69,6 @@ class VacancyDetailViewModel @Inject constructor(
                 is Resource.Loading -> {
                     _stateGet.value = FavoritesScreenState(isLoading = true)
                 }
-            }
-            if(_stateGet.value.error.isEmpty()){
-                _stateGet.value.vacancies.forEach{
-                    isFavorited.value = it.idVacancy == _state.value.vacancy?.idVacancy
-                }
-            }
-        }.launchIn(viewModelScope)
-
-    }
-
-    fun putFavoriteVacancy(vacancyId : String){
-        putFavoritesVacanciesUseCase(vacancyId).onEach { result ->
-            when(result){
-                is Resource.Success -> {
-                    _statePut.value = FavoritesAddScreenState(success = result.data ?: false)
-                }
-                is Resource.Error -> _statePut.value = FavoritesAddScreenState(error = result.message ?: "Произошла ошибка")
-                else -> {}
-            }
-        }.launchIn(viewModelScope)
-    }
-    fun deleteFavoriteVacancy(vacancyId : String){
-        deleteFavoritesVacanciesUseCase(vacancyId).onEach { result ->
-            when(result){
-                is Resource.Success -> {
-                    _stateDelete.value = FavoritesAddScreenState(success = result.data ?: false)
-                }
-                is Resource.Error -> _stateDelete.value = FavoritesAddScreenState(error = result.message ?: "Произошла ошибка")
-                else -> {}
             }
         }.launchIn(viewModelScope)
     }
