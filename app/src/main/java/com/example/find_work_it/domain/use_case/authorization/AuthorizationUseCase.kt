@@ -21,33 +21,36 @@ class AuthorizationUseCase @Inject constructor(
     private val authorizationServiceApp: AuthorizationServiceApp,
     private val sharedPrefsHelper: SharedPrefsHelper
 ) {
-    private suspend fun getTokensOrException(request: WebResourceRequest?): Tokens? {
-        val url = request?.url.toString()
-        Log.d("URLTOKENS", url)
-        var result: Tokens? = null
-        if(request != null && url.startsWith(Constants.REDIRECT_URI)){
-            suspendCoroutine<Tokens> {continuation ->
-                authorizationServiceApp.getAccessUserToken(url, authorizationService) { tokens ->
-                    continuation.resume(tokens!!)
+    private suspend fun getTokensOrNull(request: WebResourceRequest?): Tokens? {
+        return runCatching {
+            request?.url.toString().let { url ->
+                when {
+                    url.startsWith(Constants.REDIRECT_URI) -> {
+                        suspendCoroutine<Tokens> { continuation ->
+                            authorizationServiceApp.getAccessUserToken(url, authorizationService) { tokens ->
+                                continuation.resume(tokens!!)
+                            }
+                        }.also { tokens ->
+                            sharedPrefsHelper.setTokens(tokens)
+                        }
+                    }
+                    else -> null
                 }
-            }.let { tokens ->
-                result = tokens
-                sharedPrefsHelper.setTokens(tokens)
             }
-        }
-        return result
+        }.getOrNull()
     }
 
     operator fun invoke(request: WebResourceRequest?): Flow<Resource<Tokens>> = flow {
         try{
             emit(Resource.Loading())
-            val result = getTokensOrException(request)
+            val result = getTokensOrNull(request)
+
             emit(Resource.Success(result!!))
         }
         catch (e: Exception){
-            emit(Resource.Error(message = e.localizedMessage ?: "Что-то пошло не так..."))
+            emit(Resource.Error(message = e.localizedMessage ?: Constants.ERROR_OCCURRED))
         }catch (e: IOException){
-            emit(Resource.Error(message = "Что-то пошло не так... Проверьте подключение к интернету"))
+            emit(Resource.Error(message = Constants.NETWORK_ERROR))
         }
     }
 }

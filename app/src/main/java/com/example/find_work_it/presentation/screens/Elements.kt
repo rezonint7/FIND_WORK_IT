@@ -43,7 +43,7 @@ import java.util.concurrent.Executors
 fun AddBasicTextField(
     sizeWidth: Int,
     sizeHeight: Int,
-    textStyle: TextStyle,
+    textStyle: TextStyle = MainTheme.typography.inputTextField,
     placeholder: String = "",
     icon: ImageVector? = null,
     iconContentDescription: String = "",
@@ -52,6 +52,7 @@ fun AddBasicTextField(
     var message by remember { mutableStateOf(TextFieldValue("")) }
     val shape = RoundedCornerShape(size = 10.dp)
 
+    val boxPadding = if(icon != null) 64.dp else 16.dp
     val boxModifier = Modifier
         .size(sizeWidth.dp, sizeHeight.dp)
         .border(
@@ -59,7 +60,7 @@ fun AddBasicTextField(
             color = borderColor,
             shape = shape
         )
-        .padding(start = 64.dp)
+        .padding(start = boxPadding)
     val rowModifier = Modifier
         .size(sizeWidth.dp, sizeHeight.dp)
         .background(MainTheme.colors.secondaryBackground)

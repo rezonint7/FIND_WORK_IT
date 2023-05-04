@@ -25,7 +25,7 @@ val BodyStyle2 = TextStyle(
 val HeaderText = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
-    shadow = Shadow(color = Color(0xFF000000), offset = Offset(2f, 4f)),
+    shadow = Shadow(color = Color(0xFF181818), offset = Offset(2f, 4f), blurRadius = 2f),
     fontSize = 16.sp,
 )
 

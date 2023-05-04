@@ -31,10 +31,7 @@ import androidx.navigation.NavController
 import com.example.find_work_it.R
 import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.navigation.NavScreens
-import com.example.find_work_it.presentation.screens.AddBasicTextField
-import com.example.find_work_it.presentation.screens.BottomNavigationMenu
-import com.example.find_work_it.presentation.screens.ButtonElement
-import com.example.find_work_it.presentation.screens.FilterButton
+import com.example.find_work_it.presentation.screens.*
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
@@ -93,15 +90,7 @@ fun MainScreen(
                 }
             }
             if(state.isLoading){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ){
-                    CircularProgressIndicator(
-                        color = MainTheme.colors.auxiliaryColor
-                    )
-                }
+
             }
 
         }
@@ -258,61 +247,8 @@ fun VacancyItem(
 @Composable
 fun DefaultPreview() {
     FINDWORKIT_Theme(darkTheme = true) {
-        val rowModifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-        val columnMainModifier = Modifier
-            .wrapContentSize()
-            .padding(8.dp)
-            .background(MainTheme.colors.secondaryBackground, Shapes.small)
-        val boxModifier = Modifier
-            .size(48.dp)
-            .background(Color.LightGray)
+        ErrorUseCaseElement(error = "Что - то пошло не так ... Проверьте подключение к интернету") {
 
-        Column(modifier = columnMainModifier) {
-            Row(
-                modifier = rowModifier,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                Text(
-                    text = "Программист Kotlinfs dfffffffffffffffffff ffffffffffff",
-                    style = MainTheme.typography.headerText,
-                    color = MainTheme.colors.primaryText
-                )
-            }
-            Row(modifier = rowModifier){
-                Text(
-                    text = "от 18.000 до 50.000 Р",
-                    style = MainTheme.typography.bodyText2,
-                    color = MainTheme.colors.primaryText
-                )
-            }
-            Row(modifier = rowModifier, verticalAlignment = Alignment.CenterVertically){
-                Text(
-                    text = "Екатеринбург, СКБ Контур",
-                    style = MainTheme.typography.bodyText1,
-                    color = MainTheme.colors.primaryText
-                )
-                if(true){
-                    Image(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(top = 4.dp, bottom = 2.dp),
-                        painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
-                        contentDescription = "checkEmployer",
-                        colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
-                    )
-                }
-            }
-
-            Row(modifier = rowModifier) {
-                Text(
-                    text = "Опубликовано: 7 Апреля в 17:45",
-                    style = MainTheme.typography.smallText,
-                    color = MainTheme.colors.secondaryText,
-                    modifier = Modifier.padding(horizontal = 0.dp, vertical = 8.dp)
-                )
-            }
         }
     }
 }

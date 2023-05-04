@@ -1,10 +1,12 @@
 package com.example.find_work_it.data.repository
 
 import com.example.find_work_it.data.remote.ApiService
+import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
 import com.example.find_work_it.domain.model.VacancyDetail
 import com.example.find_work_it.domain.repository.ApiRepository
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiRepository{
@@ -40,6 +42,14 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
 
     override suspend fun deleteFavoriteVacancy(vacancyId: String) {
         api.deleteFavoriteVacancy(vacancyId)
+    }
+
+    override suspend fun getUserInfo(): UserDTO {
+        return api.getUserInfo()
+    }
+
+    override suspend fun putUserInfo(changeName: RequestBody) {
+       api.putUserInfo(changeName)
     }
 
     override suspend fun getVacancyDetail(vacancyId: String): VacancyDetailDTO{

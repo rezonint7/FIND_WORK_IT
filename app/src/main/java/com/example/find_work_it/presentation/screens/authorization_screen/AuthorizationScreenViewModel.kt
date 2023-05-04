@@ -25,8 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthorizationScreenViewModel @Inject constructor(
     private val authorizationUseCase: AuthorizationUseCase,
-    private val authorizationServiceApp: AuthorizationServiceApp,
-): ViewModel() {
+    private val authorizationServiceApp: AuthorizationServiceApp): ViewModel() {
     private val _state = mutableStateOf<AuthorizationScreenState>(AuthorizationScreenState())
     private val _authorizationRequest = mutableStateOf<AuthorizationRequest?>(null)
     val state: State<AuthorizationScreenState> = _state
@@ -44,10 +43,10 @@ class AuthorizationScreenViewModel @Inject constructor(
         authorizationUseCase(request).onEach { result ->
             when(result){
                 is Resource.Success -> {
-                    _state.value = AuthorizationScreenState(tokens = result.data)
+                    _state.value = AuthorizationScreenState(success = result.data != null)
                 }
                 is Resource.Error -> {
-                    _state.value = AuthorizationScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = AuthorizationScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _state.value = AuthorizationScreenState(isLoading = true)

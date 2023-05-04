@@ -6,9 +6,6 @@
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_splash">SplashActivity</string>
 
-    <string name="error_occurred">Произошла ошибка</string>
-    <string name="network_error" tools:ignore="TypographyEllipsis">Что-то пошло не так... Проверьте подключение к интернету</string>
-
     <string name="home_screen">Главная</string>
     <string name="favorite_screen">Избранное</string>
     <string name="responses_screen">Отклики</string>

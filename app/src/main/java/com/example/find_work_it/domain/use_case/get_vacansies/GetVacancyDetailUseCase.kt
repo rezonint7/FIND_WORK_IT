@@ -2,6 +2,7 @@ package com.example.find_work_it.domain.use_case.get_vacansies
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.data.remote.dto.vacancy.toVacancyDetail
 import com.example.find_work_it.domain.model.VacancyDetail
@@ -19,9 +20,9 @@ class GetVacancyDetailUseCase @Inject constructor(private val repository: ApiRep
             val vacancy = repository.getVacancyDetail(vacancyId).toVacancyDetail()
             emit(Resource.Success(vacancy))
         }catch (e: HttpException){
-            emit(Resource.Error(message = e.localizedMessage ?: "Произошла ошибка"))
+            emit(Resource.Error(message = e.localizedMessage ?: Constants.ERROR_OCCURRED))
         }catch (e: IOException){
-            emit(Resource.Error(message = "Что-то пошло не так... Проверьте подключение к интернету"))
+            emit(Resource.Error(message = Constants.NETWORK_ERROR))
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.common.autorization.model.Tokens
 import com.example.find_work_it.domain.use_case.get_vacansies.GetExtraVacanciesUseCase
@@ -18,7 +19,6 @@ class MainScreenViewModel @Inject constructor(
     private val getVacanciesUseCase: GetVacanciesUseCase,
     private val getExtraVacanciesUseCase: GetExtraVacanciesUseCase) : ViewModel(){
     private val _state = mutableStateOf<MainScreenState>(MainScreenState())
-    private val _tokens = MutableStateFlow<Tokens?>(null)
     private val _extraState = mutableStateOf(MainExtraScreenState())
 
     @SuppressLint("MutableCollectionMutableState")
@@ -28,7 +28,6 @@ class MainScreenViewModel @Inject constructor(
     ))
 
     val state: State<MainScreenState> = _state
-    val tokens: StateFlow<Tokens?> = _tokens.asStateFlow()
     val extra: State<MainExtraScreenState> = _extraState
 
     init{
@@ -48,7 +47,7 @@ class MainScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _state.value = MainScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = MainScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _state.value = MainScreenState(isLoading = true)
@@ -72,7 +71,7 @@ class MainScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _extraState.value = MainExtraScreenState(error = result.message ?: "Произошла ошибка")
+                    _extraState.value = MainExtraScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _extraState.value = MainExtraScreenState(isLoading = true)

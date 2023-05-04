@@ -1,7 +1,9 @@
 package com.example.find_work_it.domain.repository
 
+import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
+import okhttp3.RequestBody
 
 interface ApiRepository {
     suspend fun getVacancies(
@@ -21,4 +23,8 @@ interface ApiRepository {
     ) : VacancyDTO
     suspend fun putFavoriteVacancy(vacancyId : String)
     suspend fun deleteFavoriteVacancy(vacancyId : String)
+
+    suspend fun getUserInfo(): UserDTO
+
+    suspend fun putUserInfo(changeName: RequestBody)
 }

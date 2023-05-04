@@ -11,6 +11,7 @@ import com.example.find_work_it.common.autorization.AuthorizationServiceApp
 import com.example.find_work_it.presentation.screens.authorization_screen.AuthorizationScreen
 import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesScreen
 import com.example.find_work_it.presentation.screens.main_screen.MainScreen
+import com.example.find_work_it.presentation.screens.profile_screen.ProfileScreen
 import com.example.find_work_it.presentation.screens.splash_screen.SplashScreen
 import com.example.find_work_it.presentation.screens.vacancy_detail.VacancyDetailScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -37,6 +38,9 @@ fun SetUpNavController(
         }
         composable(NavScreens.FavoritesScreen.route){
             FavoritesScreen(controller)
+        }
+        composable(NavScreens.ProfileScreen.route){
+            ProfileScreen(controller)
         }
     }
 }

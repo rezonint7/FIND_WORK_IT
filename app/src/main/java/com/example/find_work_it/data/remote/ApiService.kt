@@ -1,17 +1,13 @@
 package com.example.find_work_it.data.remote
 
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
 import com.example.find_work_it.data.remote.dto.vacancy.models.ProfessionalRole
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     //Получение вакансий
@@ -57,4 +53,11 @@ interface ApiService {
         @Path("vacancyId") vacancyId : String
     ): Response<Unit>
 
+    @Headers(Constants.USER_AGENT_APP)
+    @GET("/me")
+    suspend fun getUserInfo(): UserDTO
+
+    @Headers(Constants.USER_AGENT_APP)
+    @PUT("/me")
+    suspend fun putUserInfo(@Body changeName: RequestBody): Response<Unit>
 }

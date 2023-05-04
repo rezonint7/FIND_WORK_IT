@@ -2,6 +2,7 @@ package com.example.find_work_it.data.shared_prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.find_work_it.MainActivity
 import com.example.find_work_it.common.SharedPrefsConstants
 import com.example.find_work_it.common.autorization.model.Tokens
@@ -18,6 +19,7 @@ class SharedPrefsHelper (context: Context) {
 
     fun getTokens(): Tokens? {
         val json = sharedPrefs.getString(SharedPrefsConstants.JSON_TOKENS, "")
+        Log.d("TOKENS", json.toString())
         return Gson().fromJson(json, Tokens::class.java) ?: null
     }
 

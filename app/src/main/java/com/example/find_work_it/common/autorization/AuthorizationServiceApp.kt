@@ -57,6 +57,37 @@ class AuthorizationServiceApp {
         }
     }
 
+    fun refreshAccessUserToken(
+        refreshToken: String,
+        authorizationService: AuthorizationService,
+        onTokenExchangeComplete: (Tokens?) -> Unit
+    ){
+        val tokenRequest = TokenRequest.Builder(
+            AuthorizationConfig.authorizationServiceConfiguration,
+            Constants.CLIENT_ID
+        )
+            .setRefreshToken(refreshToken)
+            .setGrantType(GrantTypeValues.REFRESH_TOKEN)
+            .setRedirectUri(redirectUri)
+            .setAdditionalParameters(
+                mapOf(
+                    "client_secret" to Constants.CLIENT_SECRET,
+                    "Content-Type" to "application/x-www-form-urlencoded"
+                )
+            ).build()
+
+        authorizationService.performTokenRequest(tokenRequest) { response, _ ->
+            onTokenExchangeComplete(
+                Tokens(
+                    response?.accessToken,
+                    response?.accessTokenExpirationTime?.toInt(),
+                    response?.refreshToken,
+                    response?.tokenType
+                )
+            )
+        }
+    }
+
 //    fun performTokenExchangeRequest(
 //        authorizationService: AuthorizationService,
 //        authorizationResponse: AuthorizationResponse,

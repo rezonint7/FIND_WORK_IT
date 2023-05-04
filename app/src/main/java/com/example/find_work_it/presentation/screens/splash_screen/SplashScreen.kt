@@ -26,7 +26,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.R
+import com.example.find_work_it.common.Constants
 import com.example.find_work_it.data.shared_prefs.SharedPrefsHelper
+import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
 import com.example.find_work_it.ui.theme.AppNameStyle
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
@@ -36,7 +38,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    controller: NavController
+    controller: NavController,
+    splashScreenViewModel: SplashScreenViewModel = hiltViewModel()
 ){
     val constraints = ConstraintSet{
         val blockLogo = createRefFor("blockLogo")
@@ -59,17 +62,18 @@ fun SplashScreen(
 //    val systemUiController = rememberSystemUiController()
 //    systemUiController.setSystemBarsColor(Color.Black)
     LaunchedEffect(key1 = true){
+        if(splashScreenViewModel.state.value.error == Constants.USER_ACCESS_ERROR){
+            splashScreenViewModel.refreshUserTokens()
+        }
         delay(3000)
         controller.popBackStack()
 
-        if(!SharedPrefsHelper.getInstance(context).containsTokens()){
-            controller.navigate(NavScreens.AuthorizationScreen.route)
-            Log.d("APP123", "toAuth")
-        }
-        else{
-            controller.navigate(NavScreens.MainScreen.route)
-            val tokens = SharedPrefsHelper.getInstance(context).getTokens()
-            Log.d("APP123", tokens?.access_token.toString())
+        if(splashScreenViewModel.state.value.error.isEmpty()){
+            if(SharedPrefsHelper.getInstance(context).containsTokens()){
+                controller.navigate(NavScreens.MainScreen.route)
+                Log.d("APP123", "toMain")
+            }
+            else{controller.navigate(NavScreens.AuthorizationScreen.route)}
         }
     }
 
@@ -99,6 +103,12 @@ fun SplashScreen(
                 style = SmallStyle,
                 color = textColor,
                 modifier = Modifier.padding(start = 8.dp))
+        }
+    }
+    if(splashScreenViewModel.state.value.error.isNotEmpty() || splashScreenViewModel.tokens.value.error.isNotEmpty()){
+        val error = splashScreenViewModel.tokens.value.error.ifEmpty { splashScreenViewModel.state.value.error }
+        ErrorUseCaseElement(error = error) {
+
         }
     }
 }
