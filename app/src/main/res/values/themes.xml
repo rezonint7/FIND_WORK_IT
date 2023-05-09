@@ -2,7 +2,6 @@
 <resources>
 
     <style name="Theme.FIND_WORK_IT" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/dark_theme</item>
-        <item name="android:navigationBarColor">@color/dark_theme</item>
+
     </style>
 </resources>

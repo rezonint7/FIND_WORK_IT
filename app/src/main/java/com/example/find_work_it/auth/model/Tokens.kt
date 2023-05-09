@@ -1,4 +1,4 @@
-package com.example.find_work_it.common.autorization.model
+package com.example.find_work_it.auth.model
 
 data class Tokens(
     val access_token: String?,

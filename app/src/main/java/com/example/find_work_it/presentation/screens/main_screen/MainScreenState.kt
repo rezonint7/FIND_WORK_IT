@@ -8,3 +8,9 @@ data class MainScreenState(
     val pages: Map<String, Int> = mapOf(),
     val error: String = ""
 )
+
+data class MainExtraScreenState(
+    val isLoading: Boolean = false,
+    val vacancies: List<Vacancy> = emptyList(),
+    val error: String = ""
+)

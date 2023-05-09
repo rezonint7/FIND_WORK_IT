@@ -1,6 +1,7 @@
 package com.example.find_work_it.domain.use_case.user
 
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.data.remote.dto.vacancy.pagesVacancy
 import com.example.find_work_it.data.remote.dto.vacancy.toVacancy
@@ -24,9 +25,9 @@ class PutUserInfoUseCase @Inject constructor(private val repository: ApiReposito
             repository.putUserInfo(requestBody)
             emit(Resource.Success(true))
         }catch (e: HttpException){
-            emit(Resource.Error(message = e.localizedMessage ?: Constants.PUT_USER_ERROR_OCCURRED))
+            emit(Resource.Error(message = e.localizedMessage ?: ConstantsError.PUT_USER_ERROR_OCCURRED))
         }catch (e: IOException){
-            emit(Resource.Error(message = Constants.PUT_USER_ERROR_NETWORK))
+            emit(Resource.Error(message = ConstantsError.PUT_USER_ERROR_NETWORK))
         }
     }
 }

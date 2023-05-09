@@ -1,13 +1,12 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
-import com.example.find_work_it.common.autorization.model.Tokens
 import com.example.find_work_it.domain.use_case.get_vacansies.GetExtraVacanciesUseCase
 import com.example.find_work_it.domain.use_case.get_vacansies.GetVacanciesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,7 @@ class MainScreenViewModel @Inject constructor(
     private val _state = mutableStateOf<MainScreenState>(MainScreenState())
     private val _extraState = mutableStateOf(MainExtraScreenState())
 
-    @SuppressLint("MutableCollectionMutableState")
+    @Suppress("MutableCollectionMutableState")
     private val _pages = mutableStateOf<MutableMap<String, Int>>(mutableMapOf(
         "page" to 0,
         "pages" to 0
@@ -47,7 +46,7 @@ class MainScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _state.value = MainScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
+                    _state.value = MainScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _state.value = MainScreenState(isLoading = true)
@@ -71,7 +70,7 @@ class MainScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _extraState.value = MainExtraScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
+                    _extraState.value = MainExtraScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _extraState.value = MainExtraScreenState(isLoading = true)

@@ -1,4 +1,4 @@
-package com.example.find_work_it.common.autorization
+package com.example.find_work_it.auth
 
 import android.net.Uri
 import com.example.find_work_it.common.Constants

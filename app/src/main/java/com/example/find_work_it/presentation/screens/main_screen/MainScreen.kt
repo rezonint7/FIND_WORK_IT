@@ -1,6 +1,5 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +36,7 @@ import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Suppress("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     controller: NavController,
@@ -90,28 +89,14 @@ fun MainScreen(
                 }
             }
             if(state.isLoading){
-
+                LoadingUseCaseElement()
             }
 
         }
         else if (state.error.isNotBlank() || stateExtra.error.isNotBlank()){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    modifier = Modifier.size(64.dp),
-                    painter = painterResource(id = R.drawable.round_connection_failed),
-                    contentDescription = "connectionFailedIcon",
-                    colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = state.error,
-                    color = MainTheme.colors.refusedColor,
-                    textAlign = TextAlign.Center,
-                )
+            val error = state.error.ifBlank { stateExtra.error }
+            ErrorUseCaseElement(error = error) {
+                
             }
         }
     }

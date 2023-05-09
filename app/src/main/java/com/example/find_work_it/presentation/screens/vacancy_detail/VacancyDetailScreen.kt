@@ -13,7 +13,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,10 +34,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.R
 import com.example.find_work_it.domain.model.Vacancy
+import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.EmployerInfoItem
 import com.example.find_work_it.presentation.screens.favorite_screen.BackPressHandler
 import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesScreenViewModel
+import com.example.find_work_it.presentation.screens.main_screen.VacancyItem
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 
@@ -47,6 +52,7 @@ fun VacancyDetailScreen(
     favoritesScreenViewModel: FavoritesScreenViewModel = hiltViewModel()
 ){
     val state = detailVacancyViewModel.state.value
+    val stateSimilarVacancies = detailVacancyViewModel.stateSimilarVacancies.value
     val statePutFavorite = favoritesScreenViewModel.statePutFavorite.value
     val stateDeleteFavorite = favoritesScreenViewModel.stateDeleteFavorite.value
 
@@ -97,6 +103,24 @@ fun VacancyDetailScreen(
                         color = MainTheme.colors.primaryText
                     )
                     Spacer(modifier = Modifier.height(48.dp))
+                }
+                item{
+                    Divider(modifier = Modifier.fillMaxWidth())
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.simillar_vacancies),
+                        style = MainTheme.typography.headerText,
+                        color = MainTheme.colors.primaryText
+                    )
+                }
+                items(stateSimilarVacancies.vacancies){ vacancy ->
+                    VacancyItem(vacancy = vacancy, onItemClick = {
+                        controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
+                    })
+                }
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Divider(modifier = Modifier.fillMaxWidth())
                 }
             }
         }

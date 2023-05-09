@@ -1,12 +1,11 @@
 package com.example.find_work_it.domain.use_case.authorization
 
-import android.util.Log
 import android.webkit.WebResourceRequest
-import androidx.compose.ui.platform.LocalContext
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
-import com.example.find_work_it.common.autorization.AuthorizationServiceApp
-import com.example.find_work_it.common.autorization.model.Tokens
+import com.example.find_work_it.auth.AuthorizationServiceApp
+import com.example.find_work_it.auth.model.Tokens
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.data.shared_prefs.SharedPrefsHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -48,9 +47,9 @@ class AuthorizationUseCase @Inject constructor(
             emit(Resource.Success(result!!))
         }
         catch (e: Exception){
-            emit(Resource.Error(message = e.localizedMessage ?: Constants.ERROR_OCCURRED))
+            emit(Resource.Error(message = e.localizedMessage ?: ConstantsError.ERROR_OCCURRED))
         }catch (e: IOException){
-            emit(Resource.Error(message = Constants.NETWORK_ERROR))
+            emit(Resource.Error(message = ConstantsError.NETWORK_ERROR))
         }
     }
 }

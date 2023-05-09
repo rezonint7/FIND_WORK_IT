@@ -6,3 +6,7 @@ data class SplashScreenState(
     val user: User? = null,
     val error: String = ""
 )
+data class RefreshTokenState(
+    val success: Boolean = false,
+    val error: String = ""
+)

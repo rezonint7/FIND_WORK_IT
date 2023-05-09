@@ -1,7 +1,6 @@
 package com.example.find_work_it.presentation.screens.profile_screen
 
-import android.annotation.SuppressLint
-import android.widget.Space
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,82 +26,107 @@ import com.example.find_work_it.R
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.ButtonElement
+import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
+import com.example.find_work_it.presentation.screens.LoadingUseCaseElement
 import com.example.find_work_it.presentation.screens.main_screen.TopBar
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen(
     controller: NavController,
     profileScreenViewModel: ProfileScreenViewModel = hiltViewModel(),
 ){
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState =
     BottomSheetState(BottomSheetValue.Collapsed))
 //    BackHandler(bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
 //        coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
 //    }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MainTheme.colors.primaryBackground)) {
-        BottomSheetScaffold(
-            topBar = {TopBar(screenName = "Профиль")},
-            backgroundColor = MainTheme.colors.primaryBackground,
-            scaffoldState = bottomSheetScaffoldState,
-            sheetContent = {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(308.dp)
-                    .background(MainTheme.colors.primaryBackground),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AddBasicTextField(
-                        sizeWidth = 274,
-                        sizeHeight = 48,
-                        textStyle = MainTheme.typography.inputTextField,
-                        placeholder = "Имя"
-                    )
-                    AddBasicTextField(
-                        sizeWidth = 274,
-                        sizeHeight = 48,
-                        textStyle = MainTheme.typography.inputTextField,
-                        placeholder = "Фамилия"
-                    )
-                    AddBasicTextField(
-                        sizeWidth = 274,
-                        sizeHeight = 48,
-                        textStyle = MainTheme.typography.inputTextField,
-                        placeholder = "Отчество"
-                    )
-                }
-            }
-        ){
-            LazyColumn(modifier = Modifier
-                .fillMaxWidth()){
-                item{
-                    ProfileInfo(bottomSheetScaffoldState, coroutineScope)
-                    Spacer(modifier = Modifier
-                        .height(1.dp)
-                        .background(MainTheme.colors.strokeColor))
-                }
-                item {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-                        ButtonElement(
-                            text = "Добавить резюме",
-                            modifier = Modifier.padding(8.dp),
-                            backgroundColor = MainTheme.colors.auxiliaryColor
-                        ) {
-                            //navigate to add
 
+    val state = profileScreenViewModel.state.value
+    if(state.user != null){
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(MainTheme.colors.primaryBackground)) {
+            BottomSheetScaffold(
+                topBar = {TopBar(screenName = "Профиль")},
+                backgroundColor = MainTheme.colors.primaryBackground,
+                sheetBackgroundColor = MainTheme.colors.primaryBackground,
+                sheetElevation = 10.dp,
+                scaffoldState = bottomSheetScaffoldState,
+                sheetContent = {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(308.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val nameState = remember { mutableStateOf(state.user.firstName) }
+                        val surnameState = remember { mutableStateOf(state.user.lastName) }
+                        val patronymicState = remember { mutableStateOf(state.user.middleName ?: "") }
+
+                        AddBasicTextField(
+                            sizeWidth = 274,
+                            sizeHeight = 48,
+                            textStyle = MainTheme.typography.inputTextField,
+                            placeholder = "Имя"
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AddBasicTextField(
+                            sizeWidth = 274,
+                            sizeHeight = 48,
+                            textStyle = MainTheme.typography.inputTextField,
+                            placeholder = "Фамилия"
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AddBasicTextField(
+                            sizeWidth = 274,
+                            sizeHeight = 48,
+                            textStyle = MainTheme.typography.inputTextField,
+                            placeholder = "Отчество"
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        ButtonElement(text = "Применить", modifier = Modifier.size(274.dp, 48.dp), backgroundColor = MainTheme.colors.auxiliaryColor) {
+
+                        }
+                    }
+                }
+            ){
+                LazyColumn(modifier = Modifier
+                    .fillMaxWidth()){
+                    item{
+                        ProfileInfo(bottomSheetScaffoldState, profileScreenViewModel, coroutineScope)
+                        Divider(modifier = Modifier.fillMaxWidth())
+                    }
+
+                    item {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                            ButtonElement(
+                                text = "Добавить резюме",
+                                modifier = Modifier.padding(8.dp),
+                                backgroundColor = MainTheme.colors.auxiliaryColor
+                            ) {
+                                //navigate to add
+
+                            }
                         }
                     }
                 }
             }
         }
+    }
+    if(state.error.isNotBlank()){
+        ErrorUseCaseElement(error = state.error) {
+
+        }
+    }
+    if(state.isLoading){
+        LoadingUseCaseElement()
     }
 }
 
@@ -109,6 +134,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileInfo(
     bottomSheetScaffoldState : BottomSheetScaffoldState,
+    profileScreenViewModel: ProfileScreenViewModel,
     coroutineScope: CoroutineScope
 ){
     Column(
@@ -155,14 +181,17 @@ fun ProfileInfo(
                 )
             }
         }
+        val middleName = profileScreenViewModel.state.value.user?.middleName ?: ""
         Text(
-            text = "Кунавин Антон Вячеславович",
+            text = "${profileScreenViewModel.state.value.user?.firstName.toString()} " +
+                    "${profileScreenViewModel.state.value.user?.lastName.toString()} " +
+                    middleName,
             style = MainTheme.typography.headerText,
             color = MainTheme.colors.primaryText
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "rezonint@gmail.com",
+            text = profileScreenViewModel.state.value.user?.email.toString(),
             style = MainTheme.typography.smallText,
             color = MainTheme.colors.primaryText
         )

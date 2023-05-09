@@ -53,9 +53,11 @@ android {
         ignoreList.add("APP_ACCESS_TOKEN")
         ignoreList.add("sdk.*")
     }
+    namespace 'com.example.find_work_it'
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:+'
     def room_version = "2.5.1"
     def hilt_version = "2.44"
     def nav_version = "2.5.3"

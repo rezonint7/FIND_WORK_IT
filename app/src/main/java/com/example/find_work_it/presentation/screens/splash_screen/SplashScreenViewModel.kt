@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.use_case.user.GetUserInfoUseCase
 import com.example.find_work_it.domain.use_case.user.RefreshUserTokensUseCase
@@ -36,7 +37,7 @@ class SplashScreenViewModel @Inject constructor(
                     Log.d("USER", _state.value.user.toString())
                 }
                 is Resource.Error -> {
-                    _state.value = SplashScreenState(error = result.message ?: Constants.ERROR_OCCURRED)
+                    _state.value = SplashScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                     Log.d("USER", _state.value.error)
                 }
                 else -> {}
@@ -51,7 +52,7 @@ class SplashScreenViewModel @Inject constructor(
                     _tokens.value = RefreshTokenState(result.data != null)
                 }
                 is Resource.Error -> {
-                    _tokens.value = RefreshTokenState(error = result.message ?: Constants.ERROR_OCCURRED)
+                    _tokens.value = RefreshTokenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 else -> {}
             }

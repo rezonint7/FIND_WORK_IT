@@ -10,7 +10,7 @@ sealed class NavScreens (val route: String, val icon: Int = -1, var title: Int =
 
     object MainScreen : NavScreens("main_screen", R.drawable.round_home_screen_icon, R.string.home_screen)
     object FavoritesScreen : NavScreens("favorites_screen", R.drawable.round_favorite_screen_icon, R.string.favorite_screen)
-    object ResponsesVacancyScreen : NavScreens("responses_vacancy_screen", R.drawable.round_favorite_screen_icon, R.string.responses_screen)
+    object ResponsesVacancyScreen : NavScreens("responses_vacancy_screen", R.drawable.round_response_icon_24, R.string.responses_screen)
     object ProfileScreen : NavScreens("profile_screen", R.drawable.round_profile_screen_icon, R.string.profile_screen)
 
 

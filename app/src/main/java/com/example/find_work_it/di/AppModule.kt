@@ -1,9 +1,8 @@
 package com.example.find_work_it.di
 
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import com.example.find_work_it.common.Constants
-import com.example.find_work_it.common.autorization.AuthorizationServiceApp
+import com.example.find_work_it.auth.AuthorizationServiceApp
 import com.example.find_work_it.data.remote.ApiService
 import com.example.find_work_it.data.repository.ApiRepositoryImpl
 import com.example.find_work_it.data.shared_prefs.SharedPrefsHelper

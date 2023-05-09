@@ -47,7 +47,8 @@ fun AddBasicTextField(
     placeholder: String = "",
     icon: ImageVector? = null,
     iconContentDescription: String = "",
-    borderColor: Color = MainTheme.colors.strokeColor
+    borderColor: Color = MainTheme.colors.strokeColor,
+    onValueChanged: () -> Unit = {}
 ){
     var message by remember { mutableStateOf(TextFieldValue("")) }
     val shape = RoundedCornerShape(size = 10.dp)

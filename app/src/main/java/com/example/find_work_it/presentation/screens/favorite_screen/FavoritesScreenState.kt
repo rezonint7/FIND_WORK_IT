@@ -8,3 +8,7 @@ data class FavoritesScreenState(
     val pages: Map<String, Int> = mapOf(),
     val error: String = ""
 )
+data class FavoritesAddScreenState(
+    val success: Boolean = false,
+    val error: String = ""
+)

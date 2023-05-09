@@ -1,17 +1,9 @@
-package com.example.find_work_it.common.autorization
+package com.example.find_work_it.auth
 
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.webkit.WebView
-import androidx.core.content.ContextCompat
 import com.example.find_work_it.common.Constants
-import com.example.find_work_it.common.autorization.model.Tokens
+import com.example.find_work_it.auth.model.Tokens
 import net.openid.appauth.*
-import okhttp3.*
-import java.io.IOException
 
 class AuthorizationServiceApp {
     private val redirectUri = Uri.parse(Constants.REDIRECT_URI)

@@ -65,6 +65,21 @@ fun FavoritesScreen(
                 )
             }
         }
+        if (state.error.isNotBlank()){
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = state.error,
+                    style = MainTheme.typography.headerText,
+                    color = MainTheme.colors.secondaryText,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
         else{
             if(state.vacancies.isEmpty()){
                 Column(
@@ -81,21 +96,6 @@ fun FavoritesScreen(
                     )
                 }
 
-            }
-        }
-        if (state.error.isNotBlank()){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ){
-                Text(
-                    text = state.error,
-                    style = MainTheme.typography.headerText,
-                    color = MainTheme.colors.secondaryText,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
     }

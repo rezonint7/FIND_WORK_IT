@@ -43,7 +43,7 @@ class FavoritesScreenViewModel @Inject constructor(
         getFavoritesVacancies()
     }
 
-    fun getFavoritesVacancies(){
+    private fun getFavoritesVacancies(){
         getFavoritesVacanciesUseCase().onEach { result ->
             when(result){
                 is Resource.Success -> {

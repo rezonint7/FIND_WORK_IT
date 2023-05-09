@@ -62,16 +62,18 @@ fun SplashScreen(
 //    val systemUiController = rememberSystemUiController()
 //    systemUiController.setSystemBarsColor(Color.Black)
     LaunchedEffect(key1 = true){
-        if(splashScreenViewModel.state.value.error == Constants.USER_ACCESS_ERROR){
-            splashScreenViewModel.refreshUserTokens()
-        }
         delay(3000)
         controller.popBackStack()
-
         if(splashScreenViewModel.state.value.error.isEmpty()){
             if(SharedPrefsHelper.getInstance(context).containsTokens()){
                 controller.navigate(NavScreens.MainScreen.route)
                 Log.d("APP123", "toMain")
+            }
+            else{controller.navigate(NavScreens.AuthorizationScreen.route)}
+        }
+        if(splashScreenViewModel.state.value.error == Constants.USER_ACCESS_ERROR){
+            if(SharedPrefsHelper.getInstance(context).containsTokens()) {
+                splashScreenViewModel.refreshUserTokens()
             }
             else{controller.navigate(NavScreens.AuthorizationScreen.route)}
         }
@@ -106,10 +108,13 @@ fun SplashScreen(
         }
     }
     if(splashScreenViewModel.state.value.error.isNotEmpty() || splashScreenViewModel.tokens.value.error.isNotEmpty()){
-        val error = splashScreenViewModel.tokens.value.error.ifEmpty { splashScreenViewModel.state.value.error }
-        ErrorUseCaseElement(error = error) {
+        if(SharedPrefsHelper.getInstance(context).containsTokens()){
+            val error = splashScreenViewModel.tokens.value.error.ifEmpty { splashScreenViewModel.state.value.error }
+            ErrorUseCaseElement(error = error) {
 
+            }
         }
+        
     }
 }
 

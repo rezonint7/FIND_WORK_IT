@@ -7,3 +7,8 @@ data class ProfileScreenState(
     val user: User? = null,
     val error: String = ""
 )
+data class EditInfoProfileScreenState(
+    val success: Boolean = false,
+    val error: String = ""
+)
+

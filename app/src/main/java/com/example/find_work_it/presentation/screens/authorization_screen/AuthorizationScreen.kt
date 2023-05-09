@@ -52,7 +52,7 @@ fun AuthorizationScreen(
 
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
-                            view?.loadData("<html><body><h1>No internet connection</h1></body></html>", "text/html", null)
+//                            view?.loadData("<html><body><h1>No internet connection</h1></body></html>", "text/html", null)
                         }
 
                         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -73,5 +73,4 @@ fun AuthorizationScreen(
             }
         }
     }
-
 }

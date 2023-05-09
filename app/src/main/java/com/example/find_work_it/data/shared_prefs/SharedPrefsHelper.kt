@@ -1,11 +1,9 @@
 package com.example.find_work_it.data.shared_prefs
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import com.example.find_work_it.MainActivity
 import com.example.find_work_it.common.SharedPrefsConstants
-import com.example.find_work_it.common.autorization.model.Tokens
+import com.example.find_work_it.auth.model.Tokens
 import com.google.gson.Gson
 
 class SharedPrefsHelper (context: Context) {
