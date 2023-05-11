@@ -16,11 +16,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 class PutUserInfoUseCase @Inject constructor(private val repository: ApiRepository) {
-    operator fun invoke(user: User): Flow<Resource<Boolean>> = flow{
+    operator fun invoke(firstName: String, lastName: String, middleName: String): Flow<Resource<Boolean>> = flow{
         try{
             val requestBody = RequestBody.create(
                 MediaType.parse("application/x-www-form-urlencoded"),
-                "first_name=${user.firstName}&last_name=${user.lastName}&middle_name=${user.middleName}"
+                "first_name=${firstName}&last_name=${lastName}&middle_name=${middleName}"
             )
             repository.putUserInfo(requestBody)
             emit(Resource.Success(true))

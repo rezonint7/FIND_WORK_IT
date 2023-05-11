@@ -14,4 +14,8 @@ object ConstantsError {
     const val PUT_USER_ERROR_NETWORK = "Не удалось изменить данные профиля. Проверьте подключение к интернету"
     const val PUT_USER_ERROR_OCCURRED = "Произошла ошибка. Не удалось изменить данные профиля."
 
+
+    const val USER_FIRSTNAME_ERROR_VALIDATE = "Имя пользователя может содержать только буквы!"
+    const val USER_LASTNAME_ERROR_VALIDATE = "Фамилия пользователя может содержать только буквы!"
+    const val USER_MIDDLENAME_ERROR_VALIDATE = "Отчество пользователя может содержать только буквы!"
 }

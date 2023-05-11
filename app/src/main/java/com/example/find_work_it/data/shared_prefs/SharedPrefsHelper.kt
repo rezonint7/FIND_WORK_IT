@@ -12,7 +12,7 @@ class SharedPrefsHelper (context: Context) {
     )
 
     fun setTokens(tokens: Tokens) {
-        sharedPrefs.edit().putString(SharedPrefsConstants.JSON_TOKENS, Gson().toJson(tokens)).apply()
+        if(tokens.access_token != null) sharedPrefs.edit().putString(SharedPrefsConstants.JSON_TOKENS, Gson().toJson(tokens)).apply()
     }
 
     fun getTokens(): Tokens? {

@@ -129,24 +129,6 @@ fun TopBarMainScreen(){
 }
 
 @Composable
-fun TopBar(screenName: String){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MainTheme.colors.primaryBackground)
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = screenName,
-            style = MainTheme.typography.headerText,
-            color = MainTheme.colors.primaryText
-        )
-    }
-}
-
-@Composable
 fun VacancyItem(
     vacancy: Vacancy,
     onItemClick: (Vacancy) -> Unit

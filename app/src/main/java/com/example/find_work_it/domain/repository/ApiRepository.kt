@@ -1,6 +1,7 @@
 package com.example.find_work_it.domain.repository
 
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
@@ -30,4 +31,6 @@ interface ApiRepository {
     suspend fun putUserInfo(changeName: RequestBody)
 
     suspend fun getEmployerInfo(employerId: String): EmployerDTO
+
+    suspend fun getUserResumes():ResumesDTO
 }

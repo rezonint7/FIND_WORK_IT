@@ -24,8 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.ButtonElement
+import com.example.find_work_it.presentation.screens.TopBar
 import com.example.find_work_it.presentation.screens.main_screen.MainScreenViewModel
-import com.example.find_work_it.presentation.screens.main_screen.TopBar
 import com.example.find_work_it.presentation.screens.main_screen.VacancyItem
 import com.example.find_work_it.ui.theme.MainTheme
 

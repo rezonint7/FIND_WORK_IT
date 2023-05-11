@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.R
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.data.shared_prefs.SharedPrefsHelper
 import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
 import com.example.find_work_it.ui.theme.AppNameStyle
@@ -59,23 +60,22 @@ fun SplashScreen(
         }
     }
     val context = LocalContext.current
-//    val systemUiController = rememberSystemUiController()
-//    systemUiController.setSystemBarsColor(Color.Black)
     LaunchedEffect(key1 = true){
         delay(3000)
         controller.popBackStack()
-        if(splashScreenViewModel.state.value.error.isEmpty()){
-            if(SharedPrefsHelper.getInstance(context).containsTokens()){
+        if(SharedPrefsHelper.getInstance(context).containsTokens()){
+            if(splashScreenViewModel.state.value.error.isEmpty()){
                 controller.navigate(NavScreens.MainScreen.route)
-                Log.d("APP123", "toMain")
             }
-            else{controller.navigate(NavScreens.AuthorizationScreen.route)}
-        }
-        if(splashScreenViewModel.state.value.error == Constants.USER_ACCESS_ERROR){
-            if(SharedPrefsHelper.getInstance(context).containsTokens()) {
+            if(splashScreenViewModel.state.value.error == ConstantsError.USER_ACCESS_ERROR){
+                Log.d("123", "1")
                 splashScreenViewModel.refreshUserTokens()
+
             }
-            else{controller.navigate(NavScreens.AuthorizationScreen.route)}
+        }
+        else{
+            Log.d("123", "2")
+            controller.navigate(NavScreens.AuthorizationScreen.route)
         }
     }
 

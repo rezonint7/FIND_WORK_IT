@@ -1,6 +1,7 @@
 package com.example.find_work_it.domain.model
 
 import com.example.find_work_it.data.remote.dto.vacancy.models.*
+import com.example.find_work_it.data.remote.dto.vacancy.models.Employer
 
 data class VacancyDetail(
     val idVacancy: String,

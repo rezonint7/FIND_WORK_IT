@@ -46,8 +46,8 @@ class ProfileScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun editUserInfo(user: User){
-        putUserInfoUseCase(user).onEach { result ->
+    fun editUserInfo(firstName: String, lastName: String, middleName: String){
+        putUserInfoUseCase(firstName, lastName, middleName).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     _editInfoState.value = EditInfoProfileScreenState(success = result.data ?: false)
@@ -57,6 +57,23 @@ class ProfileScreenViewModel @Inject constructor(
                 }
                 else -> {}
             }
-        }
+        }.launchIn(viewModelScope)
+    }
+
+    fun validateUserInfoFields(user: User): ValidateFieldsResult{
+        val firstNameIsValidate = user.firstName.isNotBlank() && user.firstName.matches(Regex("^[а-яА-ЯёЁ]+$"))
+        val lastNameIsValidate = user.lastName.isNotBlank() && user.firstName.matches(Regex("^[а-яА-ЯёЁ]+$"))
+        val middleNameIsValidate = user.middleName?.matches(Regex("^[а-яА-ЯёЁ]+$"))
+        return ValidateFieldsResult(
+            UserValidationState(firstNameIsValidate, if (firstNameIsValidate) "" else ConstantsError.USER_FIRSTNAME_ERROR_VALIDATE),
+            UserValidationState(lastNameIsValidate, if (lastNameIsValidate) "" else ConstantsError.USER_LASTNAME_ERROR_VALIDATE),
+            if(user.middleName.isNullOrEmpty()) null else UserValidationState(middleNameIsValidate!!, if (middleNameIsValidate) "" else ConstantsError.USER_MIDDLENAME_ERROR_VALIDATE),
+        )
+    }
+    fun validateUserFields(value: String): Boolean{
+        return value.isNotBlank() && value.matches(Regex("^[а-яА-ЯёЁ]+$"))
+    }
+    fun validateMiddleNameUserField(value: String?): Boolean{
+        return if(value.isNullOrEmpty()) true else value.matches(Regex("^[а-яА-ЯёЁ]+$"))
     }
 }

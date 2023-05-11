@@ -102,16 +102,17 @@ fun VacancyDetailScreen(
                         style = MainTheme.typography.bodyText1,
                         color = MainTheme.colors.primaryText
                     )
-                    Spacer(modifier = Modifier.height(48.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
                 }
                 item{
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = stringResource(id = R.string.simillar_vacancies),
                         style = MainTheme.typography.headerText,
                         color = MainTheme.colors.primaryText
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
                 items(stateSimilarVacancies.vacancies){ vacancy ->
                     VacancyItem(vacancy = vacancy, onItemClick = {
@@ -120,7 +121,8 @@ fun VacancyDetailScreen(
                 }
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Divider(modifier = Modifier.fillMaxWidth())
+                    Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
+                    Spacer(modifier = Modifier.height(48.dp))
                 }
             }
         }

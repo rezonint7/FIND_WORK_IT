@@ -2,6 +2,7 @@ package com.example.find_work_it.data.remote
 
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
@@ -69,4 +70,11 @@ interface ApiService {
     suspend fun getEmployerInfo(
         @Path("employerId") employerId: String
     ): EmployerDTO
+
+    //Работа с резюме
+    @GET("/resumes/mine")
+    suspend fun getUserResumes(): ResumesDTO
+
+    @POST("/resumes")
+    suspend fun createNewResume()
 }

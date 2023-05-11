@@ -48,9 +48,11 @@ fun AddBasicTextField(
     icon: ImageVector? = null,
     iconContentDescription: String = "",
     borderColor: Color = MainTheme.colors.strokeColor,
-    onValueChanged: () -> Unit = {}
+    isError: Boolean = false,
+    errorMessage: String = "",
+    onValueChanged: (String) -> Unit = {}
 ){
-    var message by remember { mutableStateOf(TextFieldValue("")) }
+    var message by remember { mutableStateOf(TextFieldValue("")) } // исправить
     val shape = RoundedCornerShape(size = 10.dp)
 
     val boxPadding = if(icon != null) 64.dp else 16.dp
@@ -58,7 +60,7 @@ fun AddBasicTextField(
         .size(sizeWidth.dp, sizeHeight.dp)
         .border(
             width = (0.5).dp,
-            color = borderColor,
+            color = if(isError) MainTheme.colors.refusedColor else borderColor,
             shape = shape
         )
         .padding(start = boxPadding)
@@ -91,6 +93,7 @@ fun AddBasicTextField(
             value = message,
             onValueChange = {text ->
                 message = text
+                onValueChanged(text.text)
             },
             textStyle = textStyle,
             decorationBox = {innerTextField ->
@@ -101,6 +104,37 @@ fun AddBasicTextField(
             singleLine = true,
             cursorBrush = SolidColor(MainTheme.colors.hintTextFieldColor)
         )
+        if(message.text.isNotBlank()){
+            if (isError && errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = errorMessage,
+                    style = MainTheme.typography.smallText,
+                    color = Color.Red,
+                    modifier = Modifier.padding(start = boxPadding, end = 8.dp)
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+fun TopBar(screenName: String, onItems: @Composable () -> Unit = {}){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MainTheme.colors.primaryBackground)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = screenName,
+            style = MainTheme.typography.headerText,
+            color = MainTheme.colors.primaryText
+        )
+        onItems()
     }
 }
 
@@ -137,6 +171,7 @@ fun ButtonElement(
     modifier: Modifier,
     backgroundColor: Color,
     strokeColor: Color = backgroundColor,
+    isEnabled: Boolean = true,
     onClick: () -> Unit
 ){
     Button(
@@ -148,6 +183,7 @@ fun ButtonElement(
         border = BorderStroke(1.dp, strokeColor),
         shape = Shapes.medium,
         modifier = modifier,
+        enabled = isEnabled,
         onClick = {onClick()}
     ) {
         Text(text, style = MainTheme.typography.buttonText)

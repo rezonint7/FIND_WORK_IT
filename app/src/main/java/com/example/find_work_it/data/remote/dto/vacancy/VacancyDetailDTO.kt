@@ -1,8 +1,6 @@
 package com.example.find_work_it.data.remote.dto.vacancy
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.find_work_it.data.remote.dto.vacancy.models.*
 import com.example.find_work_it.domain.model.VacancyDetail
 import com.google.gson.annotations.SerializedName
