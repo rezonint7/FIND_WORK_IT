@@ -8,6 +8,8 @@ import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
 import com.example.find_work_it.data.remote.dto.vacancy.models.ProfessionalRole
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -61,8 +63,8 @@ interface ApiService {
     suspend fun getUserInfo(): UserDTO
 
     @Headers(Constants.USER_AGENT_APP)
-    @PUT("/me")
-    suspend fun putUserInfo(@Body changeName: RequestBody): Response<Unit>
+    @POST("/me")
+    suspend fun putUserInfo(@Body body: Map<String, String?>): Call<ResponseBody>
 
     //Работа с работадателем
     @Headers(Constants.USER_AGENT_APP)

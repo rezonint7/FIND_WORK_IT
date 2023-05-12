@@ -66,7 +66,7 @@ fun AuthorizationScreen(
             },
             update = {authViewModel.authorizationRequest.value!!.toUri().toString()}
         )
-        if(authViewModel.state.value.success) controller.navigate(NavScreens.MainScreen.route)
+        //if(authViewModel.state.value.success) controller.navigate(NavScreens.MainScreen.route)
         if (authViewModel.state.value.error != null) {
             ErrorUseCaseElement(error = authViewModel.state.value.error.toString()) {
                 authViewModel.retryAuthorization()

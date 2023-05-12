@@ -1,5 +1,6 @@
 package com.example.find_work_it.domain.use_case.user
 
+import android.util.Log
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
@@ -16,13 +17,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 class PutUserInfoUseCase @Inject constructor(private val repository: ApiRepository) {
-    operator fun invoke(firstName: String, lastName: String, middleName: String): Flow<Resource<Boolean>> = flow{
+    operator fun invoke(body: Map<String, String?>): Flow<Resource<Boolean>> = flow{
         try{
-            val requestBody = RequestBody.create(
-                MediaType.parse("application/x-www-form-urlencoded"),
-                "first_name=${firstName}&last_name=${lastName}&middle_name=${middleName}"
-            )
-            repository.putUserInfo(requestBody)
+            repository.putUserInfo(body)
             emit(Resource.Success(true))
         }catch (e: HttpException){
             emit(Resource.Error(message = e.localizedMessage ?: ConstantsError.PUT_USER_ERROR_OCCURRED))

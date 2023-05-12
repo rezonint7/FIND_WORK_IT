@@ -28,7 +28,7 @@ interface ApiRepository {
 
     suspend fun getUserInfo(): UserDTO
 
-    suspend fun putUserInfo(changeName: RequestBody)
+    suspend fun putUserInfo(body: Map<String, String?>)
 
     suspend fun getEmployerInfo(employerId: String): EmployerDTO
 

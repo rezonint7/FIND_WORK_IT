@@ -50,8 +50,8 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
         return api.getUserInfo()
     }
 
-    override suspend fun putUserInfo(changeName: RequestBody) {
-       api.putUserInfo(changeName)
+    override suspend fun putUserInfo(body: Map<String, String?>) {
+       api.putUserInfo(body)
     }
 
     override suspend fun getEmployerInfo(employerId: String): EmployerDTO {

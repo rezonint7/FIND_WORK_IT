@@ -148,11 +148,12 @@ fun ProfileScreen(
                             backgroundColor = MainTheme.colors.auxiliaryColor,
                             isEnabled = isFirstNameValid.value && isLastNameValid.value && isMiddleNameValid.value)
                         {
-                            profileScreenViewModel.editUserInfo(
-                                firstNameState.value,
-                                lastNameState.value,
-                                middleNameState.value
+                            val userInfo = mapOf(
+                                "first_name" to firstNameState.value,
+                                "last_name" to lastNameState.value,
+                                "middle_name" to middleNameState.value
                             )
+                            profileScreenViewModel.editUserInfo(userInfo)
                             Toast.makeText(context, profileScreenViewModel.editInfoState.value.error, Toast.LENGTH_SHORT).show()
                         }
                     }

@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.profile_screen
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -46,14 +47,16 @@ class ProfileScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun editUserInfo(firstName: String, lastName: String, middleName: String){
-        putUserInfoUseCase(firstName, lastName, middleName).onEach { result ->
+    fun editUserInfo(body: Map<String, String?>){
+        putUserInfoUseCase(body).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     _editInfoState.value = EditInfoProfileScreenState(success = result.data ?: false)
+                    Log.d("TOKENS", _editInfoState.value.success.toString())
                 }
                 is Resource.Error -> {
                     _editInfoState.value = EditInfoProfileScreenState(error = result.message ?: ConstantsError.PUT_USER_ERROR_OCCURRED)
+                    Log.d("TOKENS", _editInfoState.value.error.toString())
                 }
                 else -> {}
             }
