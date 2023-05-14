@@ -50,7 +50,7 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
         return api.getUserInfo()
     }
 
-    override suspend fun putUserInfo(body: Map<String, String?>) {
+    override suspend fun putUserInfo(body: HashMap<String, String?>) {
        api.putUserInfo(body)
     }
 

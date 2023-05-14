@@ -64,10 +64,10 @@ interface ApiService {
 
     @Headers(
         Constants.USER_AGENT_APP,
-        Constants.CONTENT_TYPE_HEADER
     )
+    @FormUrlEncoded
     @POST("/me")
-    suspend fun putUserInfo(@Body body: Map<String, String?>): Response<RequestBody>
+    suspend fun putUserInfo(@FieldMap body: HashMap<String, String?>): Response<ResponseBody>
 
     //Работа с работадателем
     @Headers(Constants.USER_AGENT_APP)

@@ -3,9 +3,9 @@ package com.example.find_work_it.presentation.screens.profile_screen
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.model.User
@@ -20,20 +20,22 @@ import javax.inject.Inject
 class ProfileScreenViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val putUserInfoUseCase: PutUserInfoUseCase) : ViewModel() {
-    private val _state = mutableStateOf<ProfileScreenState>(ProfileScreenState())
+    private val _state: MutableLiveData<ProfileScreenState> = MutableLiveData(ProfileScreenState())
     private val _editInfoState = mutableStateOf<EditInfoProfileScreenState>(
         EditInfoProfileScreenState()
     )
-    val state: State<ProfileScreenState> = _state
+    val state: MutableLiveData<ProfileScreenState> = _state
     val editInfoState: State<EditInfoProfileScreenState> = _editInfoState
+
     init {
         getUserInfo()
     }
 
-    private fun getUserInfo(){
+    fun getUserInfo(){
         getUserInfoUseCase().onEach { result ->
             when(result){
                 is Resource.Success -> {
+                    _state.value = ProfileScreenState(user = null)
                     _state.value = ProfileScreenState(user = result.data)
                 }
                 is Resource.Error -> {
@@ -47,7 +49,7 @@ class ProfileScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun editUserInfo(body: Map<String, String?>){
+    fun editUserInfo(body: HashMap<String, String?>){
         putUserInfoUseCase(body).onEach { result ->
             when(result){
                 is Resource.Success -> {

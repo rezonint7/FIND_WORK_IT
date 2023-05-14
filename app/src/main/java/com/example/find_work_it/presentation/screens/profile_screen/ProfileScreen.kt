@@ -1,15 +1,16 @@
 package com.example.find_work_it.presentation.screens.profile_screen
 
-import android.util.Log
-import android.widget.Toast
 
+
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,138 +50,141 @@ fun ProfileScreen(
 //    }
 
     val state = profileScreenViewModel.state.value
-    if(state.user != null){
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(MainTheme.colors.primaryBackground)) {
-            BottomSheetScaffold(
-                topBar = {
-                    TopBar(screenName = "Профиль"){
-                        Row(modifier = Modifier.width(64.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                            Row(modifier = Modifier
-                                .size(28.dp)
-                                .clickable {
-                                    coroutineScope.launch {
-                                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                            bottomSheetScaffoldState.bottomSheetState.expand()
-                                        } else {
-                                            bottomSheetScaffoldState.bottomSheetState.collapse()
+    if (state != null) {
+        if(state.user != null){
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .background(MainTheme.colors.primaryBackground)) {
+                BottomSheetScaffold(
+                    topBar = {
+                        TopBar(screenName = "Профиль"){
+                            Row(modifier = Modifier.width(64.dp), horizontalArrangement = Arrangement.SpaceBetween){
+                                Row(modifier = Modifier
+                                    .size(28.dp)
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                                bottomSheetScaffoldState.bottomSheetState.expand()
+                                            } else {
+                                                bottomSheetScaffoldState.bottomSheetState.collapse()
+                                            }
                                         }
-                                    }
-                                }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.round_edit_24),
-                                    modifier = Modifier.fillMaxSize(),
-                                    colorFilter = ColorFilter.tint(MainTheme.colors.primaryText),
-                                    contentDescription = "ProfileEdit"
-                                )
-                            }
-                            Row(modifier = Modifier.size(28.dp)) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.round_share_24),
-                                    modifier = Modifier.fillMaxSize(),
-                                    colorFilter = ColorFilter.tint(MainTheme.colors.primaryText),
-                                    contentDescription = "ProfileShare"
-                                )
+                                    }) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.round_edit_24),
+                                        modifier = Modifier.fillMaxSize(),
+                                        colorFilter = ColorFilter.tint(MainTheme.colors.primaryText),
+                                        contentDescription = "ProfileEdit"
+                                    )
+                                }
+                                Row(modifier = Modifier.size(28.dp)) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.round_share_24),
+                                        modifier = Modifier.fillMaxSize(),
+                                        colorFilter = ColorFilter.tint(MainTheme.colors.primaryText),
+                                        contentDescription = "ProfileShare"
+                                    )
+                                }
                             }
                         }
-                    }
-                },
-                backgroundColor = MainTheme.colors.primaryBackground,
-                sheetBackgroundColor = MainTheme.colors.primaryBackground,
-                sheetElevation = 10.dp,
-                scaffoldState = bottomSheetScaffoldState,
-                sheetContent = {
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(308.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val firstNameState = remember { mutableStateOf(state.user.firstName) }
-                        val lastNameState = remember { mutableStateOf(state.user.lastName) }
-                        val middleNameState = remember { mutableStateOf(state.user.middleName ?: "") }
-                        val isFirstNameValid = remember { mutableStateOf(true) }
-                        val isLastNameValid = remember { mutableStateOf(true) }
-                        val isMiddleNameValid = remember { mutableStateOf(true) }
+                    },
+                    backgroundColor = MainTheme.colors.primaryBackground,
+                    sheetBackgroundColor = MainTheme.colors.primaryBackground,
+                    sheetElevation = 10.dp,
+                    scaffoldState = bottomSheetScaffoldState,
+                    sheetContent = {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(308.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val firstNameState = remember { mutableStateOf(state?.user.firstName) }
+                            val lastNameState = remember { mutableStateOf(state?.user.lastName) }
+                            val middleNameState = remember { mutableStateOf(state?.user.middleName ?: "") }
+                            val isFirstNameValid = remember { mutableStateOf(true) }
+                            val isLastNameValid = remember { mutableStateOf(true) }
+                            val isMiddleNameValid = remember { mutableStateOf(true) }
 
-                        AddBasicTextField(
-                            sizeWidth = 284,
-                            sizeHeight = 48,
-                            textStyle = MainTheme.typography.inputTextField,
-                            placeholder = "Имя",
-                            onValueChanged = {
-                                firstNameState.value = it
-                                isFirstNameValid.value = profileScreenViewModel.validateUserFields(it)
-                            },
-                            isError = !isFirstNameValid.value,
-                            message = firstNameState.value,
-                            errorMessage = ConstantsError.USER_FIRSTNAME_ERROR_VALIDATE
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AddBasicTextField(
-                            sizeWidth = 284,
-                            sizeHeight = 48,
-                            textStyle = MainTheme.typography.inputTextField,
-                            placeholder = "Фамилия",
-                            onValueChanged = {
-                                lastNameState.value = it
-                                isLastNameValid.value = profileScreenViewModel.validateUserFields(it)
-                            },
-                            isError = !isLastNameValid.value,
-                            message = lastNameState.value,
-                            errorMessage = ConstantsError.USER_LASTNAME_ERROR_VALIDATE
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AddBasicTextField(
-                            sizeWidth = 284,
-                            sizeHeight = 48,
-                            textStyle = MainTheme.typography.inputTextField,
-                            placeholder = "Отчество",
-                            onValueChanged = {
-                                middleNameState.value = it
-                                isMiddleNameValid.value = profileScreenViewModel.validateMiddleNameUserField(it)
-                            },
-                            isError = !isMiddleNameValid.value,
-                            message = middleNameState.value,
-                            errorMessage = ConstantsError.USER_MIDDLENAME_ERROR_VALIDATE
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        ButtonElement(
-                            text = "Применить",
-                            modifier = Modifier.size(274.dp, 48.dp),
-                            backgroundColor = MainTheme.colors.auxiliaryColor,
-                            isEnabled = isFirstNameValid.value && isLastNameValid.value && isMiddleNameValid.value)
-                        {
-                            val userInfo = mapOf(
-                                "first_name" to firstNameState.value,
-                                "last_name" to lastNameState.value,
-                                "middle_name" to middleNameState.value
+                            AddBasicTextField(
+                                sizeWidth = 284,
+                                sizeHeight = 48,
+                                textStyle = MainTheme.typography.inputTextField,
+                                placeholder = "Имя",
+                                onValueChanged = {
+                                    firstNameState.value = it
+                                    isFirstNameValid.value = profileScreenViewModel.validateUserFields(it)
+                                },
+                                isError = !isFirstNameValid.value,
+                                message = firstNameState.value,
+                                errorMessage = ConstantsError.USER_FIRSTNAME_ERROR_VALIDATE
                             )
-                            profileScreenViewModel.editUserInfo(userInfo)
-                            Toast.makeText(context, profileScreenViewModel.editInfoState.value.error, Toast.LENGTH_SHORT).show()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            AddBasicTextField(
+                                sizeWidth = 284,
+                                sizeHeight = 48,
+                                textStyle = MainTheme.typography.inputTextField,
+                                placeholder = "Фамилия",
+                                onValueChanged = {
+                                    lastNameState.value = it
+                                    isLastNameValid.value = profileScreenViewModel.validateUserFields(it)
+                                },
+                                isError = !isLastNameValid.value,
+                                message = lastNameState.value,
+                                errorMessage = ConstantsError.USER_LASTNAME_ERROR_VALIDATE
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            AddBasicTextField(
+                                sizeWidth = 284,
+                                sizeHeight = 48,
+                                textStyle = MainTheme.typography.inputTextField,
+                                placeholder = "Отчество",
+                                onValueChanged = {
+                                    middleNameState.value = it
+                                    isMiddleNameValid.value = profileScreenViewModel.validateMiddleNameUserField(it)
+                                },
+                                isError = !isMiddleNameValid.value,
+                                message = middleNameState.value,
+                                errorMessage = ConstantsError.USER_MIDDLENAME_ERROR_VALIDATE
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            ButtonElement(
+                                text = "Применить",
+                                modifier = Modifier.size(274.dp, 48.dp),
+                                backgroundColor = MainTheme.colors.auxiliaryColor,
+                                isEnabled = isFirstNameValid.value && isLastNameValid.value && isMiddleNameValid.value)
+                            {
+                                val userInfo = hashMapOf<String, String?>(
+                                    "first_name" to firstNameState.value,
+                                    "last_name" to lastNameState.value,
+                                    "middle_name" to middleNameState.value
+                                )
+                                profileScreenViewModel.editUserInfo(userInfo)
+                                if(profileScreenViewModel.editInfoState.value.success) profileScreenViewModel.getUserInfo()
+                                Toast.makeText(context, profileScreenViewModel.editInfoState.value.error, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
-                }
-            ){
-                LazyColumn(modifier = Modifier
-                    .fillMaxWidth()){
-                    item{
-                        ProfileInfo(profileScreenViewModel)
-                        Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
-                    }
-                    item{
-                        ResumeItem(resume = Resume("1", "Kotlin разработчик", updatedAt = "Обновлено 12.05.23"))
-                    }
-                    item {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-                            ButtonElement(
-                                text = "Добавить резюме",
-                                modifier = Modifier.padding(8.dp),
-                                backgroundColor = MainTheme.colors.auxiliaryColor
-                            ) {
-                                //navigate to add
+                ){
+                    LazyColumn(modifier = Modifier
+                        .fillMaxWidth()){
+                        item{
+                            ProfileInfo(profileScreenViewModel)
+                            Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
+                        }
+                        item{
+                            ResumeItem(resume = Resume("1", "Kotlin разработчик", updatedAt = "Обновлено 12.05.23"))
+                        }
+                        item {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                                ButtonElement(
+                                    text = "Добавить резюме",
+                                    modifier = Modifier.padding(8.dp),
+                                    backgroundColor = MainTheme.colors.auxiliaryColor
+                                ) {
+                                    //navigate to add
 
+                                }
                             }
                         }
                     }
@@ -188,38 +192,41 @@ fun ProfileScreen(
             }
         }
     }
-    if(state.error.isNotBlank()){
-        ErrorUseCaseElement(error = state.error) {
+    if (state != null) {
+        if(state.error.isNotBlank()){
+            ErrorUseCaseElement(error = state.error) {
 
+            }
         }
     }
-    if(state.isLoading){
-        LoadingUseCaseElement()
+    if (state != null) {
+        if(state.isLoading){
+            LoadingUseCaseElement()
+        }
     }
 }
 
+@SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileInfo(
     profileScreenViewModel: ProfileScreenViewModel,
 ){
+    val userInfo by profileScreenViewModel.state.observeAsState(initial = ProfileScreenState())
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(108.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val middleName = profileScreenViewModel.state.value.user?.middleName ?: ""
         Text(
-            text = "${profileScreenViewModel.state.value.user?.firstName.toString()} " +
-                    "${profileScreenViewModel.state.value.user?.lastName.toString()} " +
-                    middleName,
+            text =  userInfo.user?.lastName + " " + userInfo.user?.firstName + " " + userInfo.user?.middleName,
             style = MainTheme.typography.headerText,
             color = MainTheme.colors.primaryText
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = profileScreenViewModel.state.value.user?.email.toString(),
+            text = profileScreenViewModel.state.value?.user?.email.toString(),
             style = MainTheme.typography.smallText,
             color = MainTheme.colors.primaryText
         )
@@ -271,9 +278,12 @@ fun ResumeItem(resume: Resume){
                     RoundedCornerShape(100.dp)
                 )){
                     val image = painterResource(id = R.drawable.photo_resume_test)
-                    Image(painter = image, contentDescription = "", modifier = Modifier.clip(
-                        RoundedCornerShape(100.dp)
-                    ).size(64.dp).scale(1.6f))
+                    Image(painter = image, contentDescription = "", modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(100.dp)
+                        )
+                        .size(64.dp)
+                        .scale(1.6f))
                 }
             }
 

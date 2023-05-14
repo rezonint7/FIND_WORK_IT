@@ -17,7 +17,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class PutUserInfoUseCase @Inject constructor(private val repository: ApiRepository) {
-    operator fun invoke(body: Map<String, String?>): Flow<Resource<Boolean>> = flow{
+    operator fun invoke(body: HashMap<String, String?>): Flow<Resource<Boolean>> = flow{
         Log.d("123", body.getValue("first_name").toString())
         Log.d("123", body.getValue("last_name").toString())
         Log.d("123", body.getValue("middle_name").toString())
