@@ -57,7 +57,6 @@ fun AuthorizationScreen(
 
                         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                             authViewModel.onTokens(request)
-                            Log.d("URL2", request!!.url.toString())
                             return authViewModel.state.value.success
                         }
                     }
@@ -66,7 +65,7 @@ fun AuthorizationScreen(
             },
             update = {authViewModel.authorizationRequest.value!!.toUri().toString()}
         )
-        //if(authViewModel.state.value.success) controller.navigate(NavScreens.MainScreen.route)
+        if(authViewModel.state.value.success) controller.navigate(NavScreens.MainScreen.route)
         if (authViewModel.state.value.error != null) {
             ErrorUseCaseElement(error = authViewModel.state.value.error.toString()) {
                 authViewModel.retryAuthorization()

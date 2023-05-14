@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.profile_screen
 
+import android.util.Log
 import android.widget.Toast
 
 import androidx.compose.foundation.*
@@ -112,6 +113,7 @@ fun ProfileScreen(
                                 isFirstNameValid.value = profileScreenViewModel.validateUserFields(it)
                             },
                             isError = !isFirstNameValid.value,
+                            message = firstNameState.value,
                             errorMessage = ConstantsError.USER_FIRSTNAME_ERROR_VALIDATE
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -125,6 +127,7 @@ fun ProfileScreen(
                                 isLastNameValid.value = profileScreenViewModel.validateUserFields(it)
                             },
                             isError = !isLastNameValid.value,
+                            message = lastNameState.value,
                             errorMessage = ConstantsError.USER_LASTNAME_ERROR_VALIDATE
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -138,6 +141,7 @@ fun ProfileScreen(
                                 isMiddleNameValid.value = profileScreenViewModel.validateMiddleNameUserField(it)
                             },
                             isError = !isMiddleNameValid.value,
+                            message = middleNameState.value,
                             errorMessage = ConstantsError.USER_MIDDLENAME_ERROR_VALIDATE
                         )
                         Spacer(modifier = Modifier.height(8.dp))

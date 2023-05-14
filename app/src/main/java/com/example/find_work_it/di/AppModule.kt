@@ -35,7 +35,6 @@ object AppModule {
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer ${sharedPrefsHelper.getTokens()?.access_token}")
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .build()
                 chain.proceed(request)
             }

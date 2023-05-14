@@ -62,9 +62,12 @@ interface ApiService {
     @GET("/me")
     suspend fun getUserInfo(): UserDTO
 
-    @Headers(Constants.USER_AGENT_APP)
+    @Headers(
+        Constants.USER_AGENT_APP,
+        Constants.CONTENT_TYPE_HEADER
+    )
     @POST("/me")
-    suspend fun putUserInfo(@Body body: Map<String, String?>): Call<ResponseBody>
+    suspend fun putUserInfo(@Body body: Map<String, String?>): Response<RequestBody>
 
     //Работа с работадателем
     @Headers(Constants.USER_AGENT_APP)

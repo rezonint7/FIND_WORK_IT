@@ -104,20 +104,22 @@ fun VacancyDetailScreen(
                     )
                     Spacer(modifier = Modifier.height(28.dp))
                 }
-                item{
-                    Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(id = R.string.simillar_vacancies),
-                        style = MainTheme.typography.headerText,
-                        color = MainTheme.colors.primaryText
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                items(stateSimilarVacancies.vacancies){ vacancy ->
-                    VacancyItem(vacancy = vacancy, onItemClick = {
-                        controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
-                    })
+                if(stateSimilarVacancies.vacancies.isNotEmpty()){
+                    item{
+                        Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(id = R.string.simillar_vacancies),
+                            style = MainTheme.typography.headerText,
+                            color = MainTheme.colors.primaryText
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    items(stateSimilarVacancies.vacancies){ vacancy ->
+                        VacancyItem(vacancy = vacancy, onItemClick = {
+                            controller.navigate(NavScreens.VacancyDetailScreen.route + "/${vacancy.idVacancy}")
+                        })
+                    }
                 }
                 item {
                     Spacer(modifier = Modifier.height(8.dp))

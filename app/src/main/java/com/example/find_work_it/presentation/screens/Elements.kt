@@ -50,9 +50,10 @@ fun AddBasicTextField(
     borderColor: Color = MainTheme.colors.strokeColor,
     isError: Boolean = false,
     errorMessage: String = "",
+    message: String = "",
     onValueChanged: (String) -> Unit = {}
 ){
-    var message by remember { mutableStateOf(TextFieldValue("")) } // исправить
+    var message by remember { mutableStateOf(TextFieldValue(message)) } // исправить
     val shape = RoundedCornerShape(size = 10.dp)
 
     val boxPadding = if(icon != null) 64.dp else 16.dp
