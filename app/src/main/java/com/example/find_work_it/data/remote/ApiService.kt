@@ -73,12 +73,17 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @GET("/employers/{employer_id}")
     suspend fun getEmployerInfo(
-        @Path("employerId") employerId: String
+        @Path("employer_id") employerId: String
     ): EmployerDTO
 
     //Работа с резюме
+    @Headers(Constants.USER_AGENT_APP)
     @GET("/resumes/mine")
     suspend fun getUserResumes(): ResumesDTO
+
+    @Headers(Constants.USER_AGENT_APP)
+    @GET("/resumes/{resume_id}")
+    suspend fun getUserResumeDetail(@Path("resume_id") resumeId: String): ResumesDTO
 
     @POST("/resumes")
     suspend fun createNewResume()

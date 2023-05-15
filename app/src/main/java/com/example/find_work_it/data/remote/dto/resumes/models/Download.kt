@@ -9,3 +9,11 @@ data class Download(
     @SerializedName("rtf")
     val rtf: Rtf?
 )
+data class Rtf(
+    @SerializedName("url")
+    val url: String?
+)
+data class Pdf(
+    @SerializedName("url")
+    val url: String?
+)

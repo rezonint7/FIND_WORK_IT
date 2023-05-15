@@ -31,12 +31,12 @@ class ProfileScreenViewModel @Inject constructor(
         getUserInfo()
     }
 
-    fun getUserInfo(){
+    private fun getUserInfo(){
         getUserInfoUseCase().onEach { result ->
             when(result){
                 is Resource.Success -> {
-                    _state.value = ProfileScreenState(user = null)
                     _state.value = ProfileScreenState(user = result.data)
+                    Log.d("STATE", _state.value!!.user.toString())
                 }
                 is Resource.Error -> {
                     _state.value = ProfileScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
@@ -54,6 +54,7 @@ class ProfileScreenViewModel @Inject constructor(
             when(result){
                 is Resource.Success -> {
                     _editInfoState.value = EditInfoProfileScreenState(success = result.data ?: false)
+                    getUserInfo()
                     Log.d("TOKENS", _editInfoState.value.success.toString())
                 }
                 is Resource.Error -> {

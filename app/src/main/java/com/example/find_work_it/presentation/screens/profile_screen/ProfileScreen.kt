@@ -98,9 +98,9 @@ fun ProfileScreen(
                             .height(308.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            val firstNameState = remember { mutableStateOf(state?.user.firstName) }
-                            val lastNameState = remember { mutableStateOf(state?.user.lastName) }
-                            val middleNameState = remember { mutableStateOf(state?.user.middleName ?: "") }
+                            val firstNameState = remember { mutableStateOf(state.user.firstName) }
+                            val lastNameState = remember { mutableStateOf(state.user.lastName) }
+                            val middleNameState = remember { mutableStateOf(state.user.middleName ?: "") }
                             val isFirstNameValid = remember { mutableStateOf(true) }
                             val isLastNameValid = remember { mutableStateOf(true) }
                             val isMiddleNameValid = remember { mutableStateOf(true) }
@@ -160,7 +160,6 @@ fun ProfileScreen(
                                     "middle_name" to middleNameState.value
                                 )
                                 profileScreenViewModel.editUserInfo(userInfo)
-                                if(profileScreenViewModel.editInfoState.value.success) profileScreenViewModel.getUserInfo()
                                 Toast.makeText(context, profileScreenViewModel.editInfoState.value.error, Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -207,7 +206,6 @@ fun ProfileScreen(
 }
 
 @SuppressLint("RememberReturnType")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileInfo(
     profileScreenViewModel: ProfileScreenViewModel,
