@@ -14,8 +14,14 @@ object ConstantsError {
     const val PUT_USER_ERROR_NETWORK = "Не удалось изменить данные профиля. Проверьте подключение к интернету"
     const val PUT_USER_ERROR_OCCURRED = "Произошла ошибка. Не удалось изменить данные профиля."
 
+    const val GET_RESUMES_ERROR_OCCURRED = "Произошла ошибка. Не удалось получить список резюме"
+    const val GET_RESUMES_ERROR_NETWORK = "Не удалось получить список резюме. Проверьте подключение к интернету"
+    const val GET_RESUME_ERROR_OCCURRED = "Произошла ошибка. Не удалось получить детали резюме."
+    const val GET_RESUME_ERROR_NETWORK = "Не удалось получить детали резюме. Проверьте подключение к интернету"
 
     const val USER_FIRSTNAME_ERROR_VALIDATE = "Имя пользователя может содержать только буквы!"
     const val USER_LASTNAME_ERROR_VALIDATE = "Фамилия пользователя может содержать только буквы!"
     const val USER_MIDDLENAME_ERROR_VALIDATE = "Отчество пользователя может содержать только буквы!"
+
+
 }

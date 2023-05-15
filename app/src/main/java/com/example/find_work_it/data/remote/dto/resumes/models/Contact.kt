@@ -11,7 +11,7 @@ data class Contact(
     @SerializedName("type")
     val type: Type?,
     @SerializedName("value")
-    val value: Value?,
+    val value: Any?,
     @SerializedName("verified")
     val verified: Boolean?
 )

@@ -18,15 +18,14 @@ import javax.inject.Inject
 class GetUserResumesUseCase @Inject constructor(private val repository: ApiRepository) {
     operator fun invoke() : Flow<Resource<List<Resume>>> = flow{
         try{
-            emit(Resource.Loading())
             val resumesDTO = repository.getUserResumes()
             val pagesDTO = resumesDTO.pagesResumes()
             val resumes = resumesDTO.items!!.map { it.toResume(pagesDTO.getValue("pages")!!, pagesDTO.getValue("page")!!) }
             emit(Resource.Success(resumes))
         }catch (e: HttpException){
-            emit(Resource.Error(message = ConstantsError.USER_ACCESS_ERROR))
+            emit(Resource.Error(message = ConstantsError.GET_RESUMES_ERROR_OCCURRED))
         }catch (e: IOException){
-            emit(Resource.Error(message = ConstantsError.NETWORK_ERROR))
+            emit(Resource.Error(message = ConstantsError.GET_RESUMES_ERROR_NETWORK))
         }
     }
 }

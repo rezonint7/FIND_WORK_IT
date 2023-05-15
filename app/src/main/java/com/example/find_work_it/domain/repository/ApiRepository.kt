@@ -1,6 +1,8 @@
 package com.example.find_work_it.domain.repository
 
+import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
@@ -32,5 +34,9 @@ interface ApiRepository {
 
     suspend fun getEmployerInfo(employerId: String): EmployerDTO
 
-    suspend fun getUserResumes():ResumesDTO
+    suspend fun getUserResumes(): ResumesDTO
+
+    suspend fun getUserResumeDetail(resumeId: String): ResumeDetailDTO
+
+    suspend fun getDictionaries(): DictionariesDTO
 }

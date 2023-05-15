@@ -17,5 +17,6 @@ object Constants {
     const val CONTENT_TYPE_HEADER = "Content-Type: application/x-www-form-urlencoded"
 
     const val PARAM_VACANCY_ID = "vacancyId"
+    const val PARAM_RESUME_ID = "resumeId"
 
 }

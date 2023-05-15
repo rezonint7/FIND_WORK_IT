@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.model.User
+import com.example.find_work_it.domain.use_case.resumes.GetUserResumesUseCase
 import com.example.find_work_it.domain.use_case.user.GetUserInfoUseCase
 import com.example.find_work_it.domain.use_case.user.PutUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,16 +20,20 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val putUserInfoUseCase: PutUserInfoUseCase) : ViewModel() {
+    private val getUserResumesUseCase: GetUserResumesUseCase,
+    private val putUserInfoUseCase: PutUserInfoUseCase,) : ViewModel() {
     private val _state: MutableLiveData<ProfileScreenState> = MutableLiveData(ProfileScreenState())
     private val _editInfoState = mutableStateOf<EditInfoProfileScreenState>(
         EditInfoProfileScreenState()
     )
+    private val _getResumes = mutableStateOf<GetResumesState>(GetResumesState())
     val state: MutableLiveData<ProfileScreenState> = _state
+    val resumes: State<GetResumesState> = _getResumes
     val editInfoState: State<EditInfoProfileScreenState> = _editInfoState
 
     init {
         getUserInfo()
+        getResumesForUser()
     }
 
     private fun getUserInfo(){
@@ -45,6 +50,20 @@ class ProfileScreenViewModel @Inject constructor(
                     _state.value = ProfileScreenState(isLoading = true)
                 }
 
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getResumesForUser(){
+        getUserResumesUseCase().onEach { result ->
+            when(result){
+                is Resource.Success -> {
+                    _getResumes.value = GetResumesState(resumes = (result.data ?: emptyList()).toMutableList())
+                }
+                is Resource.Error -> {
+                    _getResumes.value = GetResumesState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
+                }
+                else -> {}
             }
         }.launchIn(viewModelScope)
     }

@@ -33,6 +33,9 @@ import com.example.find_work_it.data.remote.dto.resumes.resume_detail.TravelTime
 import com.example.find_work_it.data.remote.dto.resumes.resume_detail.WorkTicket
 import com.example.find_work_it.domain.model.ResumeDetail
 import com.google.gson.annotations.SerializedName
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.math.exp
 
 data class ResumeDetailDTO(
@@ -69,7 +72,7 @@ data class ResumeDetailDTO(
     @SerializedName("first_name")
     val firstName: String,
     @SerializedName("gender")
-    val gender: Gender,
+    val gender: Gender?,
     @SerializedName("has_vehicle")
     val hasVehicle: Boolean?,
     @SerializedName("hidden_fields")
@@ -134,7 +137,7 @@ fun ResumeDetailDTO.toResumeDetail(): ResumeDetail{
         lastName = lastName,
         firstName = firstName,
         middleName = middleName,
-        birthDate = birthDate,
+        birthDate = convertFromDate(birthDate),
         age = age,
         gender = gender,
         area = area,
@@ -150,4 +153,23 @@ fun ResumeDetailDTO.toResumeDetail(): ResumeDetail{
         skills_set = skillSet,
         certificate = certificate
     )
+}
+
+fun convertFromDate(date: String?): String?{
+    if(date.isNullOrBlank()) return null
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val dateTime = ZonedDateTime.parse(date, inputFormatter)
+
+    val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale("ru", "RU"))
+
+    return outputFormatter.format(dateTime)
+}
+fun convertToDate(date: String?): String?{
+    if(date.isNullOrBlank()) return null
+    val inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val dateTime = ZonedDateTime.parse(date, inputFormatter)
+
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale("ru", "RU"))
+
+    return outputFormatter.format(dateTime)
 }

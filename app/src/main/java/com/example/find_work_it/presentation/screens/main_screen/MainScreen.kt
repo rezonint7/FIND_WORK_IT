@@ -112,19 +112,17 @@ fun TopBarMainScreen(){
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-
         AddBasicTextField(
-            sizeWidth = 274,
+            sizeWidth = 298,
             sizeHeight = 48,
             textStyle = MainTheme.typography.inputTextField,
             placeholder = "Поиск",
             icon = Icons.Default.Search,
             iconContentDescription = "iconSearch"
         )
-        FilterButton(size = 48, onClick = {
-
-        })
-
+//        FilterButton(size = 48, onClick = {
+//
+//        })
     }
 }
 

@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -25,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.find_work_it.R
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.domain.model.Resume
+import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.AddBasicTextField
 import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
@@ -50,6 +52,7 @@ fun ProfileScreen(
 //    }
 
     val state = profileScreenViewModel.state.value
+    val getResumesState = profileScreenViewModel.resumes.value
     if (state != null) {
         if(state.user != null){
             Column(modifier = Modifier
@@ -165,14 +168,15 @@ fun ProfileScreen(
                         }
                     }
                 ){
-                    LazyColumn(modifier = Modifier
-                        .fillMaxWidth()){
+                    LazyColumn(modifier = Modifier.fillMaxWidth()){
                         item{
                             ProfileInfo(profileScreenViewModel)
                             Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
                         }
-                        item{
-                            ResumeItem(resume = Resume("1", "Kotlin разработчик", updatedAt = "Обновлено 12.05.23"))
+                        items(getResumesState.resumes){ resume ->
+                            ResumeItem(resume = resume){
+                                controller.navigate(NavScreens.AddResumeScreen.route + "/${resume.id}")
+                            }
                         }
                         item {
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
@@ -232,11 +236,11 @@ fun ProfileInfo(
 }
 
 @Composable
-fun ResumeItem(resume: Resume){
+fun ResumeItem(resume: Resume, onItemClick: () -> Unit){
     Card(modifier = Modifier
         .wrapContentSize()
         .padding(16.dp)
-        .clickable { },
+        .clickable { onItemClick() },
         elevation = 10.dp,
         shape = Shapes.small
     ) {
@@ -293,6 +297,6 @@ fun ResumeItem(resume: Resume){
 @Composable
 fun preview(){
     FINDWORKIT_Theme(darkTheme = true) {
-        ResumeItem(resume = Resume("1", "Kotlin разработчик", updatedAt = "Обновлено 12.05.23"))
+        //ResumeItem(resume = Resume("1", "Kotlin разработчик", updatedAt = "Обновлено 12.05.23"))
     }
 }

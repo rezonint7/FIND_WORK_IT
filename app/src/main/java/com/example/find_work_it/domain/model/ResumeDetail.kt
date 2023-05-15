@@ -17,7 +17,7 @@ data class ResumeDetail(
     val middleName: String?,
     val birthDate: String?,
     val age: Int?,
-    val gender: Gender,
+    val gender: Gender?,
     val area: Area?,
     val contact: List<Contact>?,
     val title: String?,

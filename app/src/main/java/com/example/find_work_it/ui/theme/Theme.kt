@@ -10,7 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun FINDWORKIT_Theme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) { darkColorPalette } else { lightColorPalette }
+    val colors = if (darkTheme) { darkColorPalette } else { darkColorPalette }
 
     val typography = FINDWORKIT_Typography(
         headerText = HeaderText,

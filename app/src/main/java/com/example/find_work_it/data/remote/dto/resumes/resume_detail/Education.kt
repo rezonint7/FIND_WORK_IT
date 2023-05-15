@@ -1,6 +1,7 @@
 package com.example.find_work_it.data.remote.dto.resumes.resume_detail
 
 
+import com.example.find_work_it.data.remote.dto.resumes.models.Level
 import com.example.find_work_it.data.remote.dto.resumes.models.Primary
 import com.google.gson.annotations.SerializedName
 

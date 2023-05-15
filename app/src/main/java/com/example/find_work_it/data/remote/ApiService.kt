@@ -1,7 +1,9 @@
 package com.example.find_work_it.data.remote
 
 import com.example.find_work_it.common.Constants
+import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
@@ -83,8 +85,13 @@ interface ApiService {
 
     @Headers(Constants.USER_AGENT_APP)
     @GET("/resumes/{resume_id}")
-    suspend fun getUserResumeDetail(@Path("resume_id") resumeId: String): ResumesDTO
+    suspend fun getUserResumeDetail(@Path("resume_id") resumeId: String): ResumeDetailDTO
 
     @POST("/resumes")
     suspend fun createNewResume()
+
+    //Справочники
+    @Headers(Constants.USER_AGENT_APP)
+    @GET("/dictionaries")
+    suspend fun getDictionaries(): DictionariesDTO
 }

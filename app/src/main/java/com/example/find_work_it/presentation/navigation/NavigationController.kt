@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.find_work_it.presentation.screens.add_resume_screen.AddResumeScreen
 import com.example.find_work_it.presentation.screens.authorization_screen.AuthorizationScreen
 import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesScreen
 import com.example.find_work_it.presentation.screens.main_screen.MainScreen
@@ -37,6 +38,9 @@ fun SetUpNavController(
         }
         composable(NavScreens.ProfileScreen.route){
             ProfileScreen(controller)
+        }
+        composable(NavScreens.AddResumeScreen.route + "/{resumeId}"){
+            AddResumeScreen(controller)
         }
     }
 }
