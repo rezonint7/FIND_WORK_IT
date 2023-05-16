@@ -109,7 +109,7 @@ fun ProfileScreen(
                             val isMiddleNameValid = remember { mutableStateOf(true) }
 
                             AddBasicTextField(
-                                sizeWidth = 284,
+                                sizeWidth = 294,
                                 sizeHeight = 48,
                                 textStyle = MainTheme.typography.inputTextField,
                                 placeholder = "Имя",
@@ -123,7 +123,7 @@ fun ProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             AddBasicTextField(
-                                sizeWidth = 284,
+                                sizeWidth = 294,
                                 sizeHeight = 48,
                                 textStyle = MainTheme.typography.inputTextField,
                                 placeholder = "Фамилия",
@@ -137,7 +137,7 @@ fun ProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             AddBasicTextField(
-                                sizeWidth = 284,
+                                sizeWidth = 294,
                                 sizeHeight = 48,
                                 textStyle = MainTheme.typography.inputTextField,
                                 placeholder = "Отчество",

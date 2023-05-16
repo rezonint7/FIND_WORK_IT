@@ -28,12 +28,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.find_work_it.R
+import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.vacancy.models.Contacts
 import com.example.find_work_it.data.remote.dto.vacancy.models.Employer
 import com.example.find_work_it.data.remote.dto.vacancy.models.Phone
 import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.domain.model.VacancyDetail
 import com.example.find_work_it.presentation.navigation.NavScreens
+import com.example.find_work_it.presentation.screens.add_resume_screen.SuggestPositionState
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
@@ -61,7 +63,7 @@ fun AddBasicTextField(
         .size(sizeWidth.dp, sizeHeight.dp)
         .border(
             width = (0.5).dp,
-            color = if(isError) MainTheme.colors.refusedColor else borderColor,
+            color = if (isError) MainTheme.colors.refusedColor else borderColor,
             shape = shape
         )
         .padding(start = boxPadding)
@@ -117,6 +119,49 @@ fun AddBasicTextField(
             }
         }
 
+    }
+}
+
+@Composable
+fun AddStandardTextField(
+    message: String,
+    hint: String,
+    label: String,
+    onValueChanged: (String) -> Unit = {}
+){
+    val message = remember{mutableStateOf(message)}
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = message.value,
+            textStyle = MainTheme.typography.inputTextField,
+            onValueChange = { newText ->
+                message.value = newText
+                onValueChanged(newText)
+            },
+            placeholder = {
+                Text(
+                    text = hint,
+                    style = MainTheme.typography.inputTextField
+                )
+            },
+            label = {
+                Text(
+                    text = label,
+                    style = MainTheme.typography.smallText,
+                    color =  MainTheme.colors.auxiliaryColor
+                )
+            },
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MainTheme.colors.primaryBackground,
+                focusedIndicatorColor = MainTheme.colors.auxiliaryColor,
+                unfocusedIndicatorColor = MainTheme.colors.strokeColor,
+                cursorColor = MainTheme.colors.hintTextFieldColor
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
     }
 }
 

@@ -33,6 +33,8 @@ import com.example.find_work_it.data.remote.dto.resumes.resume_detail.TravelTime
 import com.example.find_work_it.data.remote.dto.resumes.resume_detail.WorkTicket
 import com.example.find_work_it.domain.model.ResumeDetail
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -157,12 +159,11 @@ fun ResumeDetailDTO.toResumeDetail(): ResumeDetail{
 
 fun convertFromDate(date: String?): String?{
     if(date.isNullOrBlank()) return null
-    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val dateTime = ZonedDateTime.parse(date, inputFormatter)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val zonedDateTime = LocalDate.parse(date, formatter)
 
-    val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale("ru", "RU"))
-
-    return outputFormatter.format(dateTime)
+    val dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale("ru", "RU"))
+    return dtf.format(zonedDateTime)
 }
 fun convertToDate(date: String?): String?{
     if(date.isNullOrBlank()) return null

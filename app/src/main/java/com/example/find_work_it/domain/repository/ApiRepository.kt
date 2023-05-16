@@ -4,6 +4,7 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
@@ -39,4 +40,6 @@ interface ApiRepository {
     suspend fun getUserResumeDetail(resumeId: String): ResumeDetailDTO
 
     suspend fun getDictionaries(): DictionariesDTO
+
+    suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO
 }

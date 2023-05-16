@@ -5,6 +5,7 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
@@ -70,6 +71,10 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
 
     override suspend fun getDictionaries(): DictionariesDTO {
         return api.getDictionaries()
+    }
+
+    override suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO {
+        return api.getSuggestPositionsResume(text)
     }
 
     override suspend fun getVacancyDetail(vacancyId: String): VacancyDetailDTO{

@@ -5,13 +5,11 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
-import com.example.find_work_it.data.remote.dto.vacancy.models.ProfessionalRole
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -90,8 +88,20 @@ interface ApiService {
     @POST("/resumes")
     suspend fun createNewResume()
 
+    @PUT("/resumes/{resume_id}")
+    suspend fun editResume(
+        @Path("resume_id") resumeId: String,
+
+
+    )
+
     //Справочники
     @Headers(Constants.USER_AGENT_APP)
     @GET("/dictionaries")
     suspend fun getDictionaries(): DictionariesDTO
+
+    //Подсказки
+    @Headers(Constants.USER_AGENT_APP)
+    @GET("/suggests/positions")
+    suspend fun getSuggestPositionsResume(@Query("text") text: String) : SuggestPositionResumeDTO
 }

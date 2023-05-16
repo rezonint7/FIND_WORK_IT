@@ -23,5 +23,5 @@ object ConstantsError {
     const val USER_LASTNAME_ERROR_VALIDATE = "Фамилия пользователя может содержать только буквы!"
     const val USER_MIDDLENAME_ERROR_VALIDATE = "Отчество пользователя может содержать только буквы!"
 
-
+    const val SUGGEST_POSITION_ERROR = "Не удалось получить подсказки по должностям"
 }

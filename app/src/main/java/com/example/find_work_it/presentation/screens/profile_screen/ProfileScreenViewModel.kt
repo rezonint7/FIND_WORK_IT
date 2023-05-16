@@ -23,9 +23,7 @@ class ProfileScreenViewModel @Inject constructor(
     private val getUserResumesUseCase: GetUserResumesUseCase,
     private val putUserInfoUseCase: PutUserInfoUseCase,) : ViewModel() {
     private val _state: MutableLiveData<ProfileScreenState> = MutableLiveData(ProfileScreenState())
-    private val _editInfoState = mutableStateOf<EditInfoProfileScreenState>(
-        EditInfoProfileScreenState()
-    )
+    private val _editInfoState = mutableStateOf<EditInfoProfileScreenState>(EditInfoProfileScreenState())
     private val _getResumes = mutableStateOf<GetResumesState>(GetResumesState())
     val state: MutableLiveData<ProfileScreenState> = _state
     val resumes: State<GetResumesState> = _getResumes

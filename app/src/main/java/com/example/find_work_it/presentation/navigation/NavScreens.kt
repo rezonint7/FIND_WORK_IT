@@ -8,6 +8,7 @@ sealed class NavScreens (val route: String, val icon: Int = -1, var title: Int =
     object VacancyDetailScreen : NavScreens("vacancy_detail_screen")
     object AuthorizationScreen : NavScreens("authorization_screen")
     object AddResumeScreen : NavScreens("add_resume_screen")
+    object EditMainInfoUser : NavScreens("edit_main_info_user")
 
     object MainScreen : NavScreens("main_screen", R.drawable.round_home_screen_icon, R.string.home_screen)
     object FavoritesScreen : NavScreens("favorites_screen", R.drawable.round_favorite_screen_icon, R.string.favorite_screen)
