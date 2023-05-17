@@ -2,6 +2,7 @@ package com.example.find_work_it.presentation.screens.favorite_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.*
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Resource
@@ -24,8 +25,7 @@ class FavoritesScreenViewModel @Inject constructor(
     private val deleteFavoritesVacanciesUseCase: DeleteFavoritesVacanciesUseCase,
     private val putFavoritesVacanciesUseCase: PutFavoritesVacanciesUseCase,
     ) : ViewModel() {
-    private val _state = mutableStateOf<FavoritesScreenState>(FavoritesScreenState())
-    private val _stateUpdate = mutableStateOf<FavoritesScreenState>(FavoritesScreenState())
+    private val _state: MutableLiveData<FavoritesScreenState> = MutableLiveData<FavoritesScreenState>(FavoritesScreenState())
     private val _statePut = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
     private val _stateDelete = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
     @SuppressLint("MutableCollectionMutableState")
@@ -34,8 +34,7 @@ class FavoritesScreenViewModel @Inject constructor(
         "pages" to 0
     ))
 
-    val state: State<FavoritesScreenState> = _state
-    val stateUpdate: State<FavoritesScreenState> = _stateUpdate
+    val state: MutableLiveData<FavoritesScreenState> = _state
     val statePutFavorite: State<FavoritesAddScreenState> = _statePut
     val stateDeleteFavorite: State<FavoritesAddScreenState> = _stateDelete
 
@@ -43,15 +42,15 @@ class FavoritesScreenViewModel @Inject constructor(
         getFavoritesVacancies()
     }
 
-    private fun getFavoritesVacancies(){
+    fun getFavoritesVacancies(){
         getFavoritesVacanciesUseCase().onEach { result ->
             when(result){
                 is Resource.Success -> {
                     _state.value = FavoritesScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
                     if(!result.data.isNullOrEmpty()){
                         _pages.value.putAll(mutableMapOf(
-                            "pages" to _state.value.vacancies.last().pages,
-                            "page" to _state.value.vacancies.last().page
+                            "pages" to _state.value!!.vacancies.last().pages,
+                            "page" to _state.value!!.vacancies.last().page
                         ))
                     }
                 }
@@ -65,24 +64,22 @@ class FavoritesScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
     fun updateFavoritesVacancies(){
-        _state.value.vacancies.clear()
         getFavoritesVacanciesUseCase().onEach{ result ->
             when(result){
                 is Resource.Success -> {
-                    _stateUpdate.value = FavoritesScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
-                    _state.value.vacancies.addAll(_stateUpdate.value.vacancies)
+                    _state.value = FavoritesScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
                     if(!result.data.isNullOrEmpty()){
                         _pages.value.putAll(mutableMapOf(
-                            "pages" to _state.value.vacancies.last().pages,
-                            "page" to _state.value.vacancies.last().page
+                            "pages" to _state.value!!.vacancies.last().pages,
+                            "page" to _state.value!!.vacancies.last().page
                         ))
                     }
                 }
                 is Resource.Error -> {
-                    _stateUpdate.value = FavoritesScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = FavoritesScreenState(error = result.message ?: "Произошла ошибка")
                 }
                 is Resource.Loading -> {
-                    _stateUpdate.value = FavoritesScreenState(isLoading = true)
+                    _state.value = FavoritesScreenState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)
@@ -107,7 +104,6 @@ class FavoritesScreenViewModel @Inject constructor(
                 is Resource.Error -> _stateDelete.value = FavoritesAddScreenState(error = result.message ?: "Произошла ошибка")
                 else -> {}
             }
-            _state.value.vacancies.removeIf { it.idVacancy == vacancyId }
         }.launchIn(viewModelScope)
     }
 }

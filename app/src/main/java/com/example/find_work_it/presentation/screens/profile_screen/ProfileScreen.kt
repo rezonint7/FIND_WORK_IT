@@ -61,7 +61,7 @@ fun ProfileScreen(
                 BottomSheetScaffold(
                     topBar = {
                         TopBar(screenName = "Профиль"){
-                            Row(modifier = Modifier.width(64.dp), horizontalArrangement = Arrangement.SpaceBetween){
+                            Row(modifier = Modifier.size(64.dp, 34.dp), horizontalArrangement = Arrangement.SpaceBetween){
                                 Row(modifier = Modifier
                                     .size(28.dp)
                                     .clickable {
@@ -98,7 +98,8 @@ fun ProfileScreen(
                     sheetContent = {
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .height(308.dp),
+                            .height(398.dp)
+                            .padding(top = 8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             val firstNameState = remember { mutableStateOf(state.user.firstName) }

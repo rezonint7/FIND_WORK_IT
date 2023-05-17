@@ -13,6 +13,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
@@ -40,7 +41,7 @@ fun FavoritesScreen(
         backgroundColor = MainTheme.colors.primaryBackground,
         topBar = { TopBar(screenName = stringResource(id = NavScreens.FavoritesScreen.title))}
     ) {
-        val state = favoritesScreenViewModel.state.value
+        val state = favoritesScreenViewModel.state.observeAsState(initial = FavoritesScreenState()).value
         if(state.error.isBlank()){
             Log.d("FAVORITES", "TRUE")
             LazyColumn(modifier = Modifier

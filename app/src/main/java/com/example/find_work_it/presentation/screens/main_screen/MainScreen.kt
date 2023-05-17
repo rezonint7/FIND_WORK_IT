@@ -1,5 +1,7 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,12 +14,17 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -42,12 +49,13 @@ fun MainScreen(
     controller: NavController,
     mainScreenViewModel: MainScreenViewModel = hiltViewModel()
 ){
-    val state = mainScreenViewModel.state.value
+    val state = mainScreenViewModel.state.observeAsState(initial = MainScreenState()).value
     val stateExtra = mainScreenViewModel.extra.value
 
+    val text = rememberSaveable { mutableStateOf("")}
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopBarMainScreen()},
+        topBar = { TopBarMainScreen(mainScreenViewModel, text)},
         backgroundColor = MainTheme.colors.primaryBackground
     ) {
         if(state.error.isBlank() && stateExtra.error.isBlank()){
@@ -75,13 +83,17 @@ fun MainScreen(
                                     .size(48.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                ButtonElement(text = "Показать еще", modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(48.dp)
-                                    .padding(horizontal = 8.dp),
-                                    backgroundColor = MainTheme.colors.auxiliaryColor
-                                ) {
-                                    mainScreenViewModel.getExtraVacancies()
+                                val pages = mainScreenViewModel.state.value!!.vacancies.last().pages
+                                val page = mainScreenViewModel.state.value!!.vacancies.last().page
+                                if(page != pages){
+                                    ButtonElement(text = "Показать еще", modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(48.dp)
+                                        .padding(horizontal = 8.dp),
+                                        backgroundColor = MainTheme.colors.auxiliaryColor
+                                    ) {
+                                        mainScreenViewModel.getExtraVacancies(text.value)
+                                    }
                                 }
                             }
                         }
@@ -103,7 +115,8 @@ fun MainScreen(
 }
 
 @Composable
-fun TopBarMainScreen(){
+fun TopBarMainScreen(mainScreenViewModel: MainScreenViewModel, text: MutableState<String>){
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,16 +126,21 @@ fun TopBarMainScreen(){
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         AddBasicTextField(
-            sizeWidth = 298,
+            sizeWidth = 338,
             sizeHeight = 48,
             textStyle = MainTheme.typography.inputTextField,
             placeholder = "Поиск",
+            message = text.value,
             icon = Icons.Default.Search,
-            iconContentDescription = "iconSearch"
+            iconContentDescription = "iconSearch",
+            onValueChanged = { text.value = it },
+            onSearch = {
+                Toast.makeText(context, text.value, Toast.LENGTH_SHORT).show()
+                Log.d("123123", "ХУЙ")
+                mainScreenViewModel.getVacancies(text = text.value)
+            }
         )
-//        FilterButton(size = 48, onClick = {
-//
-//        })
+
     }
 }
 

@@ -58,8 +58,8 @@ fun VacancyDetailScreen(
 
     val context = LocalContext.current
     val onBack = {
+        favoritesScreenViewModel.getFavoritesVacancies()
         controller.popBackStack()
-        favoritesScreenViewModel.updateFavoritesVacancies()
         Toast.makeText(context, "Дерьмо", Toast.LENGTH_SHORT).show()
     }
     BackPressHandler(onBackPressed = onBack)
@@ -73,7 +73,7 @@ fun VacancyDetailScreen(
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(18.dp)){
                 item{
                     Row(
-                        modifier = Modifier.padding(horizontal = 4.dp)
+                        modifier = Modifier.fillMaxWidth()
                     ){
                         Text(
                             text = vacancy.nameVacancy,
@@ -82,11 +82,34 @@ fun VacancyDetailScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = vacancy.salary?.from.toString(),
-                        style = MainTheme.typography.bodyText1,
-                        color = MainTheme.colors.primaryText
-                    )
+                    if(vacancy.salary != null){
+                        val salary = when{
+                            (vacancy.salary.from != null && vacancy.salary.to != null) -> "от ${vacancy.salary.from} до ${vacancy.salary.to}"
+                            (vacancy.salary.to == vacancy.salary.from) -> vacancy.salary.to.toString()
+                            (vacancy.salary.from != null) -> "от ${vacancy.salary.from}"
+                            (vacancy.salary.to != null) -> "до ${vacancy.salary.to}"
+                            else -> {""}
+                        }
+                        val currency = when(vacancy.salary.currency){
+                            "RUR" -> "₽"
+                            "USD" -> "$"
+                            "EUR" -> "€"
+
+                            else -> vacancy.salary.currency
+                        }
+                        Text(
+                            text = "$salary $currency",
+                            style = MainTheme.typography.bodyText1,
+                            color = MainTheme.colors.primaryText
+                        )
+                    }
+                    else{
+                        Text(
+                            text = "Уровень дохода: не указан",
+                            style = MainTheme.typography.bodyText1,
+                            color = MainTheme.colors.primaryText
+                        )
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
@@ -162,7 +185,7 @@ fun TopBarDetailVacancy(
     vacancyDetailViewModel: VacancyDetailViewModel,
     vacancyId: String
 ){
-    val favoritesList = favoritesScreenViewModel.state.value.vacancies
+    val favoritesList = favoritesScreenViewModel.state.value?.vacancies
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current
     Row(
         modifier = Modifier
@@ -184,7 +207,7 @@ fun TopBarDetailVacancy(
             )
         }
         Row(modifier = Modifier.padding(horizontal = 8.dp)) {
-            AddToFavoriteButton(vacancyDetailViewModel, favoritesList) { clicked ->
+            AddToFavoriteButton(vacancyDetailViewModel, favoritesList!!) { clicked ->
                 if(clicked) {
                     favoritesScreenViewModel.putFavoriteVacancy(vacancyId)
                 }

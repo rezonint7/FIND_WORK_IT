@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
+import com.example.find_work_it.domain.use_case.dictionaries.GetAreasDictionaryUseCase
 import com.example.find_work_it.domain.use_case.dictionaries.GetDictionariesUseCase
 import com.example.find_work_it.domain.use_case.resumes.GetUserResumeDetailUseCase
 import com.example.find_work_it.domain.use_case.suggest.GetPositionsResumeUseCase
@@ -22,9 +23,11 @@ class AddResumeScreenViewModel @Inject constructor(
     private val getUserResumeDetailUseCase: GetUserResumeDetailUseCase,
     private val getDictionariesUseCase: GetDictionariesUseCase,
     private val getPositionsResumeUseCase: GetPositionsResumeUseCase,
+    private val getAreasDictionaryUseCase: GetAreasDictionaryUseCase,
     savedStateHandle: SavedStateHandle): ViewModel() {
     private val _state = mutableStateOf<AddResumeScreenState>(AddResumeScreenState())
     private val _dictionaries = mutableStateOf<DictionariesState>(DictionariesState())
+    private val _areasDictionary = mutableStateOf<AreasDictionaryState>(AreasDictionaryState())
     private val _suggestPosition: MutableLiveData<SuggestPositionState> = MutableLiveData(
         SuggestPositionState()
     )
@@ -32,11 +35,13 @@ class AddResumeScreenViewModel @Inject constructor(
     val state: State<AddResumeScreenState> = _state
     val suggestPositions: MutableLiveData<SuggestPositionState> = _suggestPosition
     val dictionariesState: State<DictionariesState> = _dictionaries
+    val areasDictionaryState: State<AreasDictionaryState> = _areasDictionary
     init {
         savedStateHandle.get<String>(Constants.PARAM_RESUME_ID)?.let{ resumeId ->
             getResume(resumeId)
         }
         getDictionaries()
+        getAreasDictionary()
     }
 
     private fun getResume(resumeId: String){
@@ -67,6 +72,20 @@ class AddResumeScreenViewModel @Inject constructor(
                 else -> {}
             }
 
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getAreasDictionary(){
+        getAreasDictionaryUseCase().onEach { result ->
+            when(result){
+                is Resource.Success -> {
+                    _areasDictionary.value = AreasDictionaryState(result.data)
+                }
+                is Resource.Error -> {
+                    _areasDictionary.value = AreasDictionaryState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
+                }
+                else -> {}
+            }
         }.launchIn(viewModelScope)
     }
 

@@ -2,9 +2,9 @@ package com.example.find_work_it.presentation.screens.main_screen
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.use_case.get_vacansies.GetExtraVacanciesUseCase
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MainScreenViewModel @Inject constructor(
     private val getVacanciesUseCase: GetVacanciesUseCase,
     private val getExtraVacanciesUseCase: GetExtraVacanciesUseCase) : ViewModel(){
-    private val _state = mutableStateOf<MainScreenState>(MainScreenState())
+    private val _state: MutableLiveData<MainScreenState> = MutableLiveData<MainScreenState>(MainScreenState())
     private val _extraState = mutableStateOf(MainExtraScreenState())
 
     @Suppress("MutableCollectionMutableState")
@@ -26,22 +26,22 @@ class MainScreenViewModel @Inject constructor(
         "pages" to 0
     ))
 
-    val state: State<MainScreenState> = _state
+    val state: MutableLiveData<MainScreenState> = _state
     val extra: State<MainExtraScreenState> = _extraState
 
     init{
         getVacancies()
     }
 
-    private fun getVacancies(){
-        getVacanciesUseCase().onEach { result ->
+    fun getVacancies(text: String = ""){
+        getVacanciesUseCase(text).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     _state.value = MainScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
                     if(!result.data.isNullOrEmpty()){
                         _pages.value.putAll(mutableMapOf(
-                            "pages" to _state.value.vacancies.last().pages,
-                            "page" to _state.value.vacancies.last().page
+                            "pages" to _state.value!!.vacancies.last().pages,
+                            "page" to _state.value!!.vacancies.last().page
                         ))
                     }
                 }
@@ -55,17 +55,17 @@ class MainScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-     fun getExtraVacancies(){
+     fun getExtraVacancies(text: String = ""){
         val page = _pages.value.getValue("page") + 1
-        getExtraVacanciesUseCase(page.toString()).onEach { result ->
+        getExtraVacanciesUseCase(page.toString(), text).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     _extraState.value = MainExtraScreenState(vacancies = (result.data ?: emptyList()).toMutableList())
-                    _state.value.vacancies.addAll(_extraState.value.vacancies)
+                    _state.value?.vacancies?.addAll(_extraState.value.vacancies)
                     if(!result.data.isNullOrEmpty()){
                         _pages.value.putAll(mutableMapOf(
-                            "pages" to _state.value.vacancies.last().pages,
-                            "page" to _state.value.vacancies.last().page
+                            "pages" to _state.value!!.vacancies.last().pages,
+                            "page" to _state.value!!.vacancies.last().page
                         ))
                     }
                 }

@@ -1,6 +1,7 @@
 package com.example.find_work_it.domain.repository
 
 import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
+import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
@@ -42,4 +43,6 @@ interface ApiRepository {
     suspend fun getDictionaries(): DictionariesDTO
 
     suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO
+
+    suspend fun getAreasResume(): AreasDTO
 }

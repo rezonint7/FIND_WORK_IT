@@ -41,6 +41,7 @@ import com.example.find_work_it.domain.model.ResumeDetail
 import com.example.find_work_it.presentation.screens.AddStandardTextField
 import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.TopBar
+import com.example.find_work_it.presentation.screens.add_resume_screen.info_user_elements.EditExtraInfoUser
 import com.example.find_work_it.presentation.screens.add_resume_screen.info_user_elements.EditMainInfoUser
 import com.example.find_work_it.ui.theme.MainTheme
 
@@ -51,6 +52,7 @@ fun AddResumeScreen(
     addResumeScreenViewModel: AddResumeScreenViewModel = hiltViewModel()
 ){
     val state = addResumeScreenViewModel.state.value
+    val areasState = addResumeScreenViewModel.areasDictionaryState.value
     val suggests by addResumeScreenViewModel.suggestPositions.observeAsState(initial = SuggestPositionState())
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -109,6 +111,12 @@ fun AddResumeScreen(
                 item {
                     EditMainInfoUser(title = "Основная информация", resumeDetail = resume)
                 }
+                if(areasState.areas?.areas?.isNotEmpty() == true){
+                    item{
+                        EditExtraInfoUser(title = "Дополнительно", resumeDetail = resume, areas = areasState.areas.areas.flatMap { it.areas })
+                    }
+                }
+
             }
         }
     }

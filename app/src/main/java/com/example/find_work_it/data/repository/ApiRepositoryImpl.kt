@@ -2,6 +2,7 @@ package com.example.find_work_it.data.repository
 
 import com.example.find_work_it.data.remote.ApiService
 import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
+import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
@@ -75,6 +76,10 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
 
     override suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO {
         return api.getSuggestPositionsResume(text)
+    }
+
+    override suspend fun getAreasResume(): AreasDTO {
+        return api.getAreasResume()
     }
 
     override suspend fun getVacancyDetail(vacancyId: String): VacancyDetailDTO{

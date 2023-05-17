@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -40,6 +42,7 @@ import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
 import java.util.concurrent.Executors
+import kotlin.math.sin
 
 @Composable
 fun AddBasicTextField(
@@ -53,9 +56,11 @@ fun AddBasicTextField(
     isError: Boolean = false,
     errorMessage: String = "",
     message: String = "",
-    onValueChanged: (String) -> Unit = {}
+    onValueChanged: (String) -> Unit = {},
+    onSearch: () -> Unit = {}
 ){
     var message by remember { mutableStateOf(TextFieldValue(message)) } // исправить
+    val focusManager = LocalFocusManager.current
     val shape = RoundedCornerShape(size = 10.dp)
 
     val boxPadding = if(icon != null) 64.dp else 16.dp
@@ -105,7 +110,13 @@ fun AddBasicTextField(
                 }
             },
             singleLine = true,
-            cursorBrush = SolidColor(MainTheme.colors.hintTextFieldColor)
+            cursorBrush = SolidColor(MainTheme.colors.hintTextFieldColor),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onSearch()
+                    focusManager.clearFocus()
+                }
+            )
         )
         if(message.text.isNotBlank()){
             if (isError && errorMessage.isNotEmpty()) {
@@ -134,6 +145,7 @@ fun AddStandardTextField(
         TextField(
             value = message.value,
             textStyle = MainTheme.typography.inputTextField,
+            singleLine = true,
             onValueChange = { newText ->
                 message.value = newText
                 onValueChanged(newText)
@@ -169,7 +181,7 @@ fun AddStandardTextField(
 fun TopBar(screenName: String, onItems: @Composable () -> Unit = {}){
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().height(34.dp)
             .background(MainTheme.colors.primaryBackground)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -281,52 +293,59 @@ fun EmployerInfoItem(
     vacancy: VacancyDetail,
     onItemClick: () -> Unit
 ){
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
-            .background(MainTheme.colors.secondaryBackground, shape = Shapes.medium)
-            .clickable { onItemClick() }
-    ) {
-        if(!vacancy.employer?.logoUrls?.x90.isNullOrEmpty()){
-
-        }
-        Row(Modifier.padding(4.dp)){
-            val image = rememberImagePainter("https://hhcdn.ru/employer-logo/3790847.png"){
-                this.build()
-            }
-            Image(painter = image, contentDescription = "logoEmployer")
-        }
-        Row(
-            Modifier
-                .padding(8.dp)
-                .padding(vertical = 20.dp)){
-            Text(
-                text = vacancy.employer?.name.toString(),
-                style = MainTheme.typography.headerText,
-                color = MainTheme.colors.primaryText
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)){
+        Text(
+            text = vacancy.employer?.name.toString(),
+            style = MainTheme.typography.headerText,
+            color = MainTheme.colors.primaryText
+        )
+        if(vacancy.employer?.trusted!!){
+            Image(
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(top = 2.dp),
+                painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
+                contentDescription = "checkEmployer",
+                colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
             )
-            if(vacancy.employer?.trusted!!){
-                Image(
-                    modifier = Modifier
-                        .size(18.dp)
-                        .padding(top = 2.dp),
-                    painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
-                    contentDescription = "checkEmployer",
-                    colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
-                )
-            }
-        }
-        if(vacancy.address?.raw != null){
-            Row(modifier = Modifier.padding(8.dp)){
-                Text(
-                    text = vacancy.address.raw.toString(),
-                    style = MainTheme.typography.smallText,
-                    color = MainTheme.colors.primaryText
-                )
-            }
         }
     }
+//    Column(
+//        Modifier
+//            .fillMaxWidth()
+//            .padding(2.dp)
+//            .background(MainTheme.colors.secondaryBackground, shape = Shapes.medium)
+//            .clickable { onItemClick() }
+//    ) {
+//        Row(
+//            Modifier
+//                .padding(8.dp)){
+//            Text(
+//                text = vacancy.employer?.name.toString(),
+//                style = MainTheme.typography.headerText,
+//                color = MainTheme.colors.primaryText
+//            )
+//            if(vacancy.employer?.trusted!!){
+//                Image(
+//                    modifier = Modifier
+//                        .size(18.dp)
+//                        .padding(top = 2.dp),
+//                    painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
+//                    contentDescription = "checkEmployer",
+//                    colorFilter = ColorFilter.tint(color = MainTheme.colors.auxiliaryColor)
+//                )
+//            }
+//        }
+//        if(vacancy.address?.raw != null){
+//            Row(modifier = Modifier.padding(8.dp)){
+//                Text(
+//                    text = vacancy.address.raw.toString(),
+//                    style = MainTheme.typography.smallText,
+//                    color = MainTheme.colors.primaryText
+//                )
+//            }
+//        }
+//    }
 }
 
 

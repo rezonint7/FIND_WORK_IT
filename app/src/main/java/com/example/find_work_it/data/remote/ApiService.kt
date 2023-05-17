@@ -2,6 +2,7 @@ package com.example.find_work_it.data.remote
 
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
+import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
@@ -99,6 +100,10 @@ interface ApiService {
     @Headers(Constants.USER_AGENT_APP)
     @GET("/dictionaries")
     suspend fun getDictionaries(): DictionariesDTO
+
+    @Headers(Constants.USER_AGENT_APP)
+    @GET("/areas/113")
+    suspend fun getAreasResume(): AreasDTO
 
     //Подсказки
     @Headers(Constants.USER_AGENT_APP)

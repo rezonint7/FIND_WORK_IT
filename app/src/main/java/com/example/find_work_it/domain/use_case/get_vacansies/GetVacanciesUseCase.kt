@@ -14,10 +14,10 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetVacanciesUseCase @Inject constructor(private val repository: ApiRepository){
-    operator fun invoke() : Flow<Resource<List<Vacancy>>> = flow{
+    operator fun invoke(text: String = "") : Flow<Resource<List<Vacancy>>> = flow{
         try{
             emit(Resource.Loading())
-            val vacanciesDTO = repository.getVacancies()
+            val vacanciesDTO = repository.getVacancies(text = text)
             val pagesMap = vacanciesDTO.pagesVacancy()
             val vacancies = vacanciesDTO.items!!.map { it!!.toVacancy(pagesMap.getValue("pages"), pagesMap.getValue("page")) }
             emit(Resource.Success(vacancies))
