@@ -40,6 +40,8 @@ import com.example.find_work_it.data.remote.dto.resumes.models.Value
 import com.example.find_work_it.domain.model.ResumeDetail
 import com.example.find_work_it.presentation.screens.AddStandardTextField
 import com.example.find_work_it.presentation.screens.ButtonElement
+import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
+import com.example.find_work_it.presentation.screens.LoadingUseCaseElement
 import com.example.find_work_it.presentation.screens.TopBar
 import com.example.find_work_it.presentation.screens.add_resume_screen.info_user_elements.EditExtraInfoUser
 import com.example.find_work_it.presentation.screens.add_resume_screen.info_user_elements.EditMainInfoUser
@@ -119,6 +121,14 @@ fun AddResumeScreen(
 
             }
         }
+    }
+    if(state.error.isNotEmpty()){
+        ErrorUseCaseElement(error = state.error) {
+
+        }
+    }
+    if(state.isLoading){
+        LoadingUseCaseElement()
     }
 }
 

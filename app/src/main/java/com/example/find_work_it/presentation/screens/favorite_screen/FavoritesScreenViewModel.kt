@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.find_work_it.common.ConstantsError
 import com.example.find_work_it.common.Resource
 import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.domain.repository.ApiRepository
@@ -23,8 +24,7 @@ import javax.inject.Inject
 class FavoritesScreenViewModel @Inject constructor(
     private val getFavoritesVacanciesUseCase: GetFavoritesVacanciesUseCase,
     private val deleteFavoritesVacanciesUseCase: DeleteFavoritesVacanciesUseCase,
-    private val putFavoritesVacanciesUseCase: PutFavoritesVacanciesUseCase,
-    ) : ViewModel() {
+    private val putFavoritesVacanciesUseCase: PutFavoritesVacanciesUseCase) : ViewModel() {
     private val _state: MutableLiveData<FavoritesScreenState> = MutableLiveData<FavoritesScreenState>(FavoritesScreenState())
     private val _statePut = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
     private val _stateDelete = mutableStateOf<FavoritesAddScreenState>(FavoritesAddScreenState())
@@ -55,7 +55,7 @@ class FavoritesScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _state.value = FavoritesScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = FavoritesScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _state.value = FavoritesScreenState(isLoading = true)
@@ -76,7 +76,7 @@ class FavoritesScreenViewModel @Inject constructor(
                     }
                 }
                 is Resource.Error -> {
-                    _state.value = FavoritesScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = FavoritesScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 is Resource.Loading -> {
                     _state.value = FavoritesScreenState(isLoading = true)

@@ -28,9 +28,7 @@ class AddResumeScreenViewModel @Inject constructor(
     private val _state = mutableStateOf<AddResumeScreenState>(AddResumeScreenState())
     private val _dictionaries = mutableStateOf<DictionariesState>(DictionariesState())
     private val _areasDictionary = mutableStateOf<AreasDictionaryState>(AreasDictionaryState())
-    private val _suggestPosition: MutableLiveData<SuggestPositionState> = MutableLiveData(
-        SuggestPositionState()
-    )
+    private val _suggestPosition: MutableLiveData<SuggestPositionState> = MutableLiveData(SuggestPositionState())
 
     val state: State<AddResumeScreenState> = _state
     val suggestPositions: MutableLiveData<SuggestPositionState> = _suggestPosition
@@ -54,7 +52,7 @@ class AddResumeScreenViewModel @Inject constructor(
                     _state.value = AddResumeScreenState(isLoading = true)
                 }
                 is Resource.Error -> {
-                    _state.value = AddResumeScreenState(error = result.message ?: "Произошла ошибка")
+                    _state.value = AddResumeScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
             }
         }.launchIn(viewModelScope)
@@ -67,7 +65,7 @@ class AddResumeScreenViewModel @Inject constructor(
                     _dictionaries.value = DictionariesState(dictionaries = result.data)
                 }
                 is Resource.Error -> {
-                    _dictionaries.value = DictionariesState(error = result.message ?: "Произошла ошибка")
+                    _dictionaries.value = DictionariesState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 else -> {}
             }
@@ -89,6 +87,7 @@ class AddResumeScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    // пока не используется
     fun getSuggestsPosition(text:String){
         getPositionsResumeUseCase(text).onEach { result ->
             when(result){
