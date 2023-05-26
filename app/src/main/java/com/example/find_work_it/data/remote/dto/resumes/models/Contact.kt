@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Contact(
     @SerializedName("comment")
-    val comment: String?,
+    val comment: String? = null,
     @SerializedName("preferred")
     val preferred: Boolean?,
     @SerializedName("type")
@@ -13,5 +13,5 @@ data class Contact(
     @SerializedName("value")
     val value: Any?,
     @SerializedName("verified")
-    val verified: Boolean?
+    val verified: Boolean? = false
 )

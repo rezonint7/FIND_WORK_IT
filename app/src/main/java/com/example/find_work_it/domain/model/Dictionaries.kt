@@ -2,7 +2,6 @@ package com.example.find_work_it.domain.model
 
 import com.example.find_work_it.data.remote.dto.dictionaries.models.DriverLicenseType
 import com.example.find_work_it.data.remote.dto.dictionaries.models.EducationLevel
-import com.example.find_work_it.data.remote.dto.dictionaries.models.Employment
 import com.example.find_work_it.data.remote.dto.dictionaries.models.Experience
 import com.example.find_work_it.data.remote.dto.dictionaries.models.Gender
 import com.example.find_work_it.data.remote.dto.dictionaries.models.JobSearchStatusesApplicant
@@ -10,7 +9,8 @@ import com.example.find_work_it.data.remote.dto.dictionaries.models.LanguageLeve
 import com.example.find_work_it.data.remote.dto.dictionaries.models.RelocationType
 import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeAccessType
 import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeStatus
-import com.example.find_work_it.data.remote.dto.dictionaries.models.Schedule
+import com.example.find_work_it.data.remote.dto.resumes.resume_detail.Employment
+import com.example.find_work_it.data.remote.dto.resumes.resume_detail.Schedule
 
 data class Dictionaries(
     val jobSearchStatusesApplicant: List<JobSearchStatusesApplicant>,

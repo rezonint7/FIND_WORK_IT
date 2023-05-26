@@ -13,7 +13,6 @@ object Constants {
     const val AUTHORIZATION_ENDPOINT = "https://hh.ru/oauth/authorize"
     const val TOKEN_ENDPOINT = "https://hh.ru/oauth/token"
 
-    const val USER_AGENT_APP = "User-Agent: FINDWORKIT/0.5.5 (rezonint@gmail.com)"
     const val CONTENT_TYPE_HEADER = "Content-Type: application/x-www-form-urlencoded"
 
     const val PARAM_VACANCY_ID = "vacancyId"

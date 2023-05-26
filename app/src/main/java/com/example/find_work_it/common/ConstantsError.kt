@@ -24,4 +24,7 @@ object ConstantsError {
     const val USER_MIDDLENAME_ERROR_VALIDATE = "Отчество пользователя может содержать только буквы!"
 
     const val SUGGEST_POSITION_ERROR = "Не удалось получить подсказки по должностям"
+
+    const val RESUME_CREATE_ERROR_OCCURRED = "Произошла ошибка. Не удалось создать новое резюме"
+    const val RESUME_CREATE_ERROR_NETWORK = "Не удалось создать новое резюме.  Проверьте подключение к интернету"
 }

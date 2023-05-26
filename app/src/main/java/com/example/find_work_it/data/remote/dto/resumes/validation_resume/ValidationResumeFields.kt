@@ -1,0 +1,41 @@
+package com.example.find_work_it.data.remote.dto.resumes.validation_resume
+
+import com.google.gson.annotations.SerializedName
+
+data class ValidationResumeFields(
+    @SerializedName("last_name") val lastName: ValidationRule,
+    @SerializedName("first_name") val firstName: ValidationRule,
+    @SerializedName("middle_name") val middleName: ValidationRule?,
+    @SerializedName("title") val title: ValidationRule,
+    @SerializedName("area") val area: ValidationRule,
+    @SerializedName("district") val district: ValidationRule?,
+    @SerializedName("gender") val gender: ValidationRule,
+    @SerializedName("salary") val salary: ValidationRule?,
+    @SerializedName("photo") val photo: ValidationRule?,
+    @SerializedName("hidden_fields") val hiddenFields: ValidationRule?,
+    @SerializedName("resume_locale") val resumeLocale: ValidationRule,
+    @SerializedName("skills") val skills: ValidationRule,
+    @SerializedName("citizenship") val citizenship: ValidationRule,
+    @SerializedName("work_ticket") val workTicket: ValidationRule?,
+    @SerializedName("access") val access: AccessValidationRule,
+    @SerializedName("birth_date") val birthDate: ValidationRule?,
+    @SerializedName("contact") val contact: ValidationContact,
+    @SerializedName("education") val education: ValidationEducation,
+    @SerializedName("employment") val employment: ValidationRule,
+    @SerializedName("employments") val employments: ValidationRule,
+    @SerializedName("experience") val experience: ValidationExperience,
+    @SerializedName("language") val language: ValidationLanguage,
+    @SerializedName("metro") val metro: ValidationRule?,
+    @SerializedName("recommendation") val recommendation: ValidationRecommendation?,
+    @SerializedName("relocation") val relocation: ValidationRelocation?,
+    @SerializedName("schedule") val schedule: ValidationRule,
+    @SerializedName("schedules") val schedules: ValidationRule,
+    @SerializedName("site") val site: ValidationSite?,
+    @SerializedName("travel_time") val travelTime: ValidationRule,
+    @SerializedName("business_trip_readiness") val businessTripReadiness: ValidationRule,
+    @SerializedName("portfolio") val portfolio: ValidationRule?,
+    @SerializedName("skill_set") val skillSet: ValidationSkillSet,
+    @SerializedName("has_vehicle") val hasVehicle: ValidationRule?,
+    @SerializedName("driver_license_types") val driverLicenseTypes: ValidationRule?,
+    @SerializedName("professional_roles") val professionalRoles: ValidationRule
+)

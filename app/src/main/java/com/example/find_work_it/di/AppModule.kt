@@ -35,6 +35,7 @@ object AppModule {
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer ${sharedPrefsHelper.getTokens()?.access_token}")
+                    .addHeader("User-Agent", "FINDWORKIT/0.7.1 (rezonint@gmail.com)")
                     .build()
                 chain.proceed(request)
             }

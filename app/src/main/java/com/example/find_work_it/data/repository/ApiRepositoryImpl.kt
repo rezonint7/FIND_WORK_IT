@@ -3,16 +3,17 @@ package com.example.find_work_it.data.repository
 import com.example.find_work_it.data.remote.ApiService
 import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
+import com.example.find_work_it.data.remote.dto.dictionary_professional_roles.ProfessionalRolesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.resumes.validation_resume.ValidationResumeFields
 import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDTO
 import com.example.find_work_it.data.remote.dto.vacancy.VacancyDetailDTO
-import com.example.find_work_it.domain.model.VacancyDetail
+import com.example.find_work_it.domain.model.ResumeDetail
 import com.example.find_work_it.domain.repository.ApiRepository
-import okhttp3.RequestBody
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiRepository{
@@ -74,12 +75,24 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
         return api.getDictionaries()
     }
 
+    override suspend fun gerProfessionalRoles(): ProfessionalRolesDTO {
+        return api.gerProfessionalRoles()
+    }
+
     override suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO {
         return api.getSuggestPositionsResume(text)
     }
 
     override suspend fun getAreasResume(): AreasDTO {
         return api.getAreasResume()
+    }
+
+    override suspend fun getResumeConditions(): ValidationResumeFields {
+        return api.getResumeConditions()
+    }
+
+    override suspend fun createNewResume(newResume: ResumeDetail) {
+        api.createNewResume(newResume)
     }
 
     override suspend fun getVacancyDetail(vacancyId: String): VacancyDetailDTO{

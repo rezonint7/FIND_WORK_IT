@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -129,7 +130,6 @@ fun AddBasicTextField(
                 )
             }
         }
-
     }
 }
 
@@ -138,16 +138,20 @@ fun AddStandardTextField(
     message: String,
     hint: String,
     label: String,
+    isError: Boolean = false,
+    singleLine: Boolean = true,
+    heightField: Int = 72,
+    errorMessage: String = "",
     onValueChanged: (String) -> Unit = {}
 ){
-    val message = remember{mutableStateOf(message)}
+    val messageState = remember{ mutableStateOf(message) }
     Column(modifier = Modifier.fillMaxWidth()) {
         TextField(
-            value = message.value,
+            value = messageState.value,
             textStyle = MainTheme.typography.inputTextField,
-            singleLine = true,
+            singleLine = singleLine,
             onValueChange = { newText ->
-                message.value = newText
+                messageState.value = newText
                 onValueChanged(newText)
             },
             placeholder = {
@@ -166,14 +170,23 @@ fun AddStandardTextField(
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MainTheme.colors.primaryBackground,
-                focusedIndicatorColor = MainTheme.colors.auxiliaryColor,
-                unfocusedIndicatorColor = MainTheme.colors.strokeColor,
+                focusedIndicatorColor = if(!isError) MainTheme.colors.auxiliaryColor else MainTheme.colors.refusedColor,
+                unfocusedIndicatorColor = if(!isError) MainTheme.colors.strokeColor else MainTheme.colors.refusedColor,
                 cursorColor = MainTheme.colors.hintTextFieldColor
             ),
             modifier = Modifier
                 .fillMaxWidth()
+                .height(heightField.dp)
                 .padding(vertical = 8.dp)
         )
+        if(isError){
+            Text(
+                text = errorMessage,
+                style = MainTheme.typography.smallText,
+                color = MainTheme.colors.refusedColor,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
     }
 }
 
@@ -181,7 +194,8 @@ fun AddStandardTextField(
 fun TopBar(screenName: String, onItems: @Composable () -> Unit = {}){
     Row(
         modifier = Modifier
-            .fillMaxWidth().height(34.dp)
+            .fillMaxWidth()
+            .height(48.dp)
             .background(MainTheme.colors.primaryBackground)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -190,7 +204,8 @@ fun TopBar(screenName: String, onItems: @Composable () -> Unit = {}){
         Text(
             text = screenName,
             style = MainTheme.typography.headerText,
-            color = MainTheme.colors.primaryText
+            color = MainTheme.colors.primaryText,
+            modifier = Modifier.padding(start = 8.dp).scale(1.1f)
         )
         onItems()
     }
@@ -293,7 +308,9 @@ fun EmployerInfoItem(
     vacancy: VacancyDetail,
     onItemClick: () -> Unit
 ){
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = 8.dp)){
         Text(
             text = vacancy.employer?.name.toString(),
             style = MainTheme.typography.headerText,

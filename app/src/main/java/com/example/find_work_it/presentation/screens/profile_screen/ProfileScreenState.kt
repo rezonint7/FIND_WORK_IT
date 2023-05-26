@@ -13,6 +13,12 @@ data class GetResumesState(
     val resumes: MutableList<Resume> = mutableListOf(),
     val error: String = ""
 )
+data class CreateNewResumeState(
+    val isLoading: Boolean = false,
+    val success: Boolean = false,
+    val error: String = ""
+)
+
 data class EditInfoProfileScreenState(
     val success: Boolean = false,
     val error: String = ""

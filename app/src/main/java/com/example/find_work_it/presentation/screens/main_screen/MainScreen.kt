@@ -126,7 +126,7 @@ fun TopBarMainScreen(mainScreenViewModel: MainScreenViewModel, text: MutableStat
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         AddBasicTextField(
-            sizeWidth = 338,
+            sizeWidth = 348,
             sizeHeight = 48,
             textStyle = MainTheme.typography.inputTextField,
             placeholder = "Поиск",

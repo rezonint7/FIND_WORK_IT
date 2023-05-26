@@ -9,5 +9,5 @@ data class Area(
     @SerializedName("name")
     val name: String?,
     @SerializedName("url")
-    val url: String?
+    val url: String? = null
 )

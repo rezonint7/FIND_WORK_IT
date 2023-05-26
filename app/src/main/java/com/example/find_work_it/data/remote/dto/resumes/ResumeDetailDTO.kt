@@ -153,7 +153,12 @@ fun ResumeDetailDTO.toResumeDetail(): ResumeDetail{
         finished = finished,
         skills = skills,
         skills_set = skillSet,
-        certificate = certificate
+        certificate = certificate,
+        businessTripReadiness = businessTripReadiness,
+        professionalRoles = professionalRoles,
+        employments = employments,
+        language = language,
+        schedules = schedules
     )
 }
 

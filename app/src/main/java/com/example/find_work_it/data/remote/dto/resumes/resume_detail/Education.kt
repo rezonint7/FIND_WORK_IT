@@ -7,11 +7,11 @@ import com.google.gson.annotations.SerializedName
 
 data class Education(
     @SerializedName("additional")
-    val additional: List<Additional?>?,
+    val additional: List<Additional?>? = null,
     @SerializedName("attestation")
-    val attestation: List<Attestation?>?,
+    val attestation: List<Attestation?>? = null,
     @SerializedName("elementary")
-    val elementary: List<Elementary?>?,
+    val elementary: List<Elementary?>? = null,
     @SerializedName("level")
     val level: Level?,
     @SerializedName("primary")

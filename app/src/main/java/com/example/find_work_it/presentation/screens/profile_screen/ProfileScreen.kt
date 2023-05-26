@@ -171,12 +171,15 @@ fun ProfileScreen(
                 ){
                     LazyColumn(modifier = Modifier.fillMaxWidth()){
                         item{
+                            Spacer(modifier = Modifier.height(8.dp))
                             ProfileInfo(profileScreenViewModel)
-                            Divider(modifier = Modifier.fillMaxWidth(), color = MainTheme.colors.strokeColor)
+                            Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 48.dp), color = MainTheme.colors.strokeColor)
                         }
-                        items(getResumesState.resumes){ resume ->
-                            ResumeItem(resume = resume){
-                                controller.navigate(NavScreens.AddResumeScreen.route + "/${resume.id}")
+                        getResumesState?.let { it ->
+                            items(it.resumes){ resume ->
+                                ResumeItem(resume = resume){
+                                    controller.navigate(NavScreens.AddResumeScreen.route + "/${resume.id}")
+                                }
                             }
                         }
                         item {
@@ -186,11 +189,11 @@ fun ProfileScreen(
                                     modifier = Modifier.padding(8.dp),
                                     backgroundColor = MainTheme.colors.auxiliaryColor
                                 ) {
-                                    //navigate to add
-
+                                    profileScreenViewModel.createNewResume()
                                 }
                             }
                         }
+                        item { Spacer(modifier = Modifier.height(48.dp)) }
                     }
                 }
             }
@@ -219,7 +222,7 @@ fun ProfileInfo(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(108.dp),
+            .height(68.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -240,7 +243,7 @@ fun ProfileInfo(
 fun ResumeItem(resume: Resume, onItemClick: () -> Unit){
     Card(modifier = Modifier
         .wrapContentSize()
-        .padding(16.dp)
+        .padding(horizontal = 16.dp, vertical = 8.dp)
         .clickable { onItemClick() },
         elevation = 10.dp,
         shape = Shapes.small
@@ -261,12 +264,21 @@ fun ResumeItem(resume: Resume, onItemClick: () -> Unit){
                         style = MainTheme.typography.headerText,
                         color = MainTheme.colors.primaryText
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val statusColor = when(resume.status?.id){
+                        "not_published" -> MainTheme.colors.refusedColor
+                        "published" -> MainTheme.colors.approvedColor
+                        "blocked" -> MainTheme.colors.refusedColor
+                        "on_moderation" -> MainTheme.colors.auxiliaryColor
+                        else -> MainTheme.colors.auxiliaryColor
+                    }
                     Text(
                         text = resume.status?.name.toString(),
                         style = MainTheme.typography.bodyText1,
-                        color = MainTheme.colors.auxiliaryColor,
+                        color = statusColor,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.Bottom){
                         Text(
                             text = resume.updatedAt.toString(),
@@ -275,21 +287,7 @@ fun ResumeItem(resume: Resume, onItemClick: () -> Unit){
                         )
                     }
                 }
-                Row(modifier = Modifier.border(
-                    1.dp,
-                    MainTheme.colors.auxiliaryColor,
-                    RoundedCornerShape(100.dp)
-                )){
-                    val image = painterResource(id = R.drawable.photo_resume_test)
-                    Image(painter = image, contentDescription = "", modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(100.dp)
-                        )
-                        .size(64.dp)
-                        .scale(1.6f))
-                }
             }
-
         }
     }
 }

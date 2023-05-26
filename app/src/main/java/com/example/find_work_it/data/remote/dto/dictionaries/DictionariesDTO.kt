@@ -13,7 +13,6 @@ import com.example.find_work_it.data.remote.dto.dictionaries.models.EmployerArch
 import com.example.find_work_it.data.remote.dto.dictionaries.models.EmployerHiddenVacanciesOrder
 import com.example.find_work_it.data.remote.dto.dictionaries.models.EmployerRelation
 import com.example.find_work_it.data.remote.dto.dictionaries.models.EmployerType
-import com.example.find_work_it.data.remote.dto.dictionaries.models.Employment
 import com.example.find_work_it.data.remote.dto.dictionaries.models.Experience
 import com.example.find_work_it.data.remote.dto.dictionaries.models.Gender
 import com.example.find_work_it.data.remote.dto.dictionaries.models.JobSearchStatusesApplicant
@@ -37,7 +36,6 @@ import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeSearch
 import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeSearchOrder
 import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeSearchRelocation
 import com.example.find_work_it.data.remote.dto.dictionaries.models.ResumeStatus
-import com.example.find_work_it.data.remote.dto.dictionaries.models.Schedule
 import com.example.find_work_it.data.remote.dto.dictionaries.models.TravelTime
 import com.example.find_work_it.data.remote.dto.dictionaries.models.VacancyBillingType
 import com.example.find_work_it.data.remote.dto.dictionaries.models.VacancyCluster
@@ -50,6 +48,8 @@ import com.example.find_work_it.data.remote.dto.dictionaries.models.VacancyType
 import com.example.find_work_it.data.remote.dto.dictionaries.models.WorkingDay
 import com.example.find_work_it.data.remote.dto.dictionaries.models.WorkingTimeInterval
 import com.example.find_work_it.data.remote.dto.dictionaries.models.WorkingTimeMode
+import com.example.find_work_it.data.remote.dto.resumes.resume_detail.Employment
+import com.example.find_work_it.data.remote.dto.resumes.resume_detail.Schedule
 import com.example.find_work_it.domain.model.Dictionaries
 import com.google.gson.annotations.SerializedName
 
