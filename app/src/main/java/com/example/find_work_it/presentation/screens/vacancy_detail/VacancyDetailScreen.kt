@@ -1,12 +1,14 @@
 package com.example.find_work_it.presentation.screens.vacancy_detail
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.text.Html
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,9 +16,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,10 +34,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.R
+import com.example.find_work_it.domain.model.Resume
 import com.example.find_work_it.domain.model.Vacancy
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.ButtonElement
@@ -42,6 +48,7 @@ import com.example.find_work_it.presentation.screens.favorite_screen.FavoritesSc
 import com.example.find_work_it.presentation.screens.main_screen.VacancyItem
 import com.example.find_work_it.ui.theme.FINDWORKIT_Theme
 import com.example.find_work_it.ui.theme.MainTheme
+import com.example.find_work_it.ui.theme.Shapes
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "RememberReturnType")
 @RequiresApi(Build.VERSION_CODES.P)
@@ -56,19 +63,56 @@ fun VacancyDetailScreen(
     val statePutFavorite = favoritesScreenViewModel.statePutFavorite.value
     val stateDeleteFavorite = favoritesScreenViewModel.stateDeleteFavorite.value
 
+    val suitableResumesState = detailVacancyViewModel.resumes.value
+    val responseVacancy = detailVacancyViewModel.responseVacancy.value
     val context = LocalContext.current
+    val isNavigated = remember { mutableStateOf(false) }
     val onBack = {
-        favoritesScreenViewModel.getFavoritesVacancies()
-        controller.popBackStack()
-        Toast.makeText(context, "Дерьмо", Toast.LENGTH_SHORT).show()
+        if(!isNavigated.value){
+            isNavigated.value = true
+            controller.popBackStack()
+        }
     }
-    BackPressHandler(onBackPressed = onBack)
+
+    val dialogState by lazy { mutableStateOf(false) }
+    val shareLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ -> }
+    BackPressHandler(onBackPressed = {onBack()})
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MainTheme.colors.primaryBackground,
-        topBar = {state.vacancy?.let { TopBarDetailVacancy(favoritesScreenViewModel, detailVacancyViewModel, it.idVacancy) }},
-        bottomBar = {state.vacancy?.let { AddResponseButton(detailVacancyViewModel, it.idVacancy) }}
+        topBar = {state.vacancy?.let { TopBarDetailVacancy(
+            favoritesScreenViewModel,
+            detailVacancyViewModel,
+            it.idVacancy,
+            onBackClick = {onBack()},
+            onShareClick = {
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, it)
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                shareLauncher.launch(shareIntent)
+            }
+        ) }},
+        bottomBar = {state.vacancy?.let { AddResponseButton(){
+            dialogState.value = true
+        }}}
     ) {
+        if(dialogState.value){
+            SingleSelectDialog("Выберите резюме", suitableResumesState.resumes.filter { it.status?.id == "published" }, onDismissRequest = { dialogState.value = false }){
+                detailVacancyViewModel.responseVacancy(it.id, state.vacancy?.idVacancy.toString())
+            }
+        }
+        if(responseVacancy.error.isNotBlank()){
+            Toast.makeText(context, responseVacancy.error.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        else if(responseVacancy.success && !isNavigated.value){
+            Toast.makeText(context, "Отклик создан", Toast.LENGTH_SHORT).show()
+            isNavigated.value = true
+            controller.navigate(NavScreens.ResponsesVacancyScreen.route)
+        }
         state.vacancy?.let { vacancy ->
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(18.dp)){
                 item{
@@ -179,14 +223,84 @@ fun VacancyDetailScreen(
     }
 }
 
+
+
+@Composable
+fun SingleSelectDialog(title: String, optionsList: List<Resume>, onDismissRequest: () -> Unit, onValueSelected: (Resume) -> Unit) {
+    Dialog(onDismissRequest = { onDismissRequest.invoke() }) {
+        Surface(modifier = Modifier.width(300.dp),
+            color = MainTheme.colors.primaryBackground,
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn(modifier = Modifier.padding(10.dp)) {
+                item{
+                    Text(
+                        text = title,
+                        style = MainTheme.typography.headerText,
+                        color = MainTheme.colors.primaryText,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+                items(optionsList){
+                    ResumeItem(resume = it) {
+                        onValueSelected(it)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ResumeItem(resume: Resume, onItemClick: () -> Unit){
+    Card(modifier = Modifier
+        .wrapContentSize()
+        .padding(horizontal = 16.dp, vertical = 8.dp)
+        .clickable { onItemClick() },
+        elevation = 10.dp,
+        shape = Shapes.small
+    ) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .background(MainTheme.colors.secondaryBackground)
+            .padding(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween){
+                    val title = resume.title ?: "Должность не указана"
+                    Text(
+                        text = title,
+                        style = MainTheme.typography.headerText,
+                        color = MainTheme.colors.primaryText
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.Bottom){
+                        Text(
+                            text = resume.updatedAt.toString(),
+                            style = MainTheme.typography.smallText,
+                            color = MainTheme.colors.secondaryText
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 @Composable
 fun TopBarDetailVacancy(
     favoritesScreenViewModel: FavoritesScreenViewModel,
     vacancyDetailViewModel: VacancyDetailViewModel,
-    vacancyId: String
+    vacancyId: String,
+    onBackClick: () -> Unit,
+    onShareClick: (String) -> Unit,
 ){
     val favoritesList = favoritesScreenViewModel.state.value?.vacancies
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,7 +312,7 @@ fun TopBarDetailVacancy(
         val imageModifier = Modifier.size(34.dp)
         Row(modifier = Modifier
             .size(34.dp)
-            .clickable { }) {
+            .clickable { onBackClick() }) {
             Image(
                 painter = painterResource(id = R.drawable.round_arrow_back_24),
                 contentDescription = "arrowBack",
@@ -213,10 +327,11 @@ fun TopBarDetailVacancy(
                 }
                 else favoritesScreenViewModel.deleteFavoriteVacancy(vacancyId)
             }
+            val vacancyUrl = vacancyDetailViewModel.state.value.vacancy?.url
             Spacer(modifier = Modifier.width(16.dp))
             Row(modifier = Modifier
                 .size(34.dp)
-                .clickable { }
+                .clickable { onShareClick(vacancyUrl.toString()) }
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.round_share_24),
@@ -257,7 +372,7 @@ fun AddToFavoriteButton(
 
 
 @Composable
-fun AddResponseButton(detailVacancyViewModel: VacancyDetailViewModel, vacancyId: String){
+fun AddResponseButton(onItemClick: () -> Unit){
     Row(modifier = Modifier
         .fillMaxWidth()
     ){
@@ -269,7 +384,7 @@ fun AddResponseButton(detailVacancyViewModel: VacancyDetailViewModel, vacancyId:
                 .height(48.dp),
             backgroundColor = MainTheme.colors.auxiliaryColor
         ) {
-
+            onItemClick()
         }
     }
 }

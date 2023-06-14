@@ -135,8 +135,6 @@ fun TopBarMainScreen(mainScreenViewModel: MainScreenViewModel, text: MutableStat
             iconContentDescription = "iconSearch",
             onValueChanged = { text.value = it },
             onSearch = {
-                Toast.makeText(context, text.value, Toast.LENGTH_SHORT).show()
-                Log.d("123123", "ХУЙ")
                 mainScreenViewModel.getVacancies(text = text.value)
             }
         )

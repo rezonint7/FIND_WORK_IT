@@ -51,7 +51,8 @@ fun UserDTO.toUser(): User {
         phone = phone,
         email = email,
         isInSearch = isInSearch,
-        profileVideos = profileVideos
+        profileVideos = profileVideos,
+        resumesUrl = resumesUrl
     )
 }
 

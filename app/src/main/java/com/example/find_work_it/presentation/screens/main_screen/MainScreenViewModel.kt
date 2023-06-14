@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.main_screen
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -52,6 +53,7 @@ class MainScreenViewModel @Inject constructor(
                     _state.value = MainScreenState(isLoading = true)
                 }
             }
+            Log.d("MAIN", "пизда")
         }.launchIn(viewModelScope)
     }
 

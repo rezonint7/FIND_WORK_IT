@@ -38,13 +38,13 @@ class ProfileScreenViewModel @Inject constructor(
     private val getUserResumesUseCase: GetUserResumesUseCase,
     private val createNewResumeUseCase: CreateNewResumeUseCase,
     private val putUserInfoUseCase: PutUserInfoUseCase,) : ViewModel() {
-    private val _state: MutableLiveData<ProfileScreenState> = MutableLiveData(ProfileScreenState())
+    private val _state = mutableStateOf(ProfileScreenState())
     private val _editInfoState = mutableStateOf<EditInfoProfileScreenState>(EditInfoProfileScreenState())
     private val _createNewResume = mutableStateOf<CreateNewResumeState>(CreateNewResumeState())
-    private val _getResumes = MutableLiveData<GetResumesState>()
+    private val _getResumes = mutableStateOf<GetResumesState>(GetResumesState())
 
-    val state: MutableLiveData<ProfileScreenState> = _state
-    val resumes: LiveData<GetResumesState> = _getResumes
+    val state: State<ProfileScreenState> = _state
+    val resumes: State<GetResumesState> = _getResumes
     val editInfoState: State<EditInfoProfileScreenState> = _editInfoState
     val createNewResumeState: State<CreateNewResumeState> = _createNewResume
     init {
@@ -74,10 +74,10 @@ class ProfileScreenViewModel @Inject constructor(
         getUserResumesUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _getResumes.postValue(GetResumesState(resumes = (result.data ?: emptyList()).toMutableList()))
+                    _getResumes.value = GetResumesState(resumes = (result.data ?: emptyList()).toMutableList())
                 }
                 is Resource.Error -> {
-                    _getResumes.postValue(GetResumesState(error = result.message ?: ConstantsError.ERROR_OCCURRED))
+                    _getResumes.value = GetResumesState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
                 }
                 else -> {}
             }
@@ -137,7 +137,6 @@ class ProfileScreenViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _createNewResume.value = CreateNewResumeState(error = result.message ?: ConstantsError.RESUME_CREATE_ERROR_OCCURRED)
-
                 }
             }
         }.launchIn(viewModelScope)

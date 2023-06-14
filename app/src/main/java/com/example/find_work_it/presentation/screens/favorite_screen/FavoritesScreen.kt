@@ -25,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.ButtonElement
+import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
+import com.example.find_work_it.presentation.screens.LoadingUseCaseElement
 import com.example.find_work_it.presentation.screens.TopBar
 import com.example.find_work_it.presentation.screens.main_screen.MainScreenViewModel
 import com.example.find_work_it.presentation.screens.main_screen.VacancyItem
@@ -55,49 +57,33 @@ fun FavoritesScreen(
                 }
             }
         }
-        if(state.isLoading){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ){
-                CircularProgressIndicator(
-                    color = MainTheme.colors.auxiliaryColor
-                )
+        if (state != null) {
+            if(state.error.isNotBlank()){
+                ErrorUseCaseElement(error = state.error) {
+
+                }
             }
         }
-        if (state.error.isNotBlank()){
+        if (state != null) {
+            if(state.isLoading){
+                LoadingUseCaseElement()
+            }
+        }
+        if(state.vacancies.isEmpty()){
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
                 Text(
-                    text = state.error,
+                    text = "Туть пусто...",
                     style = MainTheme.typography.headerText,
                     color = MainTheme.colors.secondaryText,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
-        else{
-            if(state.vacancies.isEmpty()){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ){
-                    Text(
-                        text = "Туть пусто...",
-                        style = MainTheme.typography.headerText,
-                        color = MainTheme.colors.secondaryText,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
 
-            }
         }
     }
 }

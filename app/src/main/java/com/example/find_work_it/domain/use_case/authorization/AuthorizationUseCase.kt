@@ -1,5 +1,6 @@
 package com.example.find_work_it.domain.use_case.authorization
 
+import android.util.Log
 import android.webkit.WebResourceRequest
 import com.example.find_work_it.common.Constants
 import com.example.find_work_it.common.Resource
@@ -29,6 +30,7 @@ class AuthorizationUseCase @Inject constructor(
                             authorizationServiceApp.getAccessUserToken(url, authorizationService) { tokens ->
                                 continuation.resume(tokens!!)
                             }
+                            Log.d("AUTH", "123")
                         }.also { tokens ->
                             sharedPrefsHelper.setTokens(tokens)
                         }
@@ -41,13 +43,15 @@ class AuthorizationUseCase @Inject constructor(
 
     operator fun invoke(request: WebResourceRequest?): Flow<Resource<Tokens>> = flow {
         try{
-            emit(Resource.Loading())
-            val result = getTokensOrNull(request)
-
-            emit(Resource.Success(result!!))
+            if(request?.url.toString().startsWith(Constants.REDIRECT_URI)){
+                emit(Resource.Loading())
+                val result = getTokensOrNull(request)
+                Log.d("AUTH", "000000000000000000")
+                emit(Resource.Success(result!!))
+            }
         }
         catch (e: Exception){
-            emit(Resource.Error(message = e.localizedMessage ?: ConstantsError.ERROR_OCCURRED))
+            emit(Resource.Error(message = ConstantsError.ERROR_OCCURRED))
         }catch (e: IOException){
             emit(Resource.Error(message = ConstantsError.NETWORK_ERROR))
         }

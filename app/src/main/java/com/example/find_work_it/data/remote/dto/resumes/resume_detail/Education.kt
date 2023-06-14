@@ -13,9 +13,9 @@ data class Education(
     @SerializedName("elementary")
     val elementary: List<Elementary?>? = null,
     @SerializedName("level")
-    val level: Level?,
+    val level: Level? = null,
     @SerializedName("primary")
-    val primary: List<Primary?>?
+    val primary: List<Primary?>? = null
 )
 
 data class Additional(

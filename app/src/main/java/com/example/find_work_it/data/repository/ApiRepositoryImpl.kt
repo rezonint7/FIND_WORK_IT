@@ -5,8 +5,10 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.dictionary_professional_roles.ProfessionalRolesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.response_list.ResponseListDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.resumes.status_resume.ResumeStatusDTO
 import com.example.find_work_it.data.remote.dto.resumes.validation_resume.ValidationResumeFields
 import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
@@ -67,6 +69,26 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
         return api.getUserResumes()
     }
 
+    override suspend fun editResume(resumeId: String, newResume: ResumeDetail) {
+        api.editResume(resumeId, newResume)
+    }
+
+    override suspend fun getStatusResume(resumeId: String): ResumeStatusDTO {
+        return api.getStatusResume(resumeId)
+    }
+
+    override suspend fun getSuitableResumes(vacancyId: String): ResumesDTO {
+        return api.getSuitableResumes(vacancyId)
+    }
+
+    override suspend fun publishResume(resumeId: String) {
+        api.publishResume(resumeId)
+    }
+
+    override suspend fun getResponseList(): ResponseListDTO {
+        return api.getResponseList()
+    }
+
     override suspend fun getUserResumeDetail(resumeId: String): ResumeDetailDTO {
         return api.getUserResumeDetail(resumeId)
     }
@@ -81,6 +103,10 @@ class ApiRepositoryImpl @Inject constructor(private val api : ApiService) : ApiR
 
     override suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO {
         return api.getSuggestPositionsResume(text)
+    }
+
+    override suspend fun responseVacancy(resumeId: String, vacancyId: String) {
+        api.responseVacancy(resumeId, vacancyId)
     }
 
     override suspend fun getAreasResume(): AreasDTO {

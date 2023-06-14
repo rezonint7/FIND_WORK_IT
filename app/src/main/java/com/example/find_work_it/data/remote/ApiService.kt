@@ -4,8 +4,10 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.dictionary_professional_roles.ProfessionalRolesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.response_list.ResponseListDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.resumes.status_resume.ResumeStatusDTO
 import com.example.find_work_it.data.remote.dto.resumes.validation_resume.ValidationResumeFields
 import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
@@ -82,12 +84,30 @@ interface ApiService {
     suspend fun getUserResumeDetail(@Path("resume_id") resumeId: String): ResumeDetailDTO
 
     @POST("/resumes")
-    suspend fun createNewResume(@Body newResume: ResumeDetail): Call<ResumeDetail>
+    suspend fun createNewResume(@Body newResume: ResumeDetail): Response<Unit>
 
     @PUT("/resumes/{resume_id}")
     suspend fun editResume(
         @Path("resume_id") resumeId: String,
         @Body newResume: ResumeDetail
+    ): Response<Unit>
+
+    @GET("/resumes/{resume_id}/status")
+    suspend fun getStatusResume(@Path("resume_id") resumeId: String): ResumeStatusDTO
+
+    @POST("/resumes/{resume_id}/publish")
+    suspend fun publishResume(@Path("resume_id") resumeId: String): Response<Unit>
+    //Отклики
+    @GET("/negotiations")
+    suspend fun getResponseList(): ResponseListDTO
+
+    @GET("GET /vacancies/{vacancy_id}/suitable_resumes")
+    suspend fun getSuitableResumes(@Path("vacancy_id") vacancyId: String): ResumesDTO
+
+    @POST("/negotiations")
+    suspend fun responseVacancy(
+        @Query("resume_id") resumeId: String,
+        @Query("vacancy_id") vacancyId: String,
     ): Response<Unit>
 
     //Справочники

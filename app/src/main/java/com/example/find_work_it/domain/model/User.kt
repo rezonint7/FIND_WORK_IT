@@ -10,5 +10,6 @@ data class User(
     val phone: String? = "",
     val email: String? = "",
     val isInSearch: Boolean,
-    val profileVideos: ProfileVideos? = null
+    val profileVideos: ProfileVideos? = null,
+    val resumesUrl: String? = null,
 )

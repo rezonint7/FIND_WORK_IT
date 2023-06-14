@@ -53,7 +53,6 @@ object AppModule {
         return ApiRepositoryImpl(api)
     }
 
-
     @Provides
     @Singleton
     fun provideAuthorizationService(@ApplicationContext context : Context) : AuthorizationService { return AuthorizationService(context) }

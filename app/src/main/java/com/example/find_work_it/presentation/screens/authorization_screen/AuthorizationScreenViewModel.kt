@@ -1,5 +1,6 @@
 package com.example.find_work_it.presentation.screens.authorization_screen
 
+import android.util.Log
 import android.webkit.WebResourceRequest
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -35,19 +36,21 @@ class AuthorizationScreenViewModel @Inject constructor(
     }
 
     fun onTokens(request: WebResourceRequest?){
-        authorizationUseCase(request).onEach { result ->
-            when(result){
-                is Resource.Success -> {
-                    _state.value = AuthorizationScreenState(success = result.data != null)
+        if(request?.url.toString().startsWith(Constants.REDIRECT_URI)){
+            authorizationUseCase(request).onEach { result ->
+                when(result){
+                    is Resource.Success -> {
+                        _state.value = AuthorizationScreenState(success = result.data != null)
+                    }
+                    is Resource.Error -> {
+                        _state.value = AuthorizationScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
+                    }
+                    is Resource.Loading -> {
+                        _state.value = AuthorizationScreenState(isLoading = true)
+                    }
                 }
-                is Resource.Error -> {
-                    _state.value = AuthorizationScreenState(error = result.message ?: ConstantsError.ERROR_OCCURRED)
-                }
-                is Resource.Loading -> {
-                    _state.value = AuthorizationScreenState(isLoading = true)
-                }
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
     }
     fun retryAuthorization() {
         _state.value = AuthorizationScreenState()

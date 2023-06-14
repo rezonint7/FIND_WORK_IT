@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName
 
 data class Primary(
     @SerializedName("name")
-    val name: String?,
+    val name: String? = null,
     @SerializedName("name_id")
-    val nameId: String?,
+    val nameId: String? = null,
     @SerializedName("organization")
-    val organization: String?,
+    val organization: String? = null,
     @SerializedName("organization_id")
-    val organizationId: Any?,
+    val organizationId: Any? = null,
     @SerializedName("result")
-    val result: String?,
+    val result: String? = null,
     @SerializedName("result_id")
-    val resultId: Any?,
+    val resultId: Any? = null,
     @SerializedName("year")
-    val year: Int?
+    val year: Int? = null
 )

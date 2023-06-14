@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.find_work_it.common.Constants
 import com.example.find_work_it.presentation.navigation.NavScreens
 import com.example.find_work_it.presentation.screens.ButtonElement
 import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
@@ -33,6 +35,7 @@ fun AuthorizationScreen(
     authViewModel: AuthorizationScreenViewModel = hiltViewModel()
 ){
     val webViewRef = remember { Ref<WebView>() }
+    val isNavigated = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -52,11 +55,15 @@ fun AuthorizationScreen(
 
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
-//                            view?.loadData("<html><body><h1>No internet connection</h1></body></html>", "text/html", null)
+                            view?.loadData("<html><body></body></html>", "text/html", null)
                         }
 
                         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                            authViewModel.onTokens(request)
+                            if(request?.url.toString().startsWith(Constants.REDIRECT_URI)){
+                                authViewModel.onTokens(request)
+                                Thread.sleep(1000)
+                                controller.navigate(NavScreens.MainScreen.route)
+                            }
                             return authViewModel.state.value.success
                         }
                     }
@@ -65,7 +72,6 @@ fun AuthorizationScreen(
             },
             update = {authViewModel.authorizationRequest.value!!.toUri().toString()}
         )
-        if(authViewModel.state.value.success) controller.navigate(NavScreens.MainScreen.route)
         if (authViewModel.state.value.error != null) {
             ErrorUseCaseElement(error = authViewModel.state.value.error.toString()) {
                 authViewModel.retryAuthorization()

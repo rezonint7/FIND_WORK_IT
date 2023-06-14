@@ -48,11 +48,11 @@ fun ErrorUseCaseElement(error: String, onRetryClick: () -> Unit){
             color = MainTheme.colors.refusedColor,
             textAlign = TextAlign.Center,
         )
-        ButtonElement(
-            text = "Попробовать снова",
-            modifier = Modifier.padding(all = 4.dp),
-            backgroundColor = MainTheme.colors.refusedColor,
-            onClick = {onRetryClick()}
-        )
+//        ButtonElement(
+//            text = "Попробовать снова",
+//            modifier = Modifier.padding(all = 4.dp),
+//            backgroundColor = MainTheme.colors.refusedColor,
+//            onClick = {onRetryClick()}
+//        )
     }
 }

@@ -3,7 +3,11 @@ package com.example.find_work_it.presentation.screens.profile_screen
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,7 +54,7 @@ fun ProfileScreen(
 //    BackHandler(bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
 //        coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
 //    }
-
+    val shareLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ -> }
     val state = profileScreenViewModel.state.value
     val getResumesState = profileScreenViewModel.resumes.value
     if (state != null) {
@@ -80,7 +84,16 @@ fun ProfileScreen(
                                         contentDescription = "ProfileEdit"
                                     )
                                 }
-                                Row(modifier = Modifier.size(28.dp)) {
+                                Row(modifier = Modifier.size(28.dp).clickable {
+
+                                    val sendIntent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, state.user.resumesUrl)
+                                        type = "text/plain"
+                                    }
+                                    val shareIntent = Intent.createChooser(sendIntent, null)
+                                    shareLauncher.launch(shareIntent)
+                                }) {
                                     Image(
                                         painter = painterResource(id = R.drawable.round_share_24),
                                         modifier = Modifier.fillMaxSize(),
@@ -173,7 +186,9 @@ fun ProfileScreen(
                         item{
                             Spacer(modifier = Modifier.height(8.dp))
                             ProfileInfo(profileScreenViewModel)
-                            Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 48.dp), color = MainTheme.colors.strokeColor)
+                            Divider(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 48.dp), color = MainTheme.colors.strokeColor)
                         }
                         getResumesState?.let { it ->
                             items(it.resumes){ resume ->
@@ -186,14 +201,19 @@ fun ProfileScreen(
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                                 ButtonElement(
                                     text = "Добавить резюме",
-                                    modifier = Modifier.padding(8.dp),
+                                    modifier = Modifier.size(274.dp, 48.dp),
                                     backgroundColor = MainTheme.colors.auxiliaryColor
-                                ) {
+                                ) {// мб испарвить
                                     profileScreenViewModel.createNewResume()
+                                    profileScreenViewModel.createNewResumeState.value.let {
+                                        profileScreenViewModel.resumes.value.let{
+                                            controller.navigate(NavScreens.AddResumeScreen.route + "/${it?.resumes?.get(0)?.id}")
+                                        }
+                                    }
                                 }
                             }
                         }
-                        item { Spacer(modifier = Modifier.height(48.dp)) }
+                        item { Spacer(modifier = Modifier.height(68.dp)) }
                     }
                 }
             }
@@ -236,7 +256,26 @@ fun ProfileInfo(
             style = MainTheme.typography.smallText,
             color = MainTheme.colors.primaryText
         )
+        OpenGmailButton(emailAddress = "rezonint@gmail.com")
     }
+}
+
+@Composable
+fun OpenGmailButton(emailAddress: String) {
+    val context = LocalContext.current
+    val emailLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ -> }
+    Spacer(modifier = Modifier.height(8.dp))
+    Text(
+        text = "Написать в тех.поддержку",
+        style = MainTheme.typography.smallText,
+        color = MainTheme.colors.auxiliaryColor,
+        modifier = Modifier.clickable {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:$emailAddress")
+            }
+            emailLauncher.launch(emailIntent)
+        }
+    )
 }
 
 @Composable

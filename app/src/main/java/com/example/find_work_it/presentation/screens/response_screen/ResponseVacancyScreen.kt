@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -22,34 +23,48 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.find_work_it.domain.model.Response
+import com.example.find_work_it.presentation.screens.ErrorUseCaseElement
+import com.example.find_work_it.presentation.screens.LoadingUseCaseElement
 import com.example.find_work_it.presentation.screens.TopBar
 import com.example.find_work_it.ui.theme.MainTheme
 import com.example.find_work_it.ui.theme.Shapes
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ResponsesVacancyScreen(){
+fun ResponsesVacancyScreen(responseVacancyScreenViewModel: ResponseVacancyScreenViewModel = hiltViewModel()){
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MainTheme.colors.primaryBackground,
         topBar = { TopBar(screenName = "Отклики")}
     ) {
+        val state = responseVacancyScreenViewModel.state.value
+        if(state.error.isNotBlank()){
+            ErrorUseCaseElement(error = state.error) {
+
+            }
+        }
+        if(state.isLoading){
+            LoadingUseCaseElement()
+        }
         LazyColumn(modifier = Modifier.fillMaxSize()){
+            items(state.responses){
+                ResponseItem(it)
+            }
             item{
-                ResponseItem("Отклик", "25.05.23 в 17:45")
-                ResponseItem("Отказ", "15.05.23 в 11:31")
-                ResponseItem("Приглашение", "23.05.23 в 13:15")
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
 }
 
 @Composable
-fun ResponseItem(responseStatus: String, date: String){
-    val responseStatusColor = when(responseStatus){
-        "Приглашение" -> MainTheme.colors.approvedColor
-        "Отклик" -> MainTheme.colors.auxiliaryColor
-        "Отказ" -> MainTheme.colors.refusedColor
+fun ResponseItem(response: Response){
+    val responseStatusColor = when(response.status?.id){
+        "invitation" -> MainTheme.colors.approvedColor
+        "response" -> MainTheme.colors.auxiliaryColor
+        "discard" -> MainTheme.colors.refusedColor
         else -> MainTheme.colors.secondaryBackground
     }
     Card(
@@ -74,13 +89,13 @@ fun ResponseItem(responseStatus: String, date: String){
                     .fillMaxWidth()
                     .padding(8.dp)) {
                     Text(
-                        text = "Программист Python",
+                        text = response.vacancy?.name.toString(),
                         style = MainTheme.typography.headerText,
                         color = MainTheme.colors.primaryText
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Екатеринбург, СКБ Контур",
+                        text = "${response.vacancy?.area?.name.toString()}, ${response.vacancy?.employer?.name.toString()}",
                         style = MainTheme.typography.bodyText1,
                         color = MainTheme.colors.primaryText
                     )
@@ -92,14 +107,14 @@ fun ResponseItem(responseStatus: String, date: String){
                             color = MainTheme.colors.primaryText
                         )
                         Text(
-                            text = responseStatus,
+                            text = response.status?.name.toString(),
                             style = MainTheme.typography.bodyText1,
                             color = responseStatusColor
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Обновлено $date",
+                        text = "Обновлено ${response.updatedAt}",
                         style = MainTheme.typography.smallText,
                         color = MainTheme.colors.secondaryText
                     )

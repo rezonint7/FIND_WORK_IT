@@ -4,8 +4,10 @@ import com.example.find_work_it.data.remote.dto.dictionaries.DictionariesDTO
 import com.example.find_work_it.data.remote.dto.dictionary_areas.AreasDTO
 import com.example.find_work_it.data.remote.dto.dictionary_professional_roles.ProfessionalRolesDTO
 import com.example.find_work_it.data.remote.dto.employer.EmployerDTO
+import com.example.find_work_it.data.remote.dto.response_list.ResponseListDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumeDetailDTO
 import com.example.find_work_it.data.remote.dto.resumes.ResumesDTO
+import com.example.find_work_it.data.remote.dto.resumes.status_resume.ResumeStatusDTO
 import com.example.find_work_it.data.remote.dto.resumes.validation_resume.ValidationResumeFields
 import com.example.find_work_it.data.remote.dto.suggest.models.SuggestPositionResumeDTO
 import com.example.find_work_it.data.remote.dto.user.UserDTO
@@ -40,12 +42,23 @@ interface ApiRepository {
 
     suspend fun getUserResumes(): ResumesDTO
 
+    suspend fun editResume(resumeId: String, newResume: ResumeDetail)
+
+    suspend fun getStatusResume(resumeId: String): ResumeStatusDTO
+    suspend fun getSuitableResumes(vacancyId: String): ResumesDTO
+
+    suspend fun publishResume(resumeId: String)
+
+    suspend fun getResponseList(): ResponseListDTO
+
     suspend fun getUserResumeDetail(resumeId: String): ResumeDetailDTO
 
     suspend fun getDictionaries(): DictionariesDTO
     suspend fun gerProfessionalRoles(): ProfessionalRolesDTO
 
     suspend fun getSuggestPositionsResume(text: String): SuggestPositionResumeDTO
+
+    suspend fun responseVacancy(resumeId: String, vacancyId: String)
 
     suspend fun getAreasResume(): AreasDTO
 

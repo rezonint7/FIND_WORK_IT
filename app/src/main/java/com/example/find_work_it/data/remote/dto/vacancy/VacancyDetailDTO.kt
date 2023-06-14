@@ -108,6 +108,7 @@ fun VacancyDetailDTO.toVacancyDetail() : VacancyDetail {
         schedule = schedule?.name,
         experience = experience,
         employment = employment,
-        contacts = contacts
+        contacts = contacts,
+        url = alternateUrl
     )
 }

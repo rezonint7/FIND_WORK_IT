@@ -15,4 +15,5 @@ data class VacancyDetail(
     val employment: Employment?,
     val contacts: Contacts?,
     val publishDate: String?,
+    val url: String?
 )
